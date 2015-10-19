@@ -1,6 +1,5 @@
 appDependencies = [
   'ngRoute'
-  'selectbox'
 ]
 
 app = angular.module 'app', appDependencies
