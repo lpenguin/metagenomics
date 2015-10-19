@@ -11,5 +11,7 @@ app = angular.module 'app', appDependencies
       templateUrl: 'templates/pages/main.html'
       controller: 'mainCtrl'
     .otherwise redirectTo: '/'
+
+    $locationProvider.html5Mode true
     return
 ]
