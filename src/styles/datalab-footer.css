@@ -1,0 +1,15 @@
+@import 'variables';
+
+.datalab-footer {
+  display: block;
+  position: fixed;
+  left: 20px;
+  bottom: 20px;
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
+}
+
+.datalab-footer__dl-caption {
+  font-family: $garamond-original-italic;
+  font-size: $dl-font-size;
+}
