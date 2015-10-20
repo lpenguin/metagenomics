@@ -1,0 +1,16 @@
+<div class="custom-select">
+  <div
+    class="custom-select__toggle"
+    data-ng-class="{'activated': isListShown}"
+    data-ng-click="toggleList()">{{toggleFormat()}}</div>
+  <ul
+    class="custom-select__dropdown"
+    data-ng-show="isListShown">
+    <li data-ng-repeat="item in dataset track by $index">
+      <div
+        class="custom-select__item"
+        data-ng-class="{'selected': isItemSelected(item)}"
+        data-ng-click="selectItem(item)">{{item.title}}</div>
+    </li>
+  </ul>
+</div>

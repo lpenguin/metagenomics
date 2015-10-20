@@ -1,0 +1,85 @@
+@import '../variables';
+
+$background-color: #e5e5e5;
+$hover-color: #d3d3d3;
+
+.custom-select {
+  display: inline-block;
+  position: relative;
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+  color: #333;
+  cursor: pointer;
+  user-select: none;
+}
+
+.custom-select__toggle {
+  display: block;
+  padding: 2px 19px 2px 5px;
+  background-color: $background-color;
+  border-radius: 4px 4px 4px 4px;
+}
+
+.custom-select__toggle.activated {
+  border-radius: 4px 4px 0 0;
+}
+
+.custom-select__toggle::after {
+  display: block;
+  position: absolute;
+  top: 8px;
+  right: 5px;
+  border-top: 4px solid #333;
+  border-right: 3px solid transparent;
+  border-bottom: none;
+  border-left: 3px solid transparent;
+  content: '';
+}
+
+.custom-select__toggle.activated::after {
+  top: 8px;
+  right: 5px;
+  border-top: none;
+  border-right: 3px solid transparent;
+  border-bottom: 4px solid #333;
+  border-left: 3px solid transparent;
+}
+
+.custom-select__dropdown {
+  display: block;
+  position: absolute;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  border-radius: 0 0 4px 4px;
+  background-color: $background-color;
+  list-style: none;
+  z-index: 100;
+}
+
+.custom-select__dropdown li:last-child .custom-select__item {
+  border-radius: 0 0 4px 4px;
+}
+
+.custom-select__item {
+  display: block;
+  position: relative;
+  line-height: 22px;
+  padding: 2px 19px 2px 5px;
+}
+
+.custom-select__item:hover {
+  background-color: $hover-color;
+}
+
+.custom-select__item.selected::after {
+  display: block;
+  position: absolute;
+  width: 9px;
+  height: 10px;
+  top: 8px;
+  right: 5px;
+  content: '';
+  background: transparent url('../img/accessories/check.png') no-repeat left top;
+  background-size: 9px 10px;
+}

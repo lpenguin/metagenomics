@@ -38,7 +38,6 @@ vendors =
     'bower_components/queue-async/queue.js'
     'bower_components/lodash/lodash.js'
   ]
-  styles: []
 
 # Tasks
 gulp.task 'clean', ->
@@ -74,12 +73,6 @@ gulp.task 'data', ->
 gulp.task 'fonts', ->
   gulp.src sources.fonts
   .pipe gulp.dest destinations.fonts
-  return
-
-gulp.task 'styles:vendor', ->
-  gulp.src vendors.styles
-  .pipe concat 'vendor.css'
-  .pipe gulp.dest destinations.styles
   return
 
 gulp.task 'scripts:vendor', ->
@@ -124,6 +117,6 @@ gulp.task 'watch', ->
   gulp.watch sources.templates, ['templates']
   return
 
-gulp.task 'build', ['index', 'favicon', 'img', 'data', 'fonts', 'styles:vendor', 'scripts:vendor', 'styles', 'scripts', 'templates']
+gulp.task 'build', ['index', 'favicon', 'img', 'data', 'fonts', 'scripts:vendor', 'styles', 'scripts', 'templates']
 
 gulp.task 'dev', ['styles', 'scripts', 'templates', 'watch', 'connect']
