@@ -14,8 +14,8 @@ sources =
   scripts: 'src/app/**/*.coffee'
   templates: 'src/templates/**/*.html'
   index: 'src/index.html'
-  favicon: 'src/favicon.ico'
-  img: 'src/img/**/*'
+  favicon: 'src/img/favicon.ico'
+  img: 'src/img/**/*.png'
   data: 'src/data/**/*'
   fonts: 'src/fonts/**'
 
