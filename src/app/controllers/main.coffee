@@ -11,10 +11,17 @@ app.controller 'mainCtrl', ($scope) ->
 
     samples.forEach (s) ->
       sample = s
-      sample['antibiotics'] = antibiotics.filter (a) -> a['sample'] is sample['names']
+      sample['antibiotics'] = antibiotics
+      .filter (a) ->
+        a['sample'] is sample['names']
+      .map (f) ->
+        'AB_category': f['AB_category']
+        'sum_abund': parseFloat f['sum_abund']
 
       $scope.samples.push sample
       return
+
+    console.log $scope.samples
 
     $scope.isDataPrepared = true
 
