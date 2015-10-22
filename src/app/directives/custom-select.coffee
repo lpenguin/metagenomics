@@ -8,7 +8,7 @@ app.directive 'customSelect', ($document, $timeout) ->
     multi: '='
     toggleFormat: '='
     disabled: '='
-    valuesOfFilters: '='
+    filterValues: '='
   link: ($scope, $element, $attrs) ->
     $scope.isListShown = true
 
@@ -25,21 +25,21 @@ app.directive 'customSelect', ($document, $timeout) ->
 
     $scope.isItemSelected = (item) ->
       if $scope.multi
-        index = _.indexOf _.pluck($scope.valuesOfFilters[$scope.key], 'title'), item.title
+        index = _.indexOf _.pluck($scope.filterValues[$scope.key], 'title'), item.title
         index isnt -1
       else
-        $scope.valuesOfFilters[$scope.key].title is item.title
+        $scope.filterValues[$scope.key].title is item.title
 
     $scope.selectItem = (item) ->
       if $scope.multi
-        index = _.indexOf _.pluck($scope.valuesOfFilters[$scope.key], 'title'), item.title
+        index = _.indexOf _.pluck($scope.filterValues[$scope.key], 'title'), item.title
 
         if index isnt -1
-          $scope.valuesOfFilters[$scope.key].splice index, 1
+          $scope.filterValues[$scope.key].splice index, 1
         else
-          $scope.valuesOfFilters[$scope.key].push item
+          $scope.filterValues[$scope.key].push item
       else
-        $scope.valuesOfFilters[$scope.key] = item
+        $scope.filterValues[$scope.key] = item
         $scope.isListShown = false
       return
 

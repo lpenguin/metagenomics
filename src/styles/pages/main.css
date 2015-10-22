@@ -22,6 +22,10 @@
   margin: 3px 0 0 10px;
 }
 
+.head__third-floor .filters-reset {
+  margin: 3px 0 0 200px;
+}
+
 .head__second-floor {
   display: block;
   width: 100%;
