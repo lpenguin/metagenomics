@@ -49,7 +49,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
     $scope.data.genders = _.uniq(_.pluck($scope.data.samples, 'gender')).sort()
     $scope.data.ages = [ [10, 16], [16, 25], [25, 35], [35, 50], [50, 70], [70, Infinity] ]
-    $scope.data.regions = _.uniq(_.pluck(samplesAntibioticsData, 'country')).sort()
+    $scope.data.regions = _.uniq(_.pluck($scope.data.samples, 'country')).sort()
     $scope.data.diagnosis = _.uniq(_.pluck($scope.data.samples, 'diagnosis')).sort()
 
     cohorts = ['gender', 'age', 'region', 'diagnosis']
