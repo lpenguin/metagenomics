@@ -1,19 +1,16 @@
 @import '../variables';
 
 .head {
-  display: block;
-  margin: 30px 0 20px 0;
+  margin-top: 30px;
 }
 
 .head__third-floor {
-  display: block;
   width: 100%;
   padding-left: 30px;
   box-sizing: border-box;
 }
 
 .head__third-floor .head__title {
-  display: block;
   font-family: $helvetica-neue-bold;
   font-size: $xl-font-size;
 }
@@ -27,7 +24,6 @@
 }
 
 .head__second-floor {
-  display: block;
   width: 100%;
   margin-top: 5px;
   padding-left: 30px;
@@ -35,7 +31,6 @@
 }
 
 .head__second-floor .head__title {
-  display: block;
   margin-top: 2px;
   font-family: $helvetica-neue-regular;
   font-size: $m-font-size;
@@ -50,26 +45,22 @@
 }
 
 .head__first-floor {
-  display: block;
   margin-top: 20px;
 }
 
 .head__first-floor .head__left-section {
-  display: block;
   width: 40%;
   padding-left: 30px;
   box-sizing: border-box;
 }
 
 .head__first-floor .head__right-section {
-  display: block;
   width: 40%;
   padding-left: 50px;
   box-sizing: border-box;
 }
 
 .head__first-floor .head__title {
-  display: block;
   margin: 2px 0 0 0;
   font-family: $helvetica-neue-regular;
   font-size: $m-font-size;
@@ -77,4 +68,20 @@
 
 .head__first-floor .custom-select {
   margin-left: 5px;
+}
+
+.content {
+  margin-top: 20px;
+}
+
+.content__bar-chart-container {
+  width: 40%;
+}
+
+.content__dot-chart-container {
+  width: 40%;
+}
+
+.content__info-block-container {
+  width: 20%;
 }
