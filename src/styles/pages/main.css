@@ -85,3 +85,7 @@
 .content__info-block-container {
   width: 20%;
 }
+
+.content .quantity-checkbox {
+  padding-left: 30px;
+}

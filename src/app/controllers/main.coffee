@@ -1,6 +1,28 @@
 app.controller 'mainCtrl', ($scope, $timeout) ->
+  tsv = d3.tsv
+
   $scope.isDataPrepared = false
-  $scope.samples = []
+
+  $scope.data =
+    samples: []
+    resisatnces: []
+    antibiotics: []
+    genders: []
+    ages: []
+    regions: []
+    diagnosis: []
+
+  $scope.filters = []
+  $scope.filterValues = {}
+
+  $scope.barChart = {}
+
+  $scope.dotChart = {}
+
+  $scope.infoBlock = {}
+
+  $scope.quantityCheckbox =
+    on: true
 
   parseData = (error, rawData) ->
     if error
@@ -18,24 +40,24 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         'AB_category': f['AB_category']
         'sum_abund': parseFloat f['sum_abund']
 
-      $scope.samples.push sample
+      $scope.data.samples.push sample
       return
 
-    resistances = ['antibiotic resistance']
-    antibiotics = _.uniq(_.pluck(samplesAntibioticsData, 'AB_category')).sort()
-    bacteria = []
+    $scope.data.resistances = ['antibiotic resistance']
+    $scope.data.antibiotics = _.uniq(_.pluck(samplesAntibioticsData, 'AB_category')).sort()
+    $scope.data.bacteria = []
 
-    genders = _.uniq(_.pluck($scope.samples, 'gender')).sort()
-    ages = [ [10, 16], [16, 25], [25, 35], [35, 50], [50, 70], [70, Infinity] ]
-    regions = _.uniq(_.pluck(samplesAntibioticsData, 'country')).sort()
-    diagnosis = _.uniq(_.pluck($scope.samples, 'diagnosis')).sort()
+    $scope.data.genders = _.uniq(_.pluck($scope.data.samples, 'gender')).sort()
+    $scope.data.ages = [ [10, 16], [16, 25], [25, 35], [35, 50], [50, 70], [70, Infinity] ]
+    $scope.data.regions = _.uniq(_.pluck(samplesAntibioticsData, 'country')).sort()
+    $scope.data.diagnosis = _.uniq(_.pluck($scope.data.samples, 'diagnosis')).sort()
 
     cohorts = ['gender', 'age', 'region', 'diagnosis']
 
     $scope.filters = [
       {
         key: 'resistance'
-        dataset: resistances.map (r) -> {title: r, value: r}
+        dataset: $scope.data.resistances.map (r) -> {title: r, value: r}
         multi: false
         toggleFormat: -> $scope.filterValues['resistance'].title
         disabled: true
@@ -43,7 +65,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'antibiotic'
-        dataset: [ {title: 'all antibiotics', value: undefined} ].concat(antibiotics.map (a) -> {title: a.charAt(0).toUpperCase() + a.slice(1), value: a})
+        dataset: [ {title: 'all antibiotics', value: undefined} ].concat($scope.data.antibiotics.map (a) -> {title: a.charAt(0).toUpperCase() + a.slice(1), value: a})
         multi: false
         toggleFormat: -> $scope.filterValues['antibiotic'].title
         disabled: false
@@ -51,7 +73,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'bacteria'
-        dataset: [ {title: 'all bacteria', value: undefined} ].concat(bacteria.map (b) -> {title: b, value: b})
+        dataset: [ {title: 'all bacteria', value: undefined} ].concat($scope.data.bacteria.map (b) -> {title: b, value: b})
         multi: false
         toggleFormat: -> $scope.filterValues['bacteria'].title
         disabled: true
@@ -59,7 +81,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'gender'
-        dataset: [ {title: 'all genders', value: undefined} ].concat(genders.map (g) -> {title: g.charAt(0).toLowerCase() + g.slice(1), value: g})
+        dataset: [ {title: 'all genders', value: undefined} ].concat($scope.data.genders.map (g) -> {title: g.charAt(0).toLowerCase() + g.slice(1), value: g})
         multi: false
         toggleFormat: -> $scope.filterValues['gender'].title
         disabled: false
@@ -67,7 +89,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'age'
-        dataset: [ {title: 'all ages', value: undefined} ].concat(ages.map (a) -> {title: a[0] + (if a[1] is Infinity then '+' else '–' + a[1]), value: a})
+        dataset: [ {title: 'all ages', value: undefined} ].concat($scope.data.ages.map (a) -> {title: a[0] + (if a[1] is Infinity then '+' else '–' + a[1]), value: a})
         multi: false
         toggleFormat: -> $scope.filterValues['age'].title
         disabled: false
@@ -75,7 +97,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'region'
-        dataset: [ {title: 'all regions', value: undefined} ].concat(regions.map (d) -> {title: d, value: d})
+        dataset: [ {title: 'all regions', value: undefined} ].concat($scope.data.regions.map (d) -> {title: d, value: d})
         multi: false
         toggleFormat: -> $scope.filterValues['region'].title
         disabled: true
@@ -83,7 +105,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'diagnosis'
-        dataset: [ {title: 'all diagnosis', value: undefined} ].concat(diagnosis.map (d) -> {title: d, value: d})
+        dataset: [ {title: 'all diagnosis', value: undefined} ].concat($scope.data.diagnosis.map (d) -> {title: d, value: d})
         multi: false
         toggleFormat: -> $scope.filterValues['diagnosis'].title
         disabled: false
@@ -117,8 +139,8 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
     return
 
   queue()
-  .defer d3.tsv, '../data/samples_description.tsv'
-  .defer d3.tsv, '../data/per_sample_antibiotic_groups_stat.tsv'
+  .defer tsv, '../data/samples_description.tsv'
+  .defer tsv, '../data/per_sample_antibiotic_groups_stat.tsv'
   .awaitAll parseData
 
   return

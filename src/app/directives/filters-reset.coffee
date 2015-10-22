@@ -9,7 +9,7 @@ app.directive 'filtersReset', ->
     $scope.isResetShown = ->
       _.some $scope.filters, (f) ->
         return if f.key is 'cohort'
-
+        
         filterValue = $scope.filterValues[f.key]
 
         if f.multi
