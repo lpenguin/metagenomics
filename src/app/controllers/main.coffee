@@ -27,10 +27,10 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
     genders = _.uniq(_.pluck($scope.samples, 'gender')).sort()
     ages = [ [10, 16], [16, 25], [25, 35], [35, 50], [50, 70], [70, Infinity] ]
-    diagnosis = _.uniq(_.pluck($scope.samples, 'diagnosis')).sort()
     regions = _.uniq(_.pluck(samplesAntibioticsData, 'country')).sort()
+    diagnosis = _.uniq(_.pluck($scope.samples, 'diagnosis')).sort()
 
-    cohorts = ['region', 'gender', 'age', 'diagnosis']
+    cohorts = ['gender', 'age', 'region', 'diagnosis']
 
     $scope.filters = [
       {
@@ -58,14 +58,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         floor: 3
       }
       {
-        key: 'region'
-        dataset: [ {title: 'all regions', value: undefined} ].concat(regions.map (d) -> {title: d, value: d})
-        multi: false
-        toggleFormat: -> $scope.filterValues['region'].title
-        disabled: true
-        floor: 2
-      }
-      {
         key: 'gender'
         dataset: [ {title: 'all genders', value: undefined} ].concat(genders.map (g) -> {title: g.charAt(0).toLowerCase() + g.slice(1), value: g})
         multi: false
@@ -79,6 +71,14 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         multi: false
         toggleFormat: -> $scope.filterValues['age'].title
         disabled: false
+        floor: 2
+      }
+      {
+        key: 'region'
+        dataset: [ {title: 'all regions', value: undefined} ].concat(regions.map (d) -> {title: d, value: d})
+        multi: false
+        toggleFormat: -> $scope.filterValues['region'].title
+        disabled: true
         floor: 2
       }
       {
@@ -107,7 +107,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       'age': _.find($scope.filters, {'key': 'age'}).dataset[0]
       'diagnosis': _.find($scope.filters, {'key': 'diagnosis'}).dataset[0]
       'region': _.find($scope.filters, {'key': 'region'}).dataset[0]
-      'cohort': _.find($scope.filters, {'key': 'cohort'}).dataset[0]
+      'cohort': _.find($scope.filters, {'key': 'cohort'}).dataset[2]
 
     $scope.isDataPrepared = true
 
