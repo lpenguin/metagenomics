@@ -1,0 +1,16 @@
+@import '../variables';
+
+.info-block__substances {
+  margin-top: 20px;
+}
+
+.info-block__substance {
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
+  user-select: none;
+  cursor: pointer;
+}
+
+.info-block__substance:not(:first-child) {
+  margin-top: 8px;
+}

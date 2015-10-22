@@ -19,8 +19,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
   $scope.dotChart = {}
 
-  $scope.infoBlock = {}
-
   $scope.quantityCheckbox =
     on: true
 
@@ -64,10 +62,10 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         floor: 3
       }
       {
-        key: 'antibiotic'
+        key: 'antibiotic resistance'
         dataset: [ {title: 'all antibiotics', value: undefined} ].concat($scope.data.antibiotics.map (a) -> {title: a.charAt(0).toUpperCase() + a.slice(1), value: a})
         multi: false
-        toggleFormat: -> $scope.filterValues['antibiotic'].title
+        toggleFormat: -> $scope.filterValues['antibiotic resistance'].title
         disabled: false
         floor: 3
       }
@@ -123,7 +121,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
     $scope.filterValues =
       'resistance': _.find($scope.filters, {'key': 'resistance'}).dataset[0]
-      'antibiotic': _.find($scope.filters, {'key': 'antibiotic'}).dataset[0]
+      'antibiotic resistance': _.find($scope.filters, {'key': 'antibiotic resistance'}).dataset[0]
       'bacteria': _.find($scope.filters, {'key': 'bacteria'}).dataset[0]
       'gender': _.find($scope.filters, {'key': 'gender'}).dataset[0]
       'age': _.find($scope.filters, {'key': 'age'}).dataset[0]

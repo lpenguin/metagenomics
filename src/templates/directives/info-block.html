@@ -1,0 +1,11 @@
+<div class="info-block">
+  <div
+    class="info-block__substances"
+    data-ng-if="areSubstancesShown()">
+    <div
+      data-ng-repeat="substance in getSubstances() track by $index"
+      class="info-block__substance"
+      data-ng-style="getSubstanceStyle(substance)"
+      data-ng-click="selectSubstance(substance)">{{substance}}</div>
+  </div>
+</div>

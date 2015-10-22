@@ -10,7 +10,7 @@ app.directive 'dotGraphTitle', ->
       resistance = $scope.filterValues['resistance'].value
 
       if resistance is 'antibiotic resistance'
-        antibiotic = $scope.filterValues['antibiotic']
+        antibiotic = $scope.filterValues['antibiotic resistance']
 
         if antibiotic.value
           'Allocation of ' + antibiotic.title.charAt(0).toLowerCase() + antibiotic.title.slice(1)
