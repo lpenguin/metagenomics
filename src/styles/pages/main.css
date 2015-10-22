@@ -45,6 +45,10 @@
   margin-left: 10px;
 }
 
+.head__second-floor .more-filters {
+  margin-left: 10px;
+}
+
 .head__first-floor {
   display: block;
   margin-top: 20px;
@@ -73,18 +77,4 @@
 
 .head__first-floor .custom-select {
   margin-left: 5px;
-}
-
-.head__plus {
-  display: block;
-  height: 20px;
-  margin: 0 0 0 10px;
-  padding: 0 5px 0 5px;
-  font-family: $helvetica-neue-regular;
-  font-size: $xl-font-size;
-  line-height: 1;
-  background-color: #e5e5e5;
-  border-radius: 4px;
-  opacity: .5;
-  cursor: default;
 }

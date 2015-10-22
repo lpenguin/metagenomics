@@ -30,7 +30,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
     diagnosis = _.uniq(_.pluck($scope.samples, 'diagnosis')).sort()
     regions = _.uniq(_.pluck(samplesAntibioticsData, 'country')).sort()
 
-    cohorts = ['gender', 'age', 'diagnosis', 'region']
+    cohorts = ['region', 'gender', 'age', 'diagnosis']
 
     $scope.filters = [
       {
@@ -58,6 +58,14 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         floor: 3
       }
       {
+        key: 'region'
+        dataset: [ {title: 'all regions', value: undefined} ].concat(regions.map (d) -> {title: d, value: d})
+        multi: false
+        toggleFormat: -> $scope.filterValues['region'].title
+        disabled: true
+        floor: 2
+      }
+      {
         key: 'gender'
         dataset: [ {title: 'all genders', value: undefined} ].concat(genders.map (g) -> {title: g.charAt(0).toLowerCase() + g.slice(1), value: g})
         multi: false
@@ -79,14 +87,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         multi: false
         toggleFormat: -> $scope.filterValues['diagnosis'].title
         disabled: false
-        floor: 2
-      }
-      {
-        key: 'region'
-        dataset: [ {title: 'all regions', value: undefined} ].concat(regions.map (d) -> {title: d, value: d})
-        multi: false
-        toggleFormat: -> $scope.filterValues['region'].title
-        disabled: true
         floor: 2
       }
       {
