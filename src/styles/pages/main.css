@@ -1,19 +1,86 @@
 @import '../variables';
 
 .head {
-  margin: 20px 0 20px 20px;
+  display: block;
+  margin: 30px 0 20px 0;
 }
 
-.head__second-floor .head__title {
+.head__third-floor {
+  display: block;
+  width: 100%;
+  padding-left: 30px;
+  box-sizing: border-box;
+}
+
+.head__third-floor .head__title {
+  display: block;
   font-family: $helvetica-neue-bold;
   font-size: $xl-font-size;
 }
 
-.head__first-floor {
+.head__third-floor .custom-select {
+  margin: 3px 0 0 10px;
+}
+
+.head__second-floor {
+  display: block;
+  width: 100%;
   margin-top: 5px;
+  padding-left: 30px;
+  box-sizing: border-box;
+}
+
+.head__second-floor .head__title {
+  display: block;
+  margin-top: 2px;
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+}
+
+.head__second-floor .custom-select {
+  margin-left: 10px;
+}
+
+.head__first-floor {
+  display: block;
+  margin-top: 20px;
+}
+
+.head__first-floor .head__left-section {
+  display: block;
+  width: 40%;
+  padding-left: 30px;
+  box-sizing: border-box;
+}
+
+.head__first-floor .head__right-section {
+  display: block;
+  width: 40%;
+  padding-left: 50px;
+  box-sizing: border-box;
 }
 
 .head__first-floor .head__title {
+  display: block;
+  margin: 2px 0 0 0;
   font-family: $helvetica-neue-regular;
   font-size: $m-font-size;
+}
+
+.head__first-floor .custom-select {
+  margin-left: 5px;
+}
+
+.head__plus {
+  display: block;
+  height: 20px;
+  margin: 0 0 0 10px;
+  padding: 0 5px 0 5px;
+  font-family: $helvetica-neue-regular;
+  font-size: $xl-font-size;
+  line-height: 1;
+  background-color: #e5e5e5;
+  border-radius: 4px;
+  opacity: .5;
+  cursor: default;
 }

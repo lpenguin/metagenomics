@@ -1,10 +1,59 @@
 <div data-ng-if="isDataPrepared">
   <div class="head">
+    <div class="head__third-floor">
+      <div class="head__title inline">Genes abundance</div>
+      <custom-select
+        data-ng-repeat="filter in filters track by filter.key"
+        data-ng-if="filter.floor === 3"
+        class="inline"
+        data-ng-class="[filter.key, {'disabled': filter.disabled}]"
+        data-key="filter.key"
+        data-dataset="filter.dataset"
+        data-multi="filter.multi"
+        data-toggle-format="filter.toggleFormat"
+        data-disabled="filter.disabled"
+        data-values-of-filters="filterValues">
+      </custom-select>
+      <br class="clear-both" />
+    </div>
     <div class="head__second-floor">
-      <div class="head__title">Представленность генов</div>
+      <div class="head__title inline">metagenomes</div>
+      <custom-select
+        data-ng-repeat="filter in filters track by filter.key"
+        data-ng-if="filter.floor === 2"
+        class="inline"
+        data-ng-class="[filter.key, {'disabled': filter.disabled}]"
+        data-key="filter.key"
+        data-dataset="filter.dataset"
+        data-multi="filter.multi"
+        data-toggle-format="filter.toggleFormat"
+        data-disabled="filter.disabled"
+        data-values-of-filters="filterValues">
+      </custom-select>
+      <div class="head__plus inline">&plus;</div>
+      <br class="clear-both" />
     </div>
     <div class="head__first-floor">
-      <div class="head__title">метагеномов</div>
+      <div class="head__left-section inline">
+        <div class="head__title inline">Cohorts</div>
+        <custom-select
+          data-ng-repeat="filter in filters track by filter.key"
+          data-ng-if="filter.floor === 1"
+          class="inline"
+          data-ng-class="[filter.key, {'disabled': filter.disabled}]"
+          data-key="filter.key"
+          data-dataset="filter.dataset"
+          data-multi="filter.multi"
+          data-toggle-format="filter.toggleFormat"
+          data-disabled="filter.disabled"
+          data-values-of-filters="filterValues">
+        </custom-select>
+        <br class="clear-both" />
+      </div>
+      <div class="head__right-section inline">
+        <div class="head__title">{{filterValues['antibiotics'].value ? ('Allocation of ' + filterValues['antibiotics'].title) : 'General allocation of antibiotic-resistant genes'}}</div>
+      </div>
+      <br class="clear-both" />
     </div>
   </div>
   <div class="content"></div>

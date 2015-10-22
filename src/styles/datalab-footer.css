@@ -3,7 +3,7 @@
 .datalab-footer {
   display: block;
   position: fixed;
-  left: 20px;
+  left: 30px;
   bottom: 20px;
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;

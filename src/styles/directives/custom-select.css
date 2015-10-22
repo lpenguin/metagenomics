@@ -13,11 +13,17 @@ $hover-color: #d3d3d3;
   user-select: none;
 }
 
+.custom-select.disabled {
+  opacity: .5;
+  cursor: default;
+}
+
 .custom-select__toggle {
   display: block;
   padding: 2px 19px 2px 5px;
   background-color: $background-color;
   border-radius: 4px 4px 4px 4px;
+  box-sizing: border-box;
 }
 
 .custom-select__toggle.activated {
@@ -48,13 +54,12 @@ $hover-color: #d3d3d3;
 .custom-select__dropdown {
   display: block;
   position: absolute;
-  width: 100%;
   margin: 0;
   padding: 0;
   border-radius: 0 0 4px 4px;
   background-color: $background-color;
   list-style: none;
-  z-index: 100;
+  z-index: 99;
 }
 
 .custom-select__dropdown li:last-child .custom-select__item {
@@ -66,6 +71,7 @@ $hover-color: #d3d3d3;
   position: relative;
   line-height: 22px;
   padding: 2px 19px 2px 5px;
+  white-space: nowrap;
 }
 
 .custom-select__item:hover {
