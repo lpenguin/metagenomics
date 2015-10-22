@@ -7,6 +7,7 @@ app.directive 'dotChart', ->
     filterValues: '='
     barChart: '='
     dotChart: '='
+    colorScale: '='
   link: ($scope, $element, $attrs) ->
     element = $element[0]
     d3element = d3.select element

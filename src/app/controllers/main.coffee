@@ -22,6 +22,8 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   $scope.quantityCheckbox =
     on: true
 
+  $scope.colorScale = d3.scale.category10()
+
   parseData = (error, rawData) ->
     if error
       console.log error

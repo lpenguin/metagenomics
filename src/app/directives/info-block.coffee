@@ -8,9 +8,8 @@ app.directive 'infoBlock', ->
     filterValues: '='
     barChart: '='
     dotChart: '='
+    colorScale: '='
   link: ($scope, $element, $attrs) ->
-    colorScale = d3.scale.category10()
-
     $scope.areSubstancesShown = ->
       if $scope.filterValues['resistance'].value is 'antibiotic resistance'
         !$scope.filterValues['antibiotic resistance'].value
@@ -20,7 +19,7 @@ app.directive 'infoBlock', ->
         $scope.data.antibiotics.map (a) -> a.charAt(0).toUpperCase() + a.slice(1)
 
     $scope.getSubstanceStyle = (substance) ->
-      color: colorScale substance
+      color: $scope.colorScale substance
 
     $scope.selectSubstance = (substance) ->
       if $scope.filterValues['resistance'].value is 'antibiotic resistance'
