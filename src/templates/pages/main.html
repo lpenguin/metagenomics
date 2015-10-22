@@ -55,7 +55,12 @@
         <br class="clear-both" />
       </div>
       <div class="head__right-section inline">
-        <div class="head__title">{{filterValues['antibiotics'].value ? ('Allocation of ' + filterValues['antibiotics'].title) : 'General allocation of antibiotic-resistant genes'}}</div>
+        <div class="head__title">
+          <dot-graph-title
+            data-filters="filters"
+            data-filter-values="filterValues">
+          </dot-graph-title>
+        </div>
       </div>
       <br class="clear-both" />
     </div>
