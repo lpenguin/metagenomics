@@ -1,5 +1,6 @@
 .filters-reset {
   font-size: 17px;
   color: #dc322f;
+  user-select: none;
   cursor: pointer;
 }

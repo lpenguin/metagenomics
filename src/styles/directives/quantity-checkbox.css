@@ -3,9 +3,15 @@
 .quantity-checkbox {
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
+  user-select: none;
+}
+
+.quantity-checkbox label {
+  cursor: pointer;
 }
 
 .quantity-checkbox input {
   margin: 0 5px 0 0;
   font-size: $xl-font-size;
+  cursor: pointer;
 }
