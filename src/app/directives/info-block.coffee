@@ -16,14 +16,14 @@ app.directive 'infoBlock', ->
 
     $scope.getSubstances = ->
       if $scope.filterValues['resistance'].value is 'antibiotic resistance'
-        $scope.data.antibiotics.map (a) -> a.charAt(0).toUpperCase() + a.slice(1)
+        $scope.data.antibiotics.map (a) -> a
 
     $scope.getSubstanceStyle = (substance) ->
       color: $scope.colorScale substance
 
     $scope.selectSubstance = (substance) ->
       if $scope.filterValues['resistance'].value is 'antibiotic resistance'
-        $scope.filterValues['antibiotic resistance'] = _.find(_.find($scope.filters, {'key': 'antibiotic resistance'}).dataset, {'title': substance})
+        $scope.filterValues['antibiotic resistance'] = _.find(_.find($scope.filters, {'key': 'antibiotic resistance'}).dataset, {'value': substance})
       return
 
     return

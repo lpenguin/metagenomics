@@ -11,6 +11,10 @@
   cursor: pointer;
 }
 
+.info-block__substance::first-letter {
+  text-transform: uppercase;
+}
+
 .info-block__substance:not(:first-child) {
   margin-top: 8px;
 }

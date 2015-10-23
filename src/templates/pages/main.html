@@ -1,4 +1,4 @@
-<div data-ng-if="isDataPrepared">
+<div data-ng-if="!initializing">
   <div class="head">
     <div class="head__third-floor">
       <div class="head__title inline">Genes abundance</div>
@@ -39,7 +39,7 @@
     </div>
     <div class="head__first-floor">
       <div class="head__left-section inline">
-        <div class="head__title inline">Cohorts</div>
+        <div class="head__title inline">Cohorts by</div>
         <custom-select
           data-ng-repeat="filter in filters track by filter.key"
           data-ng-if="filter.floor === 1"
@@ -69,6 +69,7 @@
     <div class="content__bar-chart-container inline">
       <bar-chart
         data-data="data"
+        data-filtered-samples="filteredSamples"
         data-filter-values="filterValues"
         data-quantity-checkbox="quantityCheckbox"
         data-bar-chart="barChart"

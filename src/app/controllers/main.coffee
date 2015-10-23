@@ -1,15 +1,29 @@
 app.controller 'mainCtrl', ($scope, $timeout) ->
   tsv = d3.tsv
 
-  $scope.isDataPrepared = false
+  colors = [
+    '#3dac65'
+    '#a54cae'
+    '#e4447c'
+    '#3b9685'
+    '#f66768'
+    '#d78a2e'
+    '#da4043'
+    '#5a7ddc'
+    '#7867a0'
+    '#67a127'
+    '#a78045'
+  ]
+
+  $scope.initializing = true
 
   $scope.data =
     samples: []
-    resisatnces: []
+    resistances: []
     antibiotics: []
     genders: []
     ages: []
-    regions: []
+    countries: []
     diagnosis: []
 
   $scope.filters = []
@@ -22,7 +36,17 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   $scope.quantityCheckbox =
     on: true
 
-  $scope.colorScale = d3.scale.category10()
+  $scope.colorScale = d3.scale.ordinal().range colors
+
+  $scope.filteredSamples = []
+
+  filterSamples = ->
+    $scope.filteredSamples = $scope.data.samples.filter (s) ->
+      (if $scope.filterValues['gender'].value then s['gender'] is $scope.filterValues['gender'].value else true) and
+      (if $scope.filterValues['age'].value then $scope.filterValues['age'].value[0] <= parseInt(s['age']) <= $scope.filterValues['age'].value[1] else true) and
+      (if $scope.filterValues['country'].value then s['country'] is $scope.filterValues['country'].value else true) and
+      (if $scope.filterValues['diagnosis'].value then s['diagnosis'] is $scope.filterValues['diagnosis'].value else true)
+    return
 
   parseData = (error, rawData) ->
     if error
@@ -37,7 +61,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       .filter (sAd) ->
         sAd['sample'] is sample['names']
       .map (f) ->
-        'AB_category': f['AB_category']
+        'category': f['AB_category']
         'sum_abund': parseFloat f['sum_abund']
 
       $scope.data.samples.push sample
@@ -49,10 +73,10 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
     $scope.data.genders = _.uniq(_.pluck($scope.data.samples, 'gender')).sort()
     $scope.data.ages = [ [10, 16], [16, 25], [25, 35], [35, 50], [50, 70], [70, Infinity] ]
-    $scope.data.regions = _.uniq(_.pluck($scope.data.samples, 'country')).sort()
+    $scope.data.countries = _.uniq(_.pluck($scope.data.samples, 'country')).sort()
     $scope.data.diagnosis = _.uniq(_.pluck($scope.data.samples, 'diagnosis')).sort()
 
-    cohorts = ['gender', 'age', 'region', 'diagnosis']
+    cohorts = ['gender', 'age', 'country', 'diagnosis']
 
     $scope.filters = [
       {
@@ -96,10 +120,10 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         floor: 2
       }
       {
-        key: 'region'
-        dataset: [ {title: 'all regions', value: undefined} ].concat($scope.data.regions.map (d) -> {title: d, value: d})
+        key: 'country'
+        dataset: [ {title: 'all countries', value: undefined} ].concat($scope.data.countries.map (d) -> {title: d, value: d})
         multi: false
-        toggleFormat: -> $scope.filterValues['region'].title
+        toggleFormat: -> $scope.filterValues['country'].title
         disabled: true
         floor: 2
       }
@@ -112,10 +136,10 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         floor: 2
       }
       {
-        key: 'cohort'
-        dataset: cohorts.map (c) -> {title: 'by ' + c, value: c}
+        key: 'cohorts'
+        dataset: cohorts.map (c) -> {title: c, value: c}
         multi: false
-        toggleFormat: -> $scope.filterValues['cohort'].title
+        toggleFormat: -> $scope.filterValues['cohorts'].title
         disabled: true
         floor: 1
       }
@@ -128,10 +152,10 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       'gender': _.find($scope.filters, {'key': 'gender'}).dataset[0]
       'age': _.find($scope.filters, {'key': 'age'}).dataset[0]
       'diagnosis': _.find($scope.filters, {'key': 'diagnosis'}).dataset[0]
-      'region': _.find($scope.filters, {'key': 'region'}).dataset[0]
-      'cohort': _.find($scope.filters, {'key': 'cohort'}).dataset[2]
+      'country': _.find($scope.filters, {'key': 'country'}).dataset[0]
+      'cohorts': _.find($scope.filters, {'key': 'cohorts'}).dataset[2]
 
-    $scope.isDataPrepared = true
+    $scope.initializing = false
 
     $scope.$apply()
 
@@ -142,5 +166,20 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   .defer tsv, '../data/samples_description.tsv'
   .defer tsv, '../data/per_sample_antibiotic_groups_stat.tsv'
   .awaitAll parseData
+
+  $scope.$watch '[filterValues["gender"], filterValues["age"], filterValues["country"], filterValues["diagnosis"]]', ->
+    filterSamples()
+    return
+  , true
+
+  $scope.$watch 'filterValues["resistance"]', ->
+    substances = []
+
+    if $scope.filterValues["resistance"] is 'antibiotic resistance'
+      substances = $scope.data.antibiotics
+
+    $scope.colorScale.domain substances
+
+    return
 
   return

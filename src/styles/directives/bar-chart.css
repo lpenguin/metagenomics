@@ -12,3 +12,37 @@
 .bar-chart__svg {
   display: block;
 }
+
+.y-axis path {
+  display: none;
+}
+
+.y-axis line {
+  stroke: #ccc;
+  stroke-width: 1;
+}
+
+.y-axis text {
+  font-family: $helvetica-neue-regular;
+  font-size: $xs-font-size;
+}
+
+.y-axis tspan {
+  font-family: $helvetica-neue-regular;
+  font-size: $xxs-font-size;
+}
+
+.cohort-caption {
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
+  text-anchor: start;
+  dominant-baseline: hanging;
+}
+
+.quantity-caption {
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
+  text-anchor: start;
+  dominant-baseline: hanging;
+  fill: #a5a5a5;
+}

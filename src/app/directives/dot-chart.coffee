@@ -39,6 +39,6 @@ app.directive 'dotChart', ->
     .classed 'placeholder', true
     .attr 'width', width
     .attr 'height', height
-    .attr 'fill', '#609a8d'
+    .attr 'fill', '#e6e6e6'
 
     return
