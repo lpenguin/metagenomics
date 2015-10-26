@@ -13,7 +13,7 @@ app.directive 'dotChart', ->
     d3element = d3.select element
 
     outerWidth = $element.parent().width()
-    outerHeight = outerWidth * .9
+    outerHeight = $element.parent().height()
     padding =
       top: 20
       right: 30

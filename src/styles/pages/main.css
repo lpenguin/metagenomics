@@ -49,13 +49,13 @@
 }
 
 .head__first-floor .head__left-section {
-  width: 40%;
+  width: 512px;
   padding-left: 30px;
   box-sizing: border-box;
 }
 
 .head__first-floor .head__right-section {
-  width: 40%;
+  width: 512px;
   padding-left: 50px;
   box-sizing: border-box;
 }
@@ -75,15 +75,17 @@
 }
 
 .content__bar-chart-container {
-  width: 40%;
+  width: 512px;
+  height: 465px;
 }
 
 .content__dot-chart-container {
-  width: 40%;
+  width: 512px;
+  height: 465px;
 }
 
 .content__info-block-container {
-  width: 20%;
+  width: 256px;
 }
 
 .content .quantity-checkbox {

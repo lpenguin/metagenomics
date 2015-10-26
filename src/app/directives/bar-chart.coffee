@@ -18,7 +18,7 @@ app.directive 'barChart', ->
     tooltipOffset = 20
 
     outerWidth = $element.parent().width()
-    outerHeight = outerWidth * .9
+    outerHeight = $element.parent().height()
     padding =
       top: 20
       right: 30
