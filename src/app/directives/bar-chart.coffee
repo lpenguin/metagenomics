@@ -19,6 +19,7 @@ app.directive 'barChart', ->
 
     outerWidth = $element.parent().width()
     outerHeight = $element.parent().height()
+
     padding =
       top: 20
       right: 30
@@ -28,19 +29,18 @@ app.directive 'barChart', ->
     width = outerWidth - padding.left - padding.right
     height = outerHeight - padding.top - padding.bottom
 
+    barGap = width * .01
+
     cohorts = {}
     resistance = undefined
     substances = []
 
-    barGap = width * .01
+    nOfCohorts = 0
+    nOfAxisCaptions = 4
+    degree = 0
 
     barWidthScale = d3.scale.linear()
-
-    yScale = d3.scale.linear()
-
-    nOfAxisCaptions = 4
-
-    degree = 0
+    yScale = d3.scale.linear().range [height, 0]
 
     yAxis = d3.svg.axis()
     .scale yScale
@@ -75,14 +75,17 @@ app.directive 'barChart', ->
           return
       return
 
-    updateSubstances = ->
+    updateResistanceAndSubstances = ->
       resistance = $scope.filterValues['resistance'].value
+
       if resistance is 'antibiotic resistance'
         substances = $scope.data.antibiotics.slice(0).reverse()
       return
 
     updateBarWidthScale = ->
-      nOfCohorts = _.keys(cohorts).length
+      nOfCohorts = 0
+
+      _.keys(cohorts).forEach (key) -> nOfCohorts++ if cohorts[key].length
 
       if $scope.quantityCheckbox.on
         barWidthScale.domain [0, $scope.filteredSamples.length]
@@ -92,24 +95,21 @@ app.directive 'barChart', ->
       barWidthScale.range [0, width - (nOfCohorts - 1) * barGap]
       return
 
-    updateYScale = ->
-      max = d3.max _.keys(cohorts).map (key) ->
+    updateYScaleAndAxis = ->
+      maxAbund = d3.max _.keys(cohorts).map (key) ->
         d3.sum substances.map (s) ->
           d3.mean _.pluck(cohorts[key], resistance).map (cR) ->
             _.result _.find(cR, {'category': s}), 'sum_abund'
 
-      yScale
-      .domain [0, max]
-      .range [height, 0]
+      yScale.domain [0, maxAbund]
 
-      maxExponent = max.toExponential()
+      maxExponent = maxAbund.toExponential()
       degree = parseInt(maxExponent.split('-')[1]) + 1
-      multiplier = Math.pow(10, degree)
+      multiplier = Math.pow 10, degree
 
       yAxis
-      .tickValues d3.range 0, max + max / (nOfAxisCaptions - 1), max / (nOfAxisCaptions - 1)
-      .tickFormat (d, i) ->
-        (d * multiplier).toFixed(0) + (if i is nOfAxisCaptions - 1 then ' × 10' else '')
+      .tickValues d3.range 0, maxAbund + maxAbund / (nOfAxisCaptions - 1), maxAbund / (nOfAxisCaptions - 1)
+      .tickFormat (d, i) -> (d * multiplier).toFixed(0) + (if i is nOfAxisCaptions - 1 then ' × 10' else '')
       return
 
     prepareGraph = ->
@@ -144,19 +144,27 @@ app.directive 'barChart', ->
         return
       return
 
+    getSubstanceMeanValue = (substance, samples) ->
+      mean = d3.mean _.pluck(samples, resistance).map (p) ->
+        _.result _.find(p, {'category': substance}), 'sum_abund'
+      mean = 0 unless mean
+      mean
+
     updateGraph = ->
-      yAxisGroup
-      .call yAxis
-      .selectAll 'text'
-      .attr 'dy', (d, i) ->
-        if i is nOfAxisCaptions - 1 then -5 else 0
+      yAxisGroup.call yAxis
+
+      yAxisGroup.selectAll 'text'
+      .attr 'dy', (d, i) -> if i is nOfAxisCaptions - 1 then -5 else 0
       .attr 'x', -15
       .append 'tspan'
       .attr 'baseline-shift', 'super'
-      .text (d, i) ->
-        if i is nOfAxisCaptions - 1 then '−' + degree else ''
+      .text (d, i) -> if i is nOfAxisCaptions - 1 then '−' + degree else ''
+
+      yAxisGroup.selectAll 'line'
+      .attr 'opacity', (d, i) -> unless i then 0 else 1
 
       x = 0
+      lastCaption = undefined
 
       _.keys(cohorts).forEach (key, i) ->
         meanSum = 0
@@ -172,12 +180,17 @@ app.directive 'barChart', ->
         .attr 'transform', 'translate(' + x + ', 0)'
         .style 'opacity', if cohortSamples.length then 1 else 0
 
-        caption.select('.quantity-caption').text(cohortSamples.length + (if i is _.keys(cohorts).length - 1 then ' samples' else ''))
+        caption.select '.quantity-caption'
+        .text cohortSamples.length
 
-        substances.forEach (s) ->
+        substances
+        .sort (a, b) ->
+          a = getSubstanceMeanValue a, cohortSamples
+          b = getSubstanceMeanValue b, cohortSamples
+          b - a
+        .forEach (s) ->
           bar = cohortBars.filter (b) -> b is s
-          mean = d3.mean _.pluck(cohortSamples, resistance).map (p) -> _.result _.find(p, {'category': s}), 'sum_abund'
-          mean = 0 unless mean
+          mean = getSubstanceMeanValue s, cohortSamples
 
           bar
           .transition()
@@ -190,32 +203,26 @@ app.directive 'barChart', ->
           meanSum += mean
           return
 
-        x += (barWidth + barGap)
+        if cohortSamples.length
+          x += barWidth + barGap
+          lastCaption = caption
         return
+
+      lastCaption.select '.quantity-caption'
+      .text -> d3.select(@).text() + ' samples'
       return
 
-    updateCohorts()
-    updateSubstances()
-    prepareGraph()
-
-    updateBarWidthScale()
-    updateYScale()
-
-    updateGraph()
-
-    $scope.$watch 'filterValues[filterValues["resistance"].value]', (newValue, oldValue) ->
-      return if newValue is oldValue
-
-      substance = $scope.filterValues[resistance].value
+    showSpecificSubstance = (substance) ->
+      bars = d3element.selectAll('.bar')
 
       if substance
-        d3element.selectAll('.bar')
+        bars
         .filter (b) -> b isnt substance
         .transition()
         .duration 300
         .style 'opacity', 0
 
-        d3element.selectAll('.bar')
+        bars
         .filter (b) -> b is substance
         .transition()
         .delay 400
@@ -224,28 +231,38 @@ app.directive 'barChart', ->
       else
         updateGraph()
 
-        d3element.selectAll('.bar')
+        bars
         .transition()
         .delay 400
         .duration 300
         .style 'opacity', 1
       return
 
-    $scope.$watch 'filteredSamples', (newValue, oldValue) ->
-      return if newValue is oldValue
+    updateCohorts()
+    updateResistanceAndSubstances()
+    updateBarWidthScale()
+    updateYScaleAndAxis()
+    prepareGraph()
+    updateGraph()
 
-      updateCohorts()
-      updateBarWidthScale()
-      updateYScale()
-      updateGraph()
+    $scope.$watch 'filterValues[filterValues["resistance"].value]', (newValue, oldValue) ->
+      unless newValue is oldValue
+        showSpecificSubstance $scope.filterValues[resistance].value
+      return
+
+    $scope.$watch 'filteredSamples', (newValue, oldValue) ->
+      unless newValue is oldValue
+        updateCohorts()
+        updateBarWidthScale()
+        updateYScaleAndAxis()
+        updateGraph()
       return
     , true
 
     $scope.$watch 'quantityCheckbox.on', (newValue, oldValue) ->
-      return if newValue is oldValue
-
-      updateBarWidthScale()
-      updateGraph()
+      unless newValue is oldValue
+        updateBarWidthScale()
+        updateGraph()
       return
 
     return

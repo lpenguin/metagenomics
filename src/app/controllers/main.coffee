@@ -179,7 +179,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       substances = $scope.data.antibiotics
 
     $scope.colorScale.domain substances
-
     return
 
   return

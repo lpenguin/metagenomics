@@ -8,6 +8,7 @@ app.directive 'filtersReset', ->
   link: ($scope, $element, $attrs) ->
     $scope.isResetShown = ->
       _.some $scope.filters, (f) ->
+        return if f.key is 'resistance'
         return if f.key is 'cohorts'
 
         filterValue = $scope.filterValues[f.key]
@@ -21,6 +22,7 @@ app.directive 'filtersReset', ->
       _.keys($scope.filterValues).forEach (key) ->
         filter = _.find $scope.filters, {'key': key}
 
+        return if filter.key is 'resistance'
         return if filter.key is 'cohorts'
 
         $scope.filterValues[key] = if filter.multi then [] else filter.dataset[0]

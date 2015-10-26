@@ -1,11 +1,14 @@
 @import '../variables';
 
+.dot-chart {
+  font-family: $helvetica-neue-regular;
+}
+
 .dot-chart__tooltip {
   position: absolute;
   display: none;
   background-color: rgba(255, 255, 255, .7);
   text-align: left;
-  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
 

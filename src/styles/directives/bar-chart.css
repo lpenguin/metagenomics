@@ -1,11 +1,14 @@
 @import '../variables';
 
+.bar-chart {
+  font-family: $helvetica-neue-regular;
+}
+
 .bar-chart__tooltip {
   position: absolute;
   display: none;
   background-color: rgba(255, 255, 255, .7);
   text-align: left;
-  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
 
@@ -18,29 +21,25 @@
 }
 
 .y-axis line {
-  stroke: #ccc;
+  stroke: rgba(0, 0, 0, .15);
   stroke-width: 1;
 }
 
 .y-axis text {
-  font-family: $helvetica-neue-regular;
   font-size: $xs-font-size;
 }
 
 .y-axis tspan {
-  font-family: $helvetica-neue-regular;
   font-size: $xxs-font-size;
 }
 
 .cohort-caption {
-  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
   text-anchor: start;
   dominant-baseline: hanging;
 }
 
 .quantity-caption {
-  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
   text-anchor: start;
   dominant-baseline: hanging;
