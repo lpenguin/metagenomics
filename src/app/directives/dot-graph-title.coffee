@@ -14,7 +14,5 @@ app.directive 'dotGraphTitle', ->
           'Allocation of ' + antibiotic.value
         else
           'General allocation of antibiotic-resistant genes'
-      else
-        ''
 
     return

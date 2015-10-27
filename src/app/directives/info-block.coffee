@@ -10,9 +10,7 @@ app.directive 'infoBlock', ->
     dotChart: '='
     colorScale: '='
   link: ($scope, $element, $attrs) ->
-    $scope.areSubstancesShown = ->
-      if $scope.filterValues['resistance'].value is 'antibiotic resistance'
-        !$scope.filterValues['antibiotic resistance'].value
+    $scope.areSubstancesShown = -> !$scope.filterValues[$scope.filterValues['resistance'].value].value
 
     $scope.getSubstances = ->
       if $scope.filterValues['resistance'].value is 'antibiotic resistance'
@@ -22,8 +20,7 @@ app.directive 'infoBlock', ->
       color: $scope.colorScale substance
 
     $scope.selectSubstance = (substance) ->
-      if $scope.filterValues['resistance'].value is 'antibiotic resistance'
-        $scope.filterValues['antibiotic resistance'] = _.find(_.find($scope.filters, {'key': 'antibiotic resistance'}).dataset, {'value': substance})
+      $scope.filterValues[$scope.filterValues['resistance'].value] = _.find _.find($scope.filters, {'key': $scope.filterValues['resistance'].value}).dataset, {'value': substance}
       return
 
     return

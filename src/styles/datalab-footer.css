@@ -1,7 +1,7 @@
 @import 'variables';
 
 .datalab-footer {
-  margin: 30px 0 0 30px;
+  margin: 30px 0 0 $common-padding;
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }

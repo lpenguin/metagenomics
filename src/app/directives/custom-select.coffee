@@ -57,7 +57,8 @@ app.directive 'customSelect', ($document, $timeout) ->
       return
 
     $scope.$watch 'disabled', ->
-      $scope.filterValues[$scope.key] = $scope.dataset[0]
+      if $scope.disabled
+        $scope.filterValues[$scope.key] = $scope.dataset[0]
       return
 
     return

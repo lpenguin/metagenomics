@@ -1,12 +1,9 @@
 @import '../variables';
 
-.head {
-  margin-top: 30px;
-}
-
 .head__third-floor {
   width: 100%;
-  padding-left: 30px;
+  margin-top: 30px;
+  padding-left: $common-padding;
   box-sizing: border-box;
 }
 
@@ -26,7 +23,7 @@
 .head__second-floor {
   width: 100%;
   margin-top: 5px;
-  padding-left: 30px;
+  padding-left: $common-padding;
   box-sizing: border-box;
 }
 
@@ -45,12 +42,13 @@
 }
 
 .head__first-floor {
+  width: 100%;
   margin-top: 20px;
 }
 
 .head__first-floor .head__left-section {
   width: 512px;
-  padding-left: 30px;
+  padding-left: $common-padding;
   box-sizing: border-box;
 }
 
@@ -90,5 +88,5 @@
 
 .content .quantity-checkbox {
   margin-top: 20px;
-  padding-left: 30px;
+  padding-left: $common-padding;
 }
