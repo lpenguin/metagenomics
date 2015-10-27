@@ -47,13 +47,13 @@
 }
 
 .head__first-floor .head__left-section {
-  width: 512px;
+  width: 500px;
   padding-left: $common-padding;
   box-sizing: border-box;
 }
 
 .head__first-floor .head__right-section {
-  width: 512px;
+  width: 500px;
   padding-left: 50px;
   box-sizing: border-box;
 }
@@ -73,17 +73,17 @@
 }
 
 .content__bar-chart-container {
-  width: 512px;
+  width: 500px;
   height: 465px;
 }
 
 .content__dot-chart-container {
-  width: 512px;
+  width: 500px;
   height: 465px;
 }
 
 .content__info-block-container {
-  width: 256px;
+  width: 250px;
 }
 
 .content .quantity-checkbox {
