@@ -81,7 +81,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'antibiotic resistance'
-        dataset: [ {title: 'all antibiotics', value: undefined} ].concat($scope.data.antibiotics.map (a) -> {title: a.charAt(0).toUpperCase() + a.slice(1), value: a})
+        dataset: [ {title: 'all antibiotics', value: undefined} ].concat($scope.data.antibiotics.map (a) -> {title: a, value: a})
         multi: false
         toggleFormat: -> $scope.filterValues['antibiotic resistance'].title
         disabled: false

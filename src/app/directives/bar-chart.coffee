@@ -153,9 +153,7 @@ app.directive 'barChart', ->
           cohortGroup.append 'rect'
           .classed 'bar', true
           .datum s
-          .attr 'x', 0
           .attr 'y', height
-          .attr 'width', 0
           .attr 'height', 0
           .style 'fill', $scope.colorScale s
           return
