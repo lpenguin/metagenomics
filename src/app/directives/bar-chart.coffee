@@ -68,10 +68,27 @@ app.directive 'barChart', ->
 
     updateCohorts = ->
       cohorts = {}
+      nOfCohorts = 0
 
-      if $scope.filterValues['cohorts'].value is 'country'
+      if $scope.filterValues['cohorts'].value is 'gender'
+        $scope.data.genders.forEach (c) ->
+          cohorts[c] = $scope.filteredSamples.filter (fS) -> fS['gender'] is c
+          nOfCohorts++ if cohorts[c].length
+          return
+      else if $scope.filterValues['cohorts'].value is 'age'
+        $scope.data.ages.forEach (c) ->
+          cohorts[c] = $scope.filteredSamples.filter (fS) -> c[0] <= fS['age'] <= c[1]
+          nOfCohorts++ if cohorts[c].length
+          return
+      else if $scope.filterValues['cohorts'].value is 'country'
         $scope.data.countries.forEach (c) ->
           cohorts[c] = $scope.filteredSamples.filter (fS) -> fS['country'] is c
+          nOfCohorts++ if cohorts[c].length
+          return
+      else if $scope.filterValues['cohorts'].value is 'diagnosis'
+        $scope.data.diagnosis.forEach (c) ->
+          cohorts[c] = $scope.filteredSamples.filter (fS) -> fS['diagnosis'] is c
+          nOfCohorts++ if cohorts[c].length
           return
       return
 
@@ -83,10 +100,6 @@ app.directive 'barChart', ->
       return
 
     updateBarWidthScale = ->
-      nOfCohorts = 0
-
-      _.keys(cohorts).forEach (key) -> nOfCohorts++ if cohorts[key].length
-
       if $scope.quantityCheckbox.on
         barWidthScale.domain [0, $scope.filteredSamples.length]
       else
@@ -129,7 +142,8 @@ app.directive 'barChart', ->
         captionGroup.append 'text'
         .classed 'cohort-caption', true
         .attr 'y', 3
-        .text key
+        .text ->
+          unless $scope.filterValues['cohorts'].value is 'age' then key else key.replace(',', '–').replace('–Infinity', '+')
 
         captionGroup.append 'text'
         .classed 'quantity-caption', true
@@ -139,6 +153,10 @@ app.directive 'barChart', ->
           cohortGroup.append 'rect'
           .classed 'bar', true
           .datum s
+          .attr 'x', 0
+          .attr 'y', height
+          .attr 'width', 0
+          .attr 'height', 0
           .style 'fill', $scope.colorScale s
           return
         return
@@ -258,6 +276,15 @@ app.directive 'barChart', ->
         updateGraph()
       return
     , true
+
+    $scope.$watch 'filterValues["cohorts"]', (newValue, oldValue) ->
+      unless newValue is oldValue
+        updateCohorts()
+        updateBarWidthScale()
+        updateYScaleAndAxis()
+        prepareGraph()
+        updateGraph()
+      return
 
     $scope.$watch 'quantityCheckbox.on', (newValue, oldValue) ->
       unless newValue is oldValue

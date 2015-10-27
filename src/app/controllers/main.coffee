@@ -40,14 +40,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
   $scope.filteredSamples = []
 
-  filterSamples = ->
-    $scope.filteredSamples = $scope.data.samples.filter (s) ->
-      (if $scope.filterValues['gender'].value then s['gender'] is $scope.filterValues['gender'].value else true) and
-      (if $scope.filterValues['age'].value then $scope.filterValues['age'].value[0] <= parseInt(s['age']) <= $scope.filterValues['age'].value[1] else true) and
-      (if $scope.filterValues['country'].value then s['country'] is $scope.filterValues['country'].value else true) and
-      (if $scope.filterValues['diagnosis'].value then s['diagnosis'] is $scope.filterValues['diagnosis'].value else true)
-    return
-
   parseData = (error, rawData) ->
     if error
       console.log error
@@ -72,7 +64,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
     $scope.data.bacteria = []
 
     $scope.data.genders = _.uniq(_.pluck($scope.data.samples, 'gender')).sort()
-    $scope.data.ages = [ [10, 16], [16, 25], [25, 35], [35, 50], [50, 70], [70, Infinity] ]
+    $scope.data.ages = [ [10, 16], [17, 25], [26, 35], [36, 50], [51, 70], [71, Infinity] ]
     $scope.data.countries = _.uniq(_.pluck($scope.data.samples, 'country')).sort()
     $scope.data.diagnosis = _.uniq(_.pluck($scope.data.samples, 'diagnosis')).sort()
 
@@ -108,7 +100,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         dataset: [ {title: 'all genders', value: undefined} ].concat($scope.data.genders.map (g) -> {title: g.charAt(0).toLowerCase() + g.slice(1), value: g})
         multi: false
         toggleFormat: -> $scope.filterValues['gender'].title
-        disabled: false
         floor: 2
       }
       {
@@ -116,7 +107,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         dataset: [ {title: 'all ages', value: undefined} ].concat($scope.data.ages.map (a) -> {title: a[0] + (if a[1] is Infinity then '+' else '–' + a[1]), value: a})
         multi: false
         toggleFormat: -> $scope.filterValues['age'].title
-        disabled: false
         floor: 2
       }
       {
@@ -124,7 +114,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         dataset: [ {title: 'all countries', value: undefined} ].concat($scope.data.countries.map (d) -> {title: d, value: d})
         multi: false
         toggleFormat: -> $scope.filterValues['country'].title
-        disabled: true
         floor: 2
       }
       {
@@ -132,7 +121,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         dataset: [ {title: 'all diagnosis', value: undefined} ].concat($scope.data.diagnosis.map (d) -> {title: d, value: d})
         multi: false
         toggleFormat: -> $scope.filterValues['diagnosis'].title
-        disabled: false
         floor: 2
       }
       {
@@ -140,7 +128,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
         dataset: cohorts.map (c) -> {title: c, value: c}
         multi: false
         toggleFormat: -> $scope.filterValues['cohorts'].title
-        disabled: true
         floor: 1
       }
     ]
@@ -153,7 +140,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       'age': _.find($scope.filters, {'key': 'age'}).dataset[0]
       'diagnosis': _.find($scope.filters, {'key': 'diagnosis'}).dataset[0]
       'country': _.find($scope.filters, {'key': 'country'}).dataset[0]
-      'cohorts': _.find($scope.filters, {'key': 'cohorts'}).dataset[2]
+      'cohorts': _.find($scope.filters, {'key': 'cohorts'}).dataset[0]
 
     $scope.initializing = false
 
@@ -167,11 +154,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   .defer tsv, '../data/per_sample_antibiotic_groups_stat.tsv'
   .awaitAll parseData
 
-  $scope.$watch '[filterValues["gender"], filterValues["age"], filterValues["country"], filterValues["diagnosis"]]', ->
-    filterSamples()
-    return
-  , true
-
   $scope.$watch 'filterValues["resistance"]', ->
     substances = []
 
@@ -180,5 +162,14 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
     $scope.colorScale.domain substances
     return
+
+  $scope.$watch '[filterValues["gender"], filterValues["age"], filterValues["country"], filterValues["diagnosis"]]', ->
+    $scope.filteredSamples = $scope.data.samples.filter (s) ->
+      (if $scope.filterValues['gender'].value then s['gender'] is $scope.filterValues['gender'].value else true) and
+      (if $scope.filterValues['age'].value then $scope.filterValues['age'].value[0] <= parseInt(s['age']) <= $scope.filterValues['age'].value[1] else true) and
+      (if $scope.filterValues['country'].value then s['country'] is $scope.filterValues['country'].value else true) and
+      (if $scope.filterValues['diagnosis'].value then s['diagnosis'] is $scope.filterValues['diagnosis'].value else true)
+    return
+  , true
 
   return
