@@ -6,14 +6,31 @@
 
 .bar-chart__tooltip {
   position: absolute;
-  display: none;
+  padding: 3px;
   background-color: rgba(255, 255, 255, .7);
+  border-radius: 1px;
   text-align: left;
   font-size: $s-font-size;
 }
 
+.bar-chart__tooltip .substance::first-letter {
+  text-transform: uppercase;
+}
+
+.bar-chart__tooltip .abundance {
+  margin-top: -4px;
+}
+
+.bar-chart__tooltip .abundance sup {
+  font-size: $xs-font-size;
+}
+
 .bar-chart__svg {
   display: block;
+}
+
+.y-axis {
+  pointer-events: none;
 }
 
 .y-axis path {
@@ -31,6 +48,10 @@
 
 .y-axis tspan {
   font-size: $xxs-font-size;
+}
+
+.bar {
+  cursor: pointer;
 }
 
 .cohort-caption {

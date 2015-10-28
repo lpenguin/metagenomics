@@ -1,3 +1,10 @@
 <div class="bar-chart">
-  <div class="bar-chart__tooltip"></div>
+  <div
+    class="bar-chart__tooltip"
+    data-ng-show="tooltip.shown"
+    data-ng-style="{'left': tooltip.coordinates.x + 20 + 'px', 'top': tooltip.coordinates.y + 'px'}">
+    <div class="substance">{{tooltip.substance}}</div>
+    <div class="abundance">Abundance:&nbsp;{{tooltip.abundance}}&nbsp;&times;&nbsp;10<sup>&minus;{{degree}}</sup></div>
+    <div>{{tooltip.nOfSamples}}&nbsp;{{tooltip.nOfSamples === 1 ? 'sample' : 'samples'}}</div>
+  </div>
 </div>

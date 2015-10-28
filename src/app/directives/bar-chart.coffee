@@ -5,6 +5,7 @@ app.directive 'barChart', ->
   scope:
     data: '='
     filteredSamples: '='
+    filters: '='
     filterValues: '='
     quantityCheckbox: '='
     barChart: '='
@@ -14,8 +15,14 @@ app.directive 'barChart', ->
     element = $element[0]
     d3element = d3.select element
 
-    tooltip = d3element.select '.bar-chart__tooltip'
-    tooltipOffset = 20
+    $scope.tooltip =
+      shown: false
+      coordinates:
+        x: undefined
+        y: undefined
+      substance: undefined
+      abundance: undefined
+      nOfSamples: undefined
 
     outerWidth = $element.parent().width()
     outerHeight = $element.parent().height()
@@ -37,7 +44,9 @@ app.directive 'barChart', ->
 
     nOfCohorts = 0
     nOfAxisCaptions = 4
-    degree = 0
+
+    $scope.degree = 0
+    multiplier = 0
 
     barWidthScale = d3.scale.linear()
     yScale = d3.scale.linear().range [height, 0]
@@ -99,6 +108,12 @@ app.directive 'barChart', ->
         substances = $scope.data.antibiotics.slice(0).reverse()
       return
 
+    getSubstanceMeanValue = (substance, samples) ->
+      mean = d3.mean _.pluck(samples, resistance).map (p) ->
+        _.result _.find(p, {'category': substance}), 'sum_abund'
+      mean = 0 unless mean
+      mean
+
     updateBarWidthScale = ->
       if $scope.quantityCheckbox.on
         barWidthScale.domain [0, $scope.filteredSamples.length]
@@ -117,12 +132,18 @@ app.directive 'barChart', ->
       yScale.domain [0, maxAbund]
 
       maxExponent = maxAbund.toExponential()
-      degree = parseInt(maxExponent.split('-')[1]) + 1
-      multiplier = Math.pow 10, degree
+      $scope.degree = parseInt(maxExponent.split('-')[1]) + 1
+      multiplier = Math.pow 10, $scope.degree
 
       yAxis
-      .tickValues d3.range 0, maxAbund + maxAbund / (nOfAxisCaptions - 1), maxAbund / (nOfAxisCaptions - 1)
-      .tickFormat (d, i) -> (d * multiplier).toFixed(0) + (if i is nOfAxisCaptions - 1 then ' × 10' else '')
+      .tickValues ->
+        values = d3.range 0, maxAbund + maxAbund / (nOfAxisCaptions - 1), maxAbund / (nOfAxisCaptions - 1)
+
+        values.map (v, i) -> unless i is values.length - 1 then (v * multiplier).toFixed(0) / multiplier else v
+      .tickFormat (d, i) ->
+        isLast = i is nOfAxisCaptions - 1
+
+        (d * multiplier).toFixed(unless isLast then 0 else 2) + (unless isLast then '' else ' × 10')
       return
 
     prepareGraph = ->
@@ -142,8 +163,7 @@ app.directive 'barChart', ->
         captionGroup.append 'text'
         .classed 'cohort-caption', true
         .attr 'y', 3
-        .text ->
-          unless $scope.filterValues['cohorts'].value is 'age' then key else key.replace(',', '–').replace('–Infinity', '+')
+        .text -> unless $scope.filterValues['cohorts'].value is 'age' then key else key.replace(',', '–').replace('–Infinity', '+')
 
         captionGroup.append 'text'
         .classed 'quantity-caption', true
@@ -156,15 +176,35 @@ app.directive 'barChart', ->
           .attr 'y', height
           .attr 'height', 0
           .style 'fill', $scope.colorScale s
+          .on 'mouseover', ->
+            samples = cohorts[key].filter (cs) -> _.find cs[resistance], {'category': s}
+            mean = getSubstanceMeanValue s, samples
+            abundance = (mean * multiplier).toFixed(2)
+
+            $scope.tooltip.shown = true
+            $scope.tooltip.coordinates.x = d3.event.pageX
+            $scope.tooltip.coordinates.y = d3.event.pageY
+            $scope.tooltip.substance = s
+            $scope.tooltip.abundance = abundance
+            $scope.tooltip.nOfSamples = samples.length
+            $scope.$apply()
+            return
+          .on 'mousemove', ->
+            $scope.tooltip.coordinates.x = d3.event.pageX
+            $scope.tooltip.coordinates.y = d3.event.pageY
+            $scope.$apply()
+            return
+          .on 'mouseout', ->
+            $scope.tooltip.shown = false
+            $scope.$apply()
+            return
+          .on 'click', ->
+            $scope.filterValues[resistance] = _.find _.find($scope.filters, {'key': resistance}).dataset, {'value': s}
+            $scope.$apply()
+            return
           return
         return
       return
-
-    getSubstanceMeanValue = (substance, samples) ->
-      mean = d3.mean _.pluck(samples, resistance).map (p) ->
-        _.result _.find(p, {'category': substance}), 'sum_abund'
-      mean = 0 unless mean
-      mean
 
     updateGraph = ->
       yAxisGroup.call yAxis
@@ -173,14 +213,14 @@ app.directive 'barChart', ->
       .attr 'dy', (d, i) -> if i is nOfAxisCaptions - 1 then -5 else 0
       .attr 'x', -15
       .append 'tspan'
-      .attr 'baseline-shift', 'super'
-      .text (d, i) -> if i is nOfAxisCaptions - 1 then '−' + degree else ''
+      .style 'baseline-shift', 'super'
+      .style 'display', (d, i) -> 'none' unless i is nOfAxisCaptions - 1
+      .text '−' + $scope.degree
 
       yAxisGroup.selectAll 'line'
-      .attr 'opacity', (d, i) -> unless i then 0 else 1
+      .style 'display', (d, i) -> 'none' unless i
 
       x = 0
-      lastCaption = undefined
 
       _.keys(cohorts).forEach (key, i) ->
         meanSum = 0
@@ -194,10 +234,11 @@ app.directive 'barChart', ->
         .transition()
         .duration 300
         .attr 'transform', 'translate(' + x + ', 0)'
-        .style 'opacity', if cohortSamples.length then 1 else 0
 
         caption.select '.quantity-caption'
         .text cohortSamples.length
+
+        caption.style 'display', -> 'none' unless cohortSamples.length and caption.node().getBBox().width < barWidth
 
         substances
         .sort (a, b) ->
@@ -219,13 +260,8 @@ app.directive 'barChart', ->
           meanSum += mean
           return
 
-        if cohortSamples.length
-          x += barWidth + barGap
-          lastCaption = caption
+        x += barWidth + barGap if cohortSamples.length
         return
-
-      lastCaption.select '.quantity-caption'
-      .text -> d3.select(@).text() + ' samples'
       return
 
     showSpecificSubstance = (substance) ->
@@ -237,6 +273,9 @@ app.directive 'barChart', ->
         .transition()
         .duration 300
         .style 'opacity', 0
+        .transition()
+        .delay 300
+        .style 'display', 'none'
 
         bars
         .filter (b) -> b is substance
@@ -252,6 +291,7 @@ app.directive 'barChart', ->
         .delay 400
         .duration 300
         .style 'opacity', 1
+        .style 'display', ''
       return
 
     updateCohorts()
