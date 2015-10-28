@@ -97,7 +97,7 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
       }
       {
         key: 'gender'
-        dataset: [ {title: 'all genders', value: undefined} ].concat($scope.data.genders.map (g) -> {title: g.charAt(0).toLowerCase() + g.slice(1), value: g})
+        dataset: [ {title: 'all genders', value: undefined} ].concat($scope.data.genders.map (g) -> {title: g, value: g})
         multi: false
         toggleFormat: -> $scope.filterValues['gender'].title
         floor: 2

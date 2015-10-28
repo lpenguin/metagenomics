@@ -240,12 +240,7 @@ app.directive 'barChart', ->
 
         caption.style 'display', -> 'none' unless cohortSamples.length and caption.node().getBBox().width < barWidth
 
-        substances
-        .sort (a, b) ->
-          a = getSubstanceMeanValue a, cohortSamples
-          b = getSubstanceMeanValue b, cohortSamples
-          b - a
-        .forEach (s) ->
+        substances.forEach (s) ->
           bar = cohortBars.filter (b) -> b is s
           mean = getSubstanceMeanValue s, cohortSamples
 
@@ -276,22 +271,31 @@ app.directive 'barChart', ->
         .transition()
         .delay 300
         .style 'display', 'none'
+        .style 'y', ''
 
         bars
         .filter (b) -> b is substance
+        .style 'display', ''
         .transition()
-        .delay 400
         .duration 300
-        .attr 'y', (d) -> height - d3.select(@).node().getBBox().height
+        .style 'opacity', 1
+        .transition()
+        .delay 300
+        .duration 300
+        .style 'y', (d) -> height - d3.select(@).node().getBBox().height
       else
+        bars
+        .style 'display', ''
+        .style 'y', ''
+        .attr 'y', (d) -> height - d3.select(@).node().getBBox().height
+
         updateGraph()
 
         bars
         .transition()
-        .delay 400
+        .delay 300
         .duration 300
         .style 'opacity', 1
-        .style 'display', ''
       return
 
     updateCohorts()
