@@ -10,7 +10,7 @@
     data-ng-show="isListShown">
     <li data-ng-repeat="item in dataset track by $index">
       <div
-        class="custom-select__item"
+        class="item"
         data-ng-class="{'selected': isItemSelected(item)}"
         data-ng-click="selectItem(item)">{{item.title}}</div>
     </li>

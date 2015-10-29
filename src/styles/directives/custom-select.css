@@ -58,22 +58,22 @@ $hover-color: #d3d3d3;
   z-index: 99;
 }
 
-.custom-select__dropdown li:last-child .custom-select__item {
+.custom-select__dropdown li:last-child .item {
   border-radius: 0 0 4px 4px;
 }
 
-.custom-select__item {
+.custom-select__dropdown .item {
   position: relative;
   line-height: 22px;
   padding: 2px 19px 2px 5px;
   white-space: nowrap;
 }
 
-.custom-select__item:hover {
+.custom-select__dropdown .item:hover {
   background-color: $hover-color;
 }
 
-.custom-select__item.selected::after {
+.custom-select__dropdown .item.selected::after {
   position: absolute;
   width: 9px;
   height: 10px;

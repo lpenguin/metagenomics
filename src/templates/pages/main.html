@@ -1,7 +1,7 @@
 <div data-ng-if="!initializing">
   <div class="head">
     <div class="head__third-floor">
-      <div class="head__title inline">Genes abundance</div>
+      <div class="title inline">Genes abundance</div>
       <custom-select
         data-ng-repeat="filter in filters track by filter.key"
         data-ng-if="filter.floor === 3"
@@ -20,7 +20,7 @@
       <br class="clear-both" />
     </div>
     <div class="head__second-floor">
-      <div class="head__title inline">metagenomes</div>
+      <div class="title inline">metagenomes</div>
       <custom-select
         data-ng-repeat="filter in filters track by filter.key"
         data-ng-if="filter.floor === 2"
@@ -36,8 +36,8 @@
       <br class="clear-both" />
     </div>
     <div class="head__first-floor">
-      <div class="head__left-section inline">
-        <div class="head__title inline">Cohorts by</div>
+      <div class="left-section inline">
+        <div class="title inline">Cohorts by</div>
         <custom-select
           data-ng-repeat="filter in filters track by filter.key"
           data-ng-if="filter.floor === 1"
@@ -51,8 +51,8 @@
         </custom-select>
         <br class="clear-both" />
       </div>
-      <div class="head__right-section inline">
-        <div class="head__title">
+      <div class="right-section inline">
+        <div class="title">
           <dot-graph-title
             data-filters="filters"
             data-filter-values="filterValues">
@@ -63,7 +63,7 @@
     </div>
   </div>
   <div class="content">
-    <div class="content__bar-chart-container inline">
+    <div class="content__bar-chart inline">
       <bar-chart
         data-data="data"
         data-filtered-samples="filteredSamples"
@@ -75,7 +75,7 @@
         data-color-scale="colorScale">
       </bar-chart>
     </div>
-    <div class="content__dot-chart-container inline">
+    <div class="content__dot-chart inline">
       <dot-chart
         data-data="data"
         data-filter-values="filterValues"
@@ -84,7 +84,7 @@
         data-color-scale="colorScale">
       </dot-chart>
     </div>
-    <div class="content__info-block-container inline">
+    <div class="content__info-block inline">
       <info-block
         data-data="data"
         data-filters="filters"

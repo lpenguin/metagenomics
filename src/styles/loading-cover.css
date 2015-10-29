@@ -27,10 +27,10 @@
   100% {transform: translateX(1px);}
 }
 
-.loading-cover__first-rect {
+.loading-cover__dl-symbol .first-rect {
   animation: first-rect-keyframes 5s linear infinite;
 }
 
-.loading-cover__second-rect {
+.loading-cover__dl-symbol .second-rect {
   animation: second-rect-keyframes 5s linear infinite;
 }
