@@ -29,38 +29,38 @@
   display: block;
 }
 
-.y-axis {
+.bar-chart__svg .y-axis {
   pointer-events: none;
 }
 
-.y-axis path {
+.bar-chart__svg .y-axis path {
   display: none;
 }
 
-.y-axis line {
+.bar-chart__svg .y-axis line {
   stroke: rgba(0, 0, 0, .15);
   stroke-width: 1;
 }
 
-.y-axis text {
+.bar-chart__svg .y-axis text {
   font-size: $xs-font-size;
 }
 
-.y-axis tspan {
+.bar-chart__svg .y-axis tspan {
   font-size: $xxs-font-size;
 }
 
-.bar {
+.bar-chart__svg .bar {
   cursor: pointer;
 }
 
-.cohort-caption {
+.bar-chart__svg .cohort-caption {
   font-size: $s-font-size;
   text-anchor: start;
   dominant-baseline: hanging;
 }
 
-.quantity-caption {
+.bar-chart__svg .quantity-caption {
   font-size: $s-font-size;
   text-anchor: start;
   dominant-baseline: hanging;

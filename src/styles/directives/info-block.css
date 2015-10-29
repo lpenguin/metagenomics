@@ -1,20 +1,116 @@
 @import '../variables';
 
-.info-block__substances {
-  margin-top: 20px;
+.info-block__legend {
+  position: absolute;
+  width: 250px;
+  max-height: 480px;
+  top: 158px;
+  overflow: hidden;
 }
 
-.info-block__substance {
+.info-block__legend .item {
+  width: 100%;
+  padding: 0 16px 0 10px;
+  box-sizing: border-box;
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
   user-select: none;
   cursor: pointer;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.info-block__substance::first-letter {
+.info-block__legend .item::first-letter {
   text-transform: uppercase;
 }
 
-.info-block__substance:not(:first-child) {
+.info-block__legend .item:not(:first-child) {
   margin-top: 8px;
+}
+
+.info-block__card {
+  position: absolute;
+  width: 250px;
+  height: 548px;
+  top: 88px;
+  border: 1px solid #e5e5e5;
+  border-radius: 4px;
+}
+
+.info-block__card .title {
+  width: 100%;
+  height: 39px;
+  padding: 10px;
+  box-sizing: border-box;
+  font-family: $helvetica-neue-bold;
+  font-size: $l-font-size;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-block__card .info {
+  max-height: 499px;
+  overflow: hidden;
+}
+
+.info-block__card .text-block {
+  padding: 0 16px 10px 10px;
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+  line-height: 20px;
+}
+
+.info-block__card .caption {
+  padding: 0 16px 3px 10px;
+  font-family: $helvetica-neue-bold;
+  font-size: $m-font-size;
+}
+
+.info-block__card .column {
+  float: left;
+  width: 50%;
+}
+
+.info-block__card .column-item {
+  max-width: 100%;
+  box-sizing: border-box;
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+  line-height: 20px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.info-block__card .column.left .column-item {
+  padding: 0 5px 0 10px;
+}
+
+.info-block__card .column.right .column-item {
+  padding: 0 16px 0 5px;
+}
+
+.info-block__card .simple-table {
+  width: 100%;
+  padding: 0 16px 0 10px;
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+  line-height: 20px;
+  border-spacing: 0;
+}
+
+.info-block__card .simple-table td {
+  padding: 0;
+  text-align: left;
+  vertical-align: top;
+}
+
+.info-block__card .simple-table td:first-child {
+  width: 80%;
+}
+
+.info-block__card .simple-table td:last-child {
+  width: 20%;
 }

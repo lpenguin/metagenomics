@@ -1,4 +1,4 @@
-app.directive 'infoBlock', ->
+app.directive 'infoBlock', ($timeout) ->
   restrict: 'E'
   replace: true
   templateUrl: 'templates/directives/info-block.html'
@@ -22,5 +22,7 @@ app.directive 'infoBlock', ->
     $scope.selectSubstance = (substance) ->
       $scope.filterValues[$scope.filterValues['resistance'].value] = _.find _.find($scope.filters, {'key': $scope.filterValues['resistance'].value}).dataset, {'value': substance}
       return
+
+    $timeout -> $scope.$broadcast 'rebuild:scrollbar'
 
     return

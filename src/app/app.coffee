@@ -1,5 +1,6 @@
 appDependencies = [
   'ngRoute'
+  'ngScrollbar'
 ]
 
 app = angular.module 'app', appDependencies

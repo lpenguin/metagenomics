@@ -1,11 +1,43 @@
 <div class="info-block">
   <div
-    class="info-block__substances"
-    data-ng-if="areSubstancesShown()">
+    class="info-block__legend scrollme"
+    data-ng-if="true"
+    ng-scrollbar
+    rebuild-on="rebuild:scrollbar">
     <div
       data-ng-repeat="substance in getSubstances() track by $index"
-      class="info-block__substance"
+      class="item"
       data-ng-style="getSubstanceStyle(substance)"
       data-ng-click="selectSubstance(substance)">{{substance}}</div>
+  </div>
+  <div
+    class="info-block__card"
+    data-ng-if="false">
+    <div class="title"></div>
+    <div
+      class="info"
+      ng-scrollbar
+      rebuild-on="rebuild:scrollbar">
+      <div class="text-block"></div>
+      <div class="caption">Resistance</div>
+      <div class="column left"></div>
+      <div class="column right"></div>
+      <br class="clear-both" />
+    </div>
+  </div>
+  <div
+    class="info-block__card"
+    data-ng-if="false">
+    <div class="title"></div>
+    <div
+      class="info"
+      ng-scrollbar
+      rebuild-on="rebuild:scrollbar">
+      <div class="text-block"></div>
+      <div class="caption">Sequencing</div>
+      <div class="text-block"></div>
+      <div class="caption">Taxons</div>
+      <table class="simple-table"></table>
+    </div>
   </div>
 </div>
