@@ -49,10 +49,10 @@ app.directive 'barChart', ->
     multiplier = 0
 
     barWidthScale = d3.scale.linear()
-    yScale = d3.scale.linear().range [height, 0]
+    barYScale = d3.scale.linear().range [height, 0]
 
     yAxis = d3.svg.axis()
-    .scale yScale
+    .scale barYScale
     .tickSize width
     .orient 'right'
 
@@ -108,11 +108,11 @@ app.directive 'barChart', ->
         substances = $scope.data.antibiotics.slice(0).reverse()
       return
 
-    getSubstanceMeanValue = (substance, samples) ->
-      mean = d3.mean _.pluck(samples, resistance).map (p) ->
+    getSubstanceMedianValue = (substance, samples) ->
+      median = d3.median _.pluck(samples, resistance).map (p) ->
         _.result _.find(p, {'category': substance}), 'sum_abund'
-      mean = 0 unless mean
-      mean
+      median = 0 unless median
+      median
 
     updateBarWidthScale = ->
       if $scope.quantityCheckbox.on
@@ -123,13 +123,13 @@ app.directive 'barChart', ->
       barWidthScale.range [0, width - (nOfCohorts - 1) * barGap]
       return
 
-    updateYScaleAndAxis = ->
+    updateBarYScaleAndAxis = ->
       maxAbund = d3.max _.keys(cohorts).map (key) ->
         d3.sum substances.map (s) ->
-          d3.mean _.pluck(cohorts[key], resistance).map (cR) ->
+          d3.median _.pluck(cohorts[key], resistance).map (cR) ->
             _.result _.find(cR, {'category': s}), 'sum_abund'
 
-      yScale.domain [0, maxAbund]
+      barYScale.domain [0, maxAbund]
 
       maxExponent = maxAbund.toExponential()
       $scope.degree = parseInt(maxExponent.split('-')[1]) + 1
@@ -178,8 +178,8 @@ app.directive 'barChart', ->
           .style 'fill', $scope.colorScale s
           .on 'mouseover', ->
             samples = cohorts[key].filter (cs) -> _.find cs[resistance], {'category': s}
-            mean = getSubstanceMeanValue s, samples
-            abundance = (mean * multiplier).toFixed(2)
+            median = getSubstanceMedianValue s, samples
+            abundance = (median * multiplier).toFixed(2)
 
             $scope.tooltip.shown = true
             $scope.tooltip.coordinates.x = d3.event.pageX
@@ -223,7 +223,7 @@ app.directive 'barChart', ->
       x = 0
 
       _.keys(cohorts).forEach (key, i) ->
-        meanSum = 0
+        medianSum = 0
         cohortSamples = cohorts[key]
         barWidth = barWidthScale if $scope.quantityCheckbox.on then cohortSamples.length else 1
         cohortGroup = barsGroup.selectAll('.cohort').filter (c) -> c is key
@@ -240,19 +240,23 @@ app.directive 'barChart', ->
 
         caption.style 'display', -> 'none' unless cohortSamples.length and caption.node().getBBox().width < barWidth
 
+        cohortGroup
+        .transition()
+        .duration 300
+        .attr 'transform', 'translate(' + x + ', 0)'
+
         substances.forEach (s) ->
           bar = cohortBars.filter (b) -> b is s
-          mean = getSubstanceMeanValue s, cohortSamples
+          median = getSubstanceMedianValue s, cohortSamples
 
           bar
           .transition()
           .duration 300
-          .attr 'x', x
-          .attr 'y', yScale(meanSum + mean)
+          .attr 'y', barYScale(medianSum + median)
           .attr 'width', barWidth
-          .attr 'height', yScale(meanSum) - yScale(meanSum + mean)
+          .attr 'height', barYScale(medianSum) - barYScale(medianSum + median)
 
-          meanSum += mean
+          medianSum += median
           return
 
         x += barWidth + barGap if cohortSamples.length
@@ -301,7 +305,7 @@ app.directive 'barChart', ->
     updateCohorts()
     updateResistanceAndSubstances()
     updateBarWidthScale()
-    updateYScaleAndAxis()
+    updateBarYScaleAndAxis()
     prepareGraph()
     updateGraph()
 
@@ -314,7 +318,7 @@ app.directive 'barChart', ->
       unless newValue is oldValue
         updateCohorts()
         updateBarWidthScale()
-        updateYScaleAndAxis()
+        updateBarYScaleAndAxis()
         updateGraph()
       return
     , true
@@ -323,7 +327,7 @@ app.directive 'barChart', ->
       unless newValue is oldValue
         updateCohorts()
         updateBarWidthScale()
-        updateYScaleAndAxis()
+        updateBarYScaleAndAxis()
         prepareGraph()
         updateGraph()
       return
