@@ -11,6 +11,7 @@ app.directive 'barChart', ->
     barChart: '='
     dotChart: '='
     colorScale: '='
+    formatPower: '='
   link: ($scope, $element, $attrs) ->
     element = $element[0]
     d3element = d3.select element
@@ -45,7 +46,7 @@ app.directive 'barChart', ->
     nOfCohorts = 0
     nOfAxisCaptions = 4
 
-    $scope.degree = 0
+    degree = 0
     multiplier = 0
 
     barWidthScale = d3.scale.linear()
@@ -132,8 +133,8 @@ app.directive 'barChart', ->
       barYScale.domain [0, maxAbund]
 
       maxExponent = maxAbund.toExponential()
-      $scope.degree = parseInt(maxExponent.split('-')[1]) + 1
-      multiplier = Math.pow 10, $scope.degree
+      degree = parseInt(maxExponent.split('-')[1]) + 1
+      multiplier = Math.pow 10, degree
 
       yAxis
       .tickValues ->
@@ -141,15 +142,15 @@ app.directive 'barChart', ->
 
         values.map (v, i) -> unless i is values.length - 1 then (v * multiplier).toFixed(0) / multiplier else v
       .tickFormat (d, i) ->
-        isLast = i is nOfAxisCaptions - 1
-
-        (d * multiplier).toFixed(unless isLast then 0 else 2) + (unless isLast then '' else ' × 10')
+        if i is nOfAxisCaptions - 1
+          $scope.formatPower (d * multiplier).toFixed(2), degree
+        else
+          (d * multiplier).toFixed(0)
       return
 
     prepareGraph = ->
       barsGroup.selectAll('*').remove()
       captionsGroup.selectAll('*').remove()
-      yAxisGroup.selectAll('*').remove()
 
       _.keys(cohorts).forEach (key) ->
         cohortGroup = barsGroup.append 'g'
@@ -179,7 +180,7 @@ app.directive 'barChart', ->
           .on 'mouseover', ->
             samples = cohorts[key].filter (cs) -> _.find cs[resistance], {'category': s}
             median = getSubstanceMedianValue s, samples
-            abundance = (median * multiplier).toFixed(2)
+            abundance = $scope.formatPower (median * multiplier).toFixed(2), degree
 
             $scope.tooltip.shown = true
             $scope.tooltip.coordinates.x = d3.event.pageX
@@ -212,13 +213,9 @@ app.directive 'barChart', ->
       yAxisGroup.selectAll 'text'
       .attr 'dy', (d, i) -> if i is nOfAxisCaptions - 1 then -5 else 0
       .attr 'x', -15
-      .append 'tspan'
-      .style 'baseline-shift', 'super'
-      .style 'display', (d, i) -> 'none' unless i is nOfAxisCaptions - 1
-      .text '−' + $scope.degree
 
-      yAxisGroup.selectAll 'line'
-      .style 'display', (d, i) -> 'none' unless i
+      yAxisGroup.select 'line'
+      .style 'display', 'none'
 
       x = 0
 

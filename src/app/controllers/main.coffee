@@ -77,6 +77,13 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
   $scope.colorScale = d3.scale.ordinal().range colors
 
+  $scope.formatPower = (num, degree) ->
+    thinSpace = ' '
+    times = '×'
+    superscriptMinus = '⁻'
+    superscriptDegrees = '⁰¹²³⁴⁵⁶⁷⁸⁹'
+    num + thinSpace + times + thinSpace + '10' + superscriptMinus + superscriptDegrees[degree]
+
   $scope.filteredSamples = []
 
   parseData = (error, rawData) ->

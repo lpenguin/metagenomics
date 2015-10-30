@@ -17,14 +17,6 @@
   text-transform: uppercase;
 }
 
-.bar-chart__tooltip .abundance {
-  margin-top: -4px;
-}
-
-.bar-chart__tooltip .abundance sup {
-  font-size: $xs-font-size;
-}
-
 .bar-chart__svg {
   display: block;
 }
