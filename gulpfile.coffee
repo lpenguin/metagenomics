@@ -37,11 +37,8 @@ vendors =
     'bower_components/d3/d3.js'
     'bower_components/queue-async/queue.js'
     'bower_components/lodash/lodash.js'
-    'bower_components/ng-scrollbar/dist/ng-scrollbar.js'
   ]
-  styles: [
-    'bower_components/ng-scrollbar/dist/ng-scrollbar.css'
-  ]
+  styles: []
 
 # Tasks
 gulp.task 'clean', ->
@@ -127,6 +124,6 @@ gulp.task 'watch', ->
   gulp.watch sources.templates, ['templates']
   return
 
-gulp.task 'build', ['index', 'favicon', 'img', 'data', 'fonts', 'styles:vendor', 'scripts:vendor', 'styles', 'scripts', 'templates']
+gulp.task 'build', ['index', 'favicon', 'img', 'data', 'fonts', 'scripts:vendor', 'styles', 'scripts', 'templates']
 
 gulp.task 'dev', ['styles', 'scripts', 'templates', 'watch', 'connect']

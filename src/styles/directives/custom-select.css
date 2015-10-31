@@ -2,6 +2,7 @@
 
 $background-color: #e5e5e5;
 $hover-color: #d3d3d3;
+$max-width: 200px;
 
 .custom-select {
   position: relative;
@@ -18,7 +19,7 @@ $hover-color: #d3d3d3;
 }
 
 .custom-select__toggle {
-  max-width: 200px;
+  max-width: $max-width;
   padding: 2px 19px 2px 5px;
   background-color: $background-color;
   border-radius: 4px 4px 4px 4px;
@@ -54,7 +55,7 @@ $hover-color: #d3d3d3;
 
 .custom-select__dropdown {
   position: absolute;
-  max-width: 200px;
+  max-width: $max-width;
   max-height: 260px;
   overflow: auto;
   border-radius: 0 0 4px 4px;
