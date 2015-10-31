@@ -1,4 +1,5 @@
 app.controller 'mainCtrl', ($scope, $timeout) ->
+  json = d3.json
   tsv = d3.tsv
 
   colors = [
@@ -56,17 +57,17 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
   $scope.initializing = true
 
-  $scope.data =
-    samples: []
-    resistances: []
-    antibiotics: []
-    genders: []
-    ages: []
-    countries: []
-    diagnosis: []
+  $scope.data = {}
 
-  $scope.filters = []
-  $scope.filterValues = {}
+  $scope.colorScale = d3.scale.ordinal().range colors
+
+  $scope.resistanceFilter = {}
+  $scope.substanceFilters = []
+  $scope.cohortFilter = {}
+  $scope.rscFilterValues = {}
+
+  $scope.sampleFilters = []
+  $scope.sampleFilterValues = {}
 
   $scope.barChart = {}
 
@@ -75,118 +76,124 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   $scope.quantityCheckbox =
     on: true
 
-  $scope.colorScale = d3.scale.ordinal().range colors
-
-  $scope.formatPower = (num, degree) ->
-    thinSpace = ' '
-    times = '×'
-    superscriptMinus = '⁻'
-    superscriptDegrees = '⁰¹²³⁴⁵⁶⁷⁸⁹'
-    num + thinSpace + times + thinSpace + '10' + superscriptMinus + superscriptDegrees[degree]
-
   $scope.filteredSamples = []
 
   parseData = (error, rawData) ->
     if error
       console.log error
 
-    samplesData = rawData[0]
-    samplesAntibioticsData = rawData[1]
+    $scope.data.samples = _.values rawData[0]
+    $scope.data.substances = _.values rawData[1]['categories']
 
-    samplesData.forEach (sD) ->
-      sample = sD
-      sample['antibiotic resistance'] = samplesAntibioticsData
-      .filter (sAd) ->
-        sAd['sample'] is sample['names']
-      .map (f) ->
-        'category': f['AB_category']
-        'sum_abund': parseFloat f['sum_abund']
+    $scope.data.samples.forEach (s) ->
+      sampleAbundances = rawData[2].filter (a) -> a['sample'] is s['names']
 
-      $scope.data.samples.push sample
+      _.forOwn _.groupBy(sampleAbundances, 'f_groups'), (value, key) ->
+        s[key] = {}
+        value.forEach (v) ->
+          s[key][v['AB_category']] = parseFloat v['sum_abund']
+          return
+        return
       return
 
-    $scope.data.resistances = ['antibiotic resistance']
-    $scope.data.antibiotics = _.uniq(_.pluck(samplesAntibioticsData, 'AB_category')).sort()
-    $scope.data.bacteria = []
+    prepareFilters()
+    return
 
-    $scope.data.genders = _.uniq(_.pluck($scope.data.samples, 'gender')).sort()
-    $scope.data.ages = [ [10, 16], [17, 25], [26, 35], [36, 50], [51, 70], [71, Infinity] ]
-    $scope.data.countries = _.uniq(_.pluck($scope.data.samples, 'country')).sort()
-    $scope.data.diagnosis = _.uniq(_.pluck($scope.data.samples, 'diagnosis')).sort()
-
-    cohorts = ['gender', 'age', 'country', 'diagnosis']
-
-    $scope.filters = [
-      {
-        key: 'resistance'
-        dataset: $scope.data.resistances.map (r) -> {title: r, value: r}
-        multi: false
-        toggleFormat: -> $scope.filterValues['resistance'].title
-        disabled: true
-        floor: 3
-      }
-      {
-        key: 'antibiotic resistance'
-        dataset: [ {title: 'all antibiotics', value: undefined} ].concat($scope.data.antibiotics.map (a) -> {title: a, value: a})
-        multi: false
-        toggleFormat: -> $scope.filterValues['antibiotic resistance'].title
-        disabled: false
-        floor: 3
-      }
-      {
-        key: 'bacteria'
-        dataset: [ {title: 'all bacteria', value: undefined} ].concat($scope.data.bacteria.map (b) -> {title: b, value: b})
-        multi: false
-        toggleFormat: -> $scope.filterValues['bacteria'].title
-        disabled: true
-        floor: 3
-      }
-      {
-        key: 'gender'
-        dataset: [ {title: 'all genders', value: undefined} ].concat($scope.data.genders.map (g) -> {title: g, value: g})
-        multi: false
-        toggleFormat: -> $scope.filterValues['gender'].title
-        floor: 2
-      }
-      {
-        key: 'age'
-        dataset: [ {title: 'all ages', value: undefined} ].concat($scope.data.ages.map (a) -> {title: a[0] + (if a[1] is Infinity then '+' else '–' + a[1]), value: a})
-        multi: false
-        toggleFormat: -> $scope.filterValues['age'].title
-        floor: 2
-      }
-      {
-        key: 'country'
-        dataset: [ {title: 'all countries', value: undefined} ].concat($scope.data.countries.map (d) -> {title: d, value: d})
-        multi: false
-        toggleFormat: -> $scope.filterValues['country'].title
-        floor: 2
-      }
-      {
-        key: 'diagnosis'
-        dataset: [ {title: 'all diagnosis', value: undefined} ].concat($scope.data.diagnosis.map (d) -> {title: d, value: d})
-        multi: false
-        toggleFormat: -> $scope.filterValues['diagnosis'].title
-        floor: 2
-      }
-      {
-        key: 'cohorts'
-        dataset: cohorts.map (c) -> {title: c, value: c}
-        multi: false
-        toggleFormat: -> $scope.filterValues['cohorts'].title
-        floor: 1
-      }
+  prepareFilters = ->
+    resistances = {}
+    filteringFields = [
+      'f-studies'
+      'f-countries'
+      'f-ages'
+      'f-genders'
+    ]
+    ageIntervals = [
+      [10, 16]
+      [17, 25]
+      [26, 35]
+      [36, 50]
+      [51, 70]
+      [71, Infinity]
     ]
 
-    $scope.filterValues =
-      'resistance': _.find($scope.filters, {'key': 'resistance'}).dataset[0]
-      'antibiotic resistance': _.find($scope.filters, {'key': 'antibiotic resistance'}).dataset[0]
-      'bacteria': _.find($scope.filters, {'key': 'bacteria'}).dataset[0]
-      'gender': _.find($scope.filters, {'key': 'gender'}).dataset[0]
-      'age': _.find($scope.filters, {'key': 'age'}).dataset[0]
-      'diagnosis': _.find($scope.filters, {'key': 'diagnosis'}).dataset[0]
-      'country': _.find($scope.filters, {'key': 'country'}).dataset[0]
-      'cohorts': _.find($scope.filters, {'key': 'cohorts'}).dataset[0]
+    _.uniq(_.pluck($scope.data.substances, 'group')).forEach (resistance) ->
+      resistances[resistance] = _.uniq _.pluck ($scope.data.substances.filter (s) -> s['group'] is resistance), 'category_name'
+      return
+
+    filteringFields = filteringFields.concat _.keys($scope.data.samples[0]).filter (key) ->
+      key.indexOf('f-') isnt -1 and filteringFields.indexOf(key) is -1
+
+    # Resistance filter
+    $scope.resistanceFilter =
+      key: 'resistance'
+      dataset: _.keys(resistances).map (key) -> { title: key, value: key }
+      multi: false
+      toggleFormat: -> $scope.rscFilterValues.resistance.title
+      disabled: false
+
+    $scope.rscFilterValues.resistance = $scope.resistanceFilter.dataset[0]
+
+    # Substance filters
+    _.forOwn resistances, (value, key) ->
+      $scope.substanceFilters.push
+        key: key
+        dataset: [ { title: 'all substances', value: undefined } ].concat(value.map (v) -> { title: v, value: v })
+        multi: false
+        toggleFormat: -> $scope.rscFilterValues.substance.title
+        disabled: false
+      return
+
+    $scope.rscFilterValues.substance = $scope.substanceFilters[0].dataset[0]
+
+    # Cohort filter
+    $scope.cohortFilter =
+      key: 'cohort'
+      dataset: filteringFields.map (ff) -> { title: ff.split('-')[1], value: ff }
+      multi: false
+      toggleFormat: -> $scope.rscFilterValues.cohort.title
+      disabled: false
+
+    $scope.rscFilterValues.cohort = $scope.cohortFilter.dataset[0]
+
+    # Sample filters
+    filteringFields.forEach (ff) ->
+      dataset = []
+
+      if ff is 'f-ages'
+        dataset = ageIntervals.map (aI) -> { title: aI[0] + (if aI[1] is Infinity then '+' else '–' + aI[1]), value: aI }
+      else
+        dataset = _.uniq(_.pluck($scope.data.samples, ff))
+        .sort (a, b) ->
+          return -1 if a.toLowerCase() < b.toLowerCase()
+          return 1 if a.toLowerCase() > b.toLowerCase()
+          0
+        .map (u) -> { title: u, value: u }
+
+      filter =
+        key: ff
+        dataset: dataset
+        multi: true
+        toggleFormat: ->
+          toggleTitle = ''
+
+          unless $scope.sampleFilterValues[ff].length
+            toggleTitle = ff.split('-')[1]
+          else if $scope.sampleFilterValues[ff].length is 1
+            toggleTitle = $scope.sampleFilterValues[ff][0].title
+          else
+            toggleTitle = $scope.sampleFilterValues[ff][0].title
+
+            $scope.sampleFilterValues[ff].forEach (fV, i) ->
+              toggleTitle += ', ' + fV.title if i
+              return
+
+          toggleTitle
+        disabled: false
+
+      $scope.sampleFilters.push filter
+
+      $scope.sampleFilterValues[ff] = []
+      return
 
     $scope.initializing = false
 
@@ -196,25 +203,40 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
     return
 
   queue()
-  .defer tsv, '../data/samples_description.tsv'
-  .defer tsv, '../data/per_sample_antibiotic_groups_stat.tsv'
+  .defer json, '../data/samples_description.json'
+  .defer json, '../data/group_description.json'
+  .defer tsv, '../data/per_sample_groups_stat.tsv'
   .awaitAll parseData
 
-  $scope.$watch 'filterValues["resistance"]', ->
-    substances = []
+  $scope.getNumWithSuperscript = (num, degree) ->
+    thinSpace = ' '
+    times = '×'
+    superscriptMinus = '⁻'
+    superscriptDegrees = '⁰¹²³⁴⁵⁶⁷⁸⁹'
 
-    if $scope.filterValues["resistance"] is 'antibiotic resistance'
-      substances = $scope.data.antibiotics
+    num + thinSpace + times + thinSpace + '10' + superscriptMinus + superscriptDegrees[degree]
 
-    $scope.colorScale.domain substances
+  $scope.$watch 'rscFilterValues.resistance', ->
+    return unless $scope.rscFilterValues.resistance
+
+    $scope.rscFilterValues.substance = _.find($scope.substanceFilters, {'key': $scope.rscFilterValues.resistance.value}).dataset[0]
     return
 
-  $scope.$watch '[filterValues["gender"], filterValues["age"], filterValues["country"], filterValues["diagnosis"]]', ->
+  $scope.$watch 'sampleFilterValues', ->
+    return unless $scope.data.samples
+
     $scope.filteredSamples = $scope.data.samples.filter (s) ->
-      (if $scope.filterValues['gender'].value then s['gender'] is $scope.filterValues['gender'].value else true) and
-      (if $scope.filterValues['age'].value then $scope.filterValues['age'].value[0] <= parseInt(s['age']) <= $scope.filterValues['age'].value[1] else true) and
-      (if $scope.filterValues['country'].value then s['country'] is $scope.filterValues['country'].value else true) and
-      (if $scope.filterValues['diagnosis'].value then s['diagnosis'] is $scope.filterValues['diagnosis'].value else true)
+      _.every $scope.sampleFilters, (sF) ->
+        filterValues = $scope.sampleFilterValues[sF.key]
+
+        if filterValues.length
+          _.some filterValues, (fV) ->
+            if sF.key is 'f-ages'
+              fV.value[0] <= s[sF.key] <= fV.value[1]
+            else
+              s[sF.key] is fV.value
+        else
+          true
     return
   , true
 

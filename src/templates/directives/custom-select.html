@@ -1,18 +1,18 @@
 <div
   class="custom-select"
-  data-ng-class="{'disabled': disabled}">
+  data-ng-class="[key, {'disabled': disabled}]"
+  data-ng-style="{'visibility': isSelectPrepared ? 'visible' : 'hidden'}">
   <div
     class="custom-select__toggle"
     data-ng-class="{'activated': isListShown}"
     data-ng-click="toggleList()">{{toggleFormat()}}</div>
-  <ul
+  <div
     class="custom-select__dropdown"
-    data-ng-show="isListShown">
-    <li data-ng-repeat="item in dataset track by $index">
-      <div
-        class="item"
-        data-ng-class="{'selected': isItemSelected(item)}"
-        data-ng-click="selectItem(item)">{{item.title}}</div>
-    </li>
-  </ul>
+    data-ng-style="{'visibility': isListShown ? 'visible' : 'hidden'}">
+    <div
+      data-ng-repeat="item in dataset track by $index"
+      class="item"
+      data-ng-class="{'selected': isItemSelected(item)}"
+      data-ng-click="selectItem(item)">{{item.title}}</div>
+  </div>
 </div>

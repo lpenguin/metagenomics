@@ -11,7 +11,7 @@
 }
 
 .quantity-checkbox input {
-  margin: 0 5px 0 0;
+  margin-right: 5px;
   font-size: $xl-font-size;
   cursor: pointer;
 }

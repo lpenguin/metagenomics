@@ -3,15 +3,12 @@ app.directive 'filtersReset', ->
   replace: true
   templateUrl: 'templates/directives/filters-reset.html'
   scope:
-    filters: '='
-    filterValues: '='
+    sampleFilters: '='
+    sampleFilterValues: '='
   link: ($scope, $element, $attrs) ->
     $scope.isResetShown = ->
-      _.some $scope.filters, (f) ->
-        return if f.key is 'resistance'
-        return if f.key is 'cohorts'
-
-        filterValue = $scope.filterValues[f.key]
+      _.some $scope.sampleFilters, (f) ->
+        filterValue = $scope.sampleFilterValues[f.key]
 
         if f.multi
           filterValue.length
@@ -19,13 +16,10 @@ app.directive 'filtersReset', ->
           filterValue isnt f.dataset[0]
 
     $scope.resetFilters = ->
-      _.keys($scope.filterValues).forEach (key) ->
-        filter = _.find $scope.filters, {'key': key}
+      _.keys($scope.sampleFilterValues).forEach (key) ->
+        filter = _.find $scope.sampleFilters, {'key': key}
 
-        return if filter.key is 'resistance'
-        return if filter.key is 'cohorts'
-
-        $scope.filterValues[key] = if filter.multi then [] else filter.dataset[0]
+        $scope.sampleFilterValues[key] = if filter.multi then [] else filter.dataset[0]
         return
       return
 

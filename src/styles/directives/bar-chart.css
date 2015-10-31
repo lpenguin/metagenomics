@@ -6,6 +6,7 @@
 
 .bar-chart__tooltip {
   position: absolute;
+  display: none;
   padding: 3px;
   background-color: rgba(255, 255, 255, .7);
   border-radius: 1px;
@@ -36,10 +37,6 @@
 
 .bar-chart__svg .y-axis text {
   font-size: $xs-font-size;
-}
-
-.bar-chart__svg .y-axis tspan {
-  font-size: $xxs-font-size;
 }
 
 .bar-chart__svg .bar {

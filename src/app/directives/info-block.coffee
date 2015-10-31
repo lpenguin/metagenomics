@@ -3,26 +3,23 @@ app.directive 'infoBlock', ($timeout) ->
   replace: true
   templateUrl: 'templates/directives/info-block.html'
   scope:
-    data: '='
-    filters: '='
-    filterValues: '='
+    substanceFilters: '='
+    rscFilterValues: '='
     barChart: '='
     dotChart: '='
     colorScale: '='
   link: ($scope, $element, $attrs) ->
-    $scope.areSubstancesShown = -> !$scope.filterValues[$scope.filterValues['resistance'].value].value
+    $scope.areSubstancesShown = ->
+      !$scope.rscFilterValues.substance.value
 
     $scope.getSubstances = ->
-      if $scope.filterValues['resistance'].value is 'antibiotic resistance'
-        $scope.data.antibiotics.map (a) -> a
+      _.pluck _.find($scope.substanceFilters, {'key': $scope.rscFilterValues.resistance.value}).dataset.slice(1), 'title'
 
     $scope.getSubstanceStyle = (substance) ->
       color: $scope.colorScale substance
 
     $scope.selectSubstance = (substance) ->
-      $scope.filterValues[$scope.filterValues['resistance'].value] = _.find _.find($scope.filters, {'key': $scope.filterValues['resistance'].value}).dataset, {'value': substance}
+      $scope.rscFilterValues.substance = _.find _.find($scope.substanceFilters, {'key': $scope.rscFilterValues.resistance.value}).dataset, {'value': substance}
       return
-
-    $timeout -> $scope.$broadcast 'rebuild:scrollbar'
 
     return

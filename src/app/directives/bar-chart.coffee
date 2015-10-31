@@ -3,27 +3,25 @@ app.directive 'barChart', ->
   replace: true
   templateUrl: 'templates/directives/bar-chart.html'
   scope:
-    data: '='
+    substanceFilters: '='
+    sampleFilters: '='
+    rscFilterValues: '='
     filteredSamples: '='
-    filters: '='
-    filterValues: '='
-    quantityCheckbox: '='
     barChart: '='
     dotChart: '='
+    quantityCheckbox: '='
     colorScale: '='
-    formatPower: '='
+    getNumWithSuperscript: '='
   link: ($scope, $element, $attrs) ->
     element = $element[0]
     d3element = d3.select element
 
-    $scope.tooltip =
-      shown: false
-      coordinates:
-        x: undefined
-        y: undefined
-      substance: undefined
-      abundance: undefined
-      nOfSamples: undefined
+    tooltip = d3element.select '.bar-chart__tooltip'
+    tooltipSubstance = tooltip.select '.substance'
+    tooltipAbundance = tooltip.select '.abundance'
+    tooltipNofSamples = tooltip.select '.n-of-samples'
+
+    tooltipOffset = 20
 
     outerWidth = $element.parent().width()
     outerHeight = $element.parent().height()
@@ -40,10 +38,12 @@ app.directive 'barChart', ->
     barGap = width * .01
 
     cohorts = {}
+    nOfCohorts = 0
+
     resistance = undefined
     substances = []
+    cohort = undefined
 
-    nOfCohorts = 0
     nOfAxisCaptions = 4
 
     degree = 0
@@ -76,42 +76,34 @@ app.directive 'barChart', ->
     yAxisGroup = g.append 'g'
     .classed 'y-axis', true
 
+    updateResistance = ->
+      resistance = $scope.rscFilterValues.resistance.value
+      return
+
+    updateSubstances = ->
+      substances = _.pluck(_.find($scope.substanceFilters, {'key': resistance}).dataset.slice(1), 'value').reverse()
+      return
+
+    updateCohort = ->
+      cohort = $scope.rscFilterValues.cohort.value
+      return
+
     updateCohorts = ->
       cohorts = {}
       nOfCohorts = 0
 
-      if $scope.filterValues['cohorts'].value is 'gender'
-        $scope.data.genders.forEach (c) ->
-          cohorts[c] = $scope.filteredSamples.filter (fS) -> fS['gender'] is c
-          nOfCohorts++ if cohorts[c].length
-          return
-      else if $scope.filterValues['cohorts'].value is 'age'
-        $scope.data.ages.forEach (c) ->
-          cohorts[c] = $scope.filteredSamples.filter (fS) -> c[0] <= fS['age'] <= c[1]
-          nOfCohorts++ if cohorts[c].length
-          return
-      else if $scope.filterValues['cohorts'].value is 'country'
-        $scope.data.countries.forEach (c) ->
-          cohorts[c] = $scope.filteredSamples.filter (fS) -> fS['country'] is c
-          nOfCohorts++ if cohorts[c].length
-          return
-      else if $scope.filterValues['cohorts'].value is 'diagnosis'
-        $scope.data.diagnosis.forEach (c) ->
-          cohorts[c] = $scope.filteredSamples.filter (fS) -> fS['diagnosis'] is c
-          nOfCohorts++ if cohorts[c].length
-          return
-      return
-
-    updateResistanceAndSubstances = ->
-      resistance = $scope.filterValues['resistance'].value
-
-      if resistance is 'antibiotic resistance'
-        substances = $scope.data.antibiotics.slice(0).reverse()
+      _.find($scope.sampleFilters, {'key': cohort}).dataset.forEach (p) ->
+        cohorts[p.title] = $scope.filteredSamples.filter (fS) ->
+          if cohort is 'f-ages'
+            p.value[0] <= fS[cohort] <= p.value[1]
+          else
+            fS[cohort] is p.value
+        nOfCohorts++ if cohorts[p.title].length
+        return
       return
 
     getSubstanceMedianValue = (substance, samples) ->
-      median = d3.median _.pluck(samples, resistance).map (p) ->
-        _.result _.find(p, {'category': substance}), 'sum_abund'
+      median = d3.median _.pluck(samples, resistance).map (p) -> _.result p, substance
       median = 0 unless median
       median
 
@@ -127,8 +119,7 @@ app.directive 'barChart', ->
     updateBarYScaleAndAxis = ->
       maxAbund = d3.max _.keys(cohorts).map (key) ->
         d3.sum substances.map (s) ->
-          d3.median _.pluck(cohorts[key], resistance).map (cR) ->
-            _.result _.find(cR, {'category': s}), 'sum_abund'
+          d3.median _.pluck(cohorts[key], resistance).map (cR) -> _.result cR, s
 
       barYScale.domain [0, maxAbund]
 
@@ -143,7 +134,7 @@ app.directive 'barChart', ->
         values.map (v, i) -> unless i is values.length - 1 then (v * multiplier).toFixed(0) / multiplier else v
       .tickFormat (d, i) ->
         if i is nOfAxisCaptions - 1
-          $scope.formatPower (d * multiplier).toFixed(2), degree
+          $scope.getNumWithSuperscript (d * multiplier).toFixed(2), degree
         else
           (d * multiplier).toFixed(0)
       return
@@ -153,10 +144,6 @@ app.directive 'barChart', ->
       captionsGroup.selectAll('*').remove()
 
       _.keys(cohorts).forEach (key) ->
-        cohortGroup = barsGroup.append 'g'
-        .classed 'cohort', true
-        .datum key
-
         captionGroup = captionsGroup.append 'g'
         .classed 'caption', true
         .datum key
@@ -164,11 +151,15 @@ app.directive 'barChart', ->
         captionGroup.append 'text'
         .classed 'cohort-caption', true
         .attr 'y', 3
-        .text -> unless $scope.filterValues['cohorts'].value is 'age' then key else key.replace(',', '–').replace('–Infinity', '+')
+        .text -> key
 
         captionGroup.append 'text'
         .classed 'quantity-caption', true
-        .attr 'y', 15
+        .attr 'y', 18
+
+        cohortGroup = barsGroup.append 'g'
+        .classed 'cohort', true
+        .datum key
 
         substances.forEach (s) ->
           cohortGroup.append 'rect'
@@ -178,29 +169,29 @@ app.directive 'barChart', ->
           .attr 'height', 0
           .style 'fill', $scope.colorScale s
           .on 'mouseover', ->
-            samples = cohorts[key].filter (cs) -> _.find cs[resistance], {'category': s}
+            samples = cohorts[key].filter (cs) -> cs[resistance][s]
             median = getSubstanceMedianValue s, samples
-            abundance = $scope.formatPower (median * multiplier).toFixed(2), degree
+            abundance = $scope.getNumWithSuperscript (median * multiplier).toFixed(2), degree
 
-            $scope.tooltip.shown = true
-            $scope.tooltip.coordinates.x = d3.event.pageX
-            $scope.tooltip.coordinates.y = d3.event.pageY
-            $scope.tooltip.substance = s
-            $scope.tooltip.abundance = abundance
-            $scope.tooltip.nOfSamples = samples.length
-            $scope.$apply()
+            tooltipSubstance.html s
+            tooltipAbundance.html 'Abundance: ' + abundance
+            tooltipNofSamples.html samples.length + ' ' + if samples.length is 1 then 'sample' else 'samples'
+
+            tooltip
+            .style 'display', 'block'
+            .style 'top', d3.event.pageY + 'px'
+            .style 'left', d3.event.pageX + tooltipOffset + 'px'
             return
           .on 'mousemove', ->
-            $scope.tooltip.coordinates.x = d3.event.pageX
-            $scope.tooltip.coordinates.y = d3.event.pageY
-            $scope.$apply()
+            tooltip
+            .style 'top', d3.event.pageY + 'px'
+            .style 'left', d3.event.pageX + tooltipOffset + 'px'
             return
           .on 'mouseout', ->
-            $scope.tooltip.shown = false
-            $scope.$apply()
+            tooltip.style 'display', ''
             return
           .on 'click', ->
-            $scope.filterValues[resistance] = _.find _.find($scope.filters, {'key': resistance}).dataset, {'value': s}
+            $scope.rscFilterValues.substance = _.find _.find($scope.substanceFilters, {'key': resistance}).dataset, {'value': s}
             $scope.$apply()
             return
           return
@@ -223,9 +214,9 @@ app.directive 'barChart', ->
         medianSum = 0
         cohortSamples = cohorts[key]
         barWidth = barWidthScale if $scope.quantityCheckbox.on then cohortSamples.length else 1
+        caption = d3element.selectAll('.caption').filter (c) -> c is key
         cohortGroup = barsGroup.selectAll('.cohort').filter (c) -> c is key
         cohortBars = cohortGroup.selectAll '.bar'
-        caption = d3element.selectAll('.caption').filter (c) -> c is key
 
         caption
         .transition()
@@ -299,16 +290,36 @@ app.directive 'barChart', ->
         .style 'opacity', 1
       return
 
+    updateResistance()
+    updateSubstances()
+    updateCohort()
     updateCohorts()
-    updateResistanceAndSubstances()
     updateBarWidthScale()
     updateBarYScaleAndAxis()
     prepareGraph()
     updateGraph()
 
-    $scope.$watch 'filterValues[filterValues["resistance"].value]', (newValue, oldValue) ->
+    $scope.$watch 'rscFilterValues.resistance', (newValue, oldValue) ->
       unless newValue is oldValue
-        showSpecificSubstance $scope.filterValues[resistance].value
+        updateResistance()
+        updateSubstances()
+        updateBarYScaleAndAxis()
+        prepareGraph()
+      return
+
+    $scope.$watch 'rscFilterValues.substance', (newValue, oldValue) ->
+      unless newValue is oldValue
+        showSpecificSubstance $scope.rscFilterValues.substance.value
+      return
+
+    $scope.$watch 'rscFilterValues.cohort', (newValue, oldValue) ->
+      unless newValue is oldValue
+        updateCohort()
+        updateCohorts()
+        updateBarWidthScale()
+        updateBarYScaleAndAxis()
+        prepareGraph()
+        updateGraph()
       return
 
     $scope.$watch 'filteredSamples', (newValue, oldValue) ->
@@ -320,13 +331,9 @@ app.directive 'barChart', ->
       return
     , true
 
-    $scope.$watch 'filterValues["cohorts"]', (newValue, oldValue) ->
+    $scope.$watch 'dotChart', (newValue, oldValue) ->
       unless newValue is oldValue
-        updateCohorts()
-        updateBarWidthScale()
-        updateBarYScaleAndAxis()
-        prepareGraph()
-        updateGraph()
+        console.log 'W: dot chart'
       return
 
     $scope.$watch 'quantityCheckbox.on', (newValue, oldValue) ->

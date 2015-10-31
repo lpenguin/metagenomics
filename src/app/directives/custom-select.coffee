@@ -8,9 +8,10 @@ app.directive 'customSelect', ($document, $timeout) ->
     multi: '='
     toggleFormat: '='
     disabled: '='
-    filterValues: '='
+    selected: '='
   link: ($scope, $element, $attrs) ->
-    $scope.isListShown = true
+    $scope.isSelectPrepared = false
+    $scope.isListShown = false
 
     $scope.toggleList = ->
       return if $scope.disabled
@@ -25,21 +26,21 @@ app.directive 'customSelect', ($document, $timeout) ->
 
     $scope.isItemSelected = (item) ->
       if $scope.multi
-        index = _.indexOf _.pluck($scope.filterValues[$scope.key], 'title'), item.title
+        index = _.indexOf _.pluck($scope.selected, 'title'), item.title
         index isnt -1
       else
-        $scope.filterValues[$scope.key].title is item.title
+        $scope.selected.title is item.title
 
     $scope.selectItem = (item) ->
       if $scope.multi
-        index = _.indexOf _.pluck($scope.filterValues[$scope.key], 'title'), item.title
+        index = _.indexOf _.pluck($scope.selected, 'title'), item.title
 
         if index isnt -1
-          $scope.filterValues[$scope.key].splice index, 1
+          $scope.selected.splice index, 1
         else
-          $scope.filterValues[$scope.key].push item
+          $scope.selected.push item
       else
-        $scope.filterValues[$scope.key] = item
+        $scope.selected = item
         $scope.isListShown = false
       return
 
@@ -52,13 +53,22 @@ app.directive 'customSelect', ($document, $timeout) ->
       return
 
     $timeout ->
-      $element.find('.custom-select__toggle').innerWidth $element.find('.custom-select__dropdown')[0].getBoundingClientRect().width
-      $scope.isListShown = false
+      $toggle = $element.find '.custom-select__toggle'
+      $dropdown = $element.find '.custom-select__dropdown'
+      toggleWidth = $toggle[0].getBoundingClientRect().width
+      dropdownWidth = $dropdown[0].getBoundingClientRect().width
+      dropdownHasScroll = $dropdown[0].scrollHeight > $dropdown[0].offsetHeight
+
+      dropdownWidth += 16 if dropdownHasScroll
+
+      $toggle.innerWidth Math.max toggleWidth, dropdownWidth
+      $dropdown.width Math.max toggleWidth, dropdownWidth
+      $scope.isSelectPrepared = true
       return
 
     $scope.$watch 'disabled', ->
       if $scope.disabled
-        $scope.filterValues[$scope.key] = $scope.dataset[0]
+        $scope.selected = if $scope.multi then [] else $scope.dataset[0]
       return
 
     return

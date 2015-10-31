@@ -3,59 +3,63 @@
     <div class="head__third-floor">
       <div class="title inline">Genes abundance</div>
       <custom-select
-        data-ng-repeat="filter in filters track by filter.key"
-        data-ng-if="filter.floor === 3"
+        class="inline"
+        data-key="resistanceFilter.key"
+        data-dataset="resistanceFilter.dataset"
+        data-multi="resistanceFilter.multi"
+        data-toggle-format="resistanceFilter.toggleFormat"
+        data-disabled="resistanceFilter.disabled"
+        data-selected="rscFilterValues.resistance">
+      </custom-select>
+      <custom-select
+        data-ng-repeat="filter in substanceFilters track by filter.key"
+        data-ng-if="filter.key === rscFilterValues.resistance.value"
         class="inline"
         data-key="filter.key"
         data-dataset="filter.dataset"
         data-multi="filter.multi"
         data-toggle-format="filter.toggleFormat"
         data-disabled="filter.disabled"
-        data-filter-values="filterValues">
+        data-selected="rscFilterValues.substance">
       </custom-select>
-      <filters-reset
-        data-filters="filters"
-        data-filter-values="filterValues">
-      </filters-reset>
       <br class="clear-both" />
     </div>
     <div class="head__second-floor">
       <div class="title inline">metagenomes</div>
       <custom-select
-        data-ng-repeat="filter in filters track by filter.key"
-        data-ng-if="filter.floor === 2"
+        data-ng-repeat="filter in sampleFilters track by filter.key"
         class="inline"
         data-key="filter.key"
         data-dataset="filter.dataset"
         data-multi="filter.multi"
         data-toggle-format="filter.toggleFormat"
-        data-disabled="filter.key === filterValues['cohorts'].value"
-        data-filter-values="filterValues">
+        data-disabled="filter.key === rscFilterValues.cohort.value"
+        data-selected="sampleFilterValues[filter.key]">
       </custom-select>
-      <more-filters class="disabled inline"></more-filters>
+      <filters-reset
+        data-sample-filters="sampleFilters"
+        data-sample-filter-values="sampleFilterValues">
+      </filters-reset>
       <br class="clear-both" />
     </div>
     <div class="head__first-floor">
       <div class="left-section inline">
         <div class="title inline">Cohorts by</div>
         <custom-select
-          data-ng-repeat="filter in filters track by filter.key"
-          data-ng-if="filter.floor === 1"
           class="inline"
-          data-key="filter.key"
-          data-dataset="filter.dataset"
-          data-multi="filter.multi"
-          data-toggle-format="filter.toggleFormat"
-          data-disabled="false"
-          data-filter-values="filterValues">
+          data-key="cohortFilter.key"
+          data-dataset="cohortFilter.dataset"
+          data-multi="cohortFilter.multi"
+          data-toggle-format="cohortFilter.toggleFormat"
+          data-disabled="cohortFilter.disabled"
+          data-selected="rscFilterValues.cohort">
         </custom-select>
         <br class="clear-both" />
       </div>
       <div class="right-section inline">
         <div class="title">
           <dot-graph-title
-            data-filters="filters"
-            data-filter-values="filterValues">
+            data-rsc-filter-values="rscFilterValues">
           </dot-graph-title>
         </div>
       </div>
@@ -65,15 +69,15 @@
   <div class="content">
     <div class="content__bar-chart inline">
       <bar-chart
-        data-data="data"
+        data-substance-filters="substanceFilters"
+        data-sample-filters="sampleFilters"
+        data-rsc-filter-values="rscFilterValues"
         data-filtered-samples="filteredSamples"
-        data-filters="filters"
-        data-filter-values="filterValues"
-        data-quantity-checkbox="quantityCheckbox"
         data-bar-chart="barChart"
         data-dot-chart="dotChart"
+        data-quantity-checkbox="quantityCheckbox"
         data-color-scale="colorScale"
-        data-format-power="formatPower">
+        data-get-num-with-superscript="getNumWithSuperscript">
       </bar-chart>
     </div>
     <div class="content__dot-chart inline">
@@ -87,9 +91,8 @@
     </div>
     <div class="content__info-block inline">
       <info-block
-        data-data="data"
-        data-filters="filters"
-        data-filter-values="filterValues"
+        data-substance-filters="substanceFilters"
+        data-rsc-filter-values="rscFilterValues"
         data-bar-chart="barChart"
         data-dot-chart="dotChart"
         data-color-scale="colorScale">

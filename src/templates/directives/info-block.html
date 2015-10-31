@@ -1,9 +1,7 @@
 <div class="info-block">
   <div
-    class="info-block__legend scrollme"
-    data-ng-if="true"
-    ng-scrollbar
-    rebuild-on="rebuild:scrollbar">
+    class="info-block__legend"
+    data-ng-if="areSubstancesShown()">
     <div
       data-ng-repeat="substance in getSubstances() track by $index"
       class="item"
@@ -14,10 +12,7 @@
     class="info-block__card"
     data-ng-if="false">
     <div class="title"></div>
-    <div
-      class="info"
-      ng-scrollbar
-      rebuild-on="rebuild:scrollbar">
+    <div class="info">
       <div class="text-block"></div>
       <div class="caption">Resistance</div>
       <div class="column left"></div>
@@ -29,10 +24,7 @@
     class="info-block__card"
     data-ng-if="false">
     <div class="title"></div>
-    <div
-      class="info"
-      ng-scrollbar
-      rebuild-on="rebuild:scrollbar">
+    <div class="info">
       <div class="text-block"></div>
       <div class="caption">Sequencing</div>
       <div class="text-block"></div>

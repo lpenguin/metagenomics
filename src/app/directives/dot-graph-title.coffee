@@ -3,16 +3,12 @@ app.directive 'dotGraphTitle', ->
   replace: true
   templateUrl: 'templates/directives/dot-graph-title.html'
   scope:
-    filters: '='
-    filterValues: '='
+    rscFilterValues: '='
   link: ($scope, $element, $attrs) ->
     $scope.getGraphTitle = ->
-      if $scope.filterValues['resistance'].value is 'antibiotic resistance'
-        antibiotic = $scope.filterValues['antibiotic resistance']
-
-        if antibiotic.value
-          'Allocation of ' + antibiotic.value
-        else
-          'General allocation of antibiotic-resistant genes'
+      if $scope.rscFilterValues.substance.value
+        'Allocation of ' + $scope.rscFilterValues.substance.title
+      else
+        'Allocation of genes with ' + $scope.rscFilterValues.resistance.title
 
     return
