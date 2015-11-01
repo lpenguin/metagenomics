@@ -208,14 +208,6 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   .defer tsv, '../data/per_sample_groups_stat.tsv'
   .awaitAll parseData
 
-  $scope.getNumWithSuperscript = (num, degree) ->
-    thinSpace = ' '
-    times = '×'
-    superscriptMinus = '⁻'
-    superscriptDegrees = '⁰¹²³⁴⁵⁶⁷⁸⁹'
-
-    num + thinSpace + times + thinSpace + '10' + superscriptMinus + superscriptDegrees[degree]
-
   $scope.$watch 'rscFilterValues.resistance', ->
     return unless $scope.rscFilterValues.resistance
 

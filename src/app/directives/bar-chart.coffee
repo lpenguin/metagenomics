@@ -11,17 +11,9 @@ app.directive 'barChart', ->
     dotChart: '='
     quantityCheckbox: '='
     colorScale: '='
-    getNumWithSuperscript: '='
   link: ($scope, $element, $attrs) ->
     element = $element[0]
     d3element = d3.select element
-
-    tooltip = d3element.select '.bar-chart__tooltip'
-    tooltipSubstance = tooltip.select '.substance'
-    tooltipAbundance = tooltip.select '.abundance'
-    tooltipNofSamples = tooltip.select '.n-of-samples'
-
-    tooltipOffset = 20
 
     outerWidth = $element.parent().width()
     outerHeight = $element.parent().height()
@@ -35,23 +27,22 @@ app.directive 'barChart', ->
     width = outerWidth - padding.left - padding.right
     height = outerHeight - padding.top - padding.bottom
 
-    barGap = width * .01
+    cohortGap = width * .01
+
+    resistance = undefined
+    cohort = undefined
+
+    substances = []
 
     cohorts = {}
     nOfCohorts = 0
 
-    resistance = undefined
-    substances = []
-    cohort = undefined
-
     nOfAxisCaptions = 4
-
-    degree = 0
+    power = 0
     multiplier = 0
 
     barWidthScale = d3.scale.linear()
     barYScale = d3.scale.linear().range [height, 0]
-
     yAxis = d3.svg.axis()
     .scale barYScale
     .tickSize width
@@ -66,8 +57,8 @@ app.directive 'barChart', ->
     .classed 'main', true
     .attr 'transform', 'translate(' + padding.left + ', ' + padding.top + ')'
 
-    barsGroup = g.append 'g'
-    .classed 'bars', true
+    cohortsGroup = g.append 'g'
+    .classed 'cohorts', true
 
     captionsGroup = g.append 'g'
     .classed 'captions', true
@@ -75,6 +66,13 @@ app.directive 'barChart', ->
 
     yAxisGroup = g.append 'g'
     .classed 'y-axis', true
+
+    tooltip = d3element.select '.bar-chart__tooltip'
+    tooltipSubstance = tooltip.select '.substance'
+    tooltipAbundance = tooltip.select '.abundance'
+    tooltipCohort = tooltip.select '.cohort'
+    tooltipNofSamples = tooltip.select '.n-of-samples'
+    tooltipOffset = 20
 
     updateResistance = ->
       resistance = $scope.rscFilterValues.resistance.value
@@ -98,6 +96,7 @@ app.directive 'barChart', ->
             p.value[0] <= fS[cohort] <= p.value[1]
           else
             fS[cohort] is p.value
+
         nOfCohorts++ if cohorts[p.title].length
         return
       return
@@ -113,34 +112,32 @@ app.directive 'barChart', ->
       else
         barWidthScale.domain [0, nOfCohorts]
 
-      barWidthScale.range [0, width - (nOfCohorts - 1) * barGap]
+      barWidthScale.range [0, width - (nOfCohorts - 1) * cohortGap]
       return
 
     updateBarYScaleAndAxis = ->
-      maxAbund = d3.max _.keys(cohorts).map (key) ->
+      max = d3.max _.keys(cohorts).map (key) ->
         d3.sum substances.map (s) ->
           d3.median _.pluck(cohorts[key], resistance).map (cR) -> _.result cR, s
 
-      barYScale.domain [0, maxAbund]
+      barYScale.domain [0, max]
 
-      maxExponent = maxAbund.toExponential()
-      degree = parseInt(maxExponent.split('-')[1]) + 1
-      multiplier = Math.pow 10, degree
+      power = parseInt(max.toExponential().split('-')[1]) + 1
+      multiplier = Math.pow 10, power
 
       yAxis
       .tickValues ->
-        values = d3.range 0, maxAbund + maxAbund / (nOfAxisCaptions - 1), maxAbund / (nOfAxisCaptions - 1)
+        values = d3.range 0, max + max / (nOfAxisCaptions - 1), max / (nOfAxisCaptions - 1)
 
         values.map (v, i) -> unless i is values.length - 1 then (v * multiplier).toFixed(0) / multiplier else v
       .tickFormat (d, i) ->
-        if i is nOfAxisCaptions - 1
-          $scope.getNumWithSuperscript (d * multiplier).toFixed(2), degree
-        else
-          (d * multiplier).toFixed(0)
+        isLast = i is nOfAxisCaptions - 1
+
+        (d * multiplier).toFixed(unless isLast then 0 else 2) + (unless isLast then '' else ' × 10')
       return
 
     prepareGraph = ->
-      barsGroup.selectAll('*').remove()
+      cohortsGroup.selectAll('*').remove()
       captionsGroup.selectAll('*').remove()
 
       _.keys(cohorts).forEach (key) ->
@@ -157,7 +154,7 @@ app.directive 'barChart', ->
         .classed 'quantity-caption', true
         .attr 'y', 18
 
-        cohortGroup = barsGroup.append 'g'
+        cohortGroup = cohortsGroup.append 'g'
         .classed 'cohort', true
         .datum key
 
@@ -171,10 +168,11 @@ app.directive 'barChart', ->
           .on 'mouseover', ->
             samples = cohorts[key].filter (cs) -> cs[resistance][s]
             median = getSubstanceMedianValue s, samples
-            abundance = $scope.getNumWithSuperscript (median * multiplier).toFixed(2), degree
+            abundance = (median * multiplier).toFixed(2)
 
             tooltipSubstance.html s
-            tooltipAbundance.html 'Abundance: ' + abundance
+            tooltipAbundance.html 'Median abundance: ' + abundance + ' × 10<sup>−' + power + '</sup>'
+            tooltipCohort.html key
             tooltipNofSamples.html samples.length + ' ' + if samples.length is 1 then 'sample' else 'samples'
 
             tooltip
@@ -202,20 +200,26 @@ app.directive 'barChart', ->
       yAxisGroup.call yAxis
 
       yAxisGroup.selectAll 'text'
-      .attr 'dy', (d, i) -> if i is nOfAxisCaptions - 1 then -5 else 0
       .attr 'x', -15
+      .attr 'dy', 0
+
+      d3.select yAxisGroup.selectAll('text')[0].pop()
+      .attr 'dy', -5
+      .append 'tspan'
+      .style 'baseline-shift', 'super'
+      .text '−' + power
 
       yAxisGroup.select 'line'
       .style 'display', 'none'
 
       x = 0
 
-      _.keys(cohorts).forEach (key, i) ->
+      _.keys(cohorts).forEach (key) ->
         medianSum = 0
         cohortSamples = cohorts[key]
         barWidth = barWidthScale if $scope.quantityCheckbox.on then cohortSamples.length else 1
         caption = d3element.selectAll('.caption').filter (c) -> c is key
-        cohortGroup = barsGroup.selectAll('.cohort').filter (c) -> c is key
+        cohortGroup = cohortsGroup.selectAll('.cohort').filter (c) -> c is key
         cohortBars = cohortGroup.selectAll '.bar'
 
         caption
@@ -247,7 +251,7 @@ app.directive 'barChart', ->
           medianSum += median
           return
 
-        x += barWidth + barGap if cohortSamples.length
+        x += barWidth + cohortGap if cohortSamples.length
         return
       return
 

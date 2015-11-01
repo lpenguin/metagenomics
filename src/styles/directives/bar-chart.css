@@ -12,10 +12,19 @@
   border-radius: 1px;
   text-align: left;
   font-size: $s-font-size;
+  z-index: 1;
 }
 
 .bar-chart__tooltip .substance::first-letter {
   text-transform: uppercase;
+}
+
+.bar-chart__tooltip .abundance {
+  margin-top: -3px;
+}
+
+.bar-chart__tooltip .abundance sup {
+  font-size: $xs-font-size;
 }
 
 .bar-chart__svg {
@@ -32,11 +41,15 @@
 
 .bar-chart__svg .y-axis line {
   stroke: rgba(0, 0, 0, .15);
-  stroke-width: 1;
+  stroke-width: .3;
 }
 
 .bar-chart__svg .y-axis text {
   font-size: $xs-font-size;
+}
+
+.bar-chart__svg .y-axis tspan {
+  font-size: $xxs-font-size;
 }
 
 .bar-chart__svg .bar {
