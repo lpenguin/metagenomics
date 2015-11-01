@@ -268,17 +268,16 @@ app.directive 'barChart', ->
           bar
           .transition()
           .duration 300
-          .attr 'y', barYScale(medianSum + median)
-          .attr 'width', barWidth
-          .attr 'height', barHeight
-          .style 'y', ->
+          .attr 'y', ->
             if $scope.rscFilterValues.substance.value
               if s is $scope.rscFilterValues.substance.value
                 height - barHeight
               else
-                ''
+                barYScale(medianSum + median)
             else
-              ''
+              barYScale(medianSum + median)
+          .attr 'width', barWidth
+          .attr 'height', barHeight
           .style 'visibility', ->
             if $scope.rscFilterValues.substance.value
               if s is $scope.rscFilterValues.substance.value
