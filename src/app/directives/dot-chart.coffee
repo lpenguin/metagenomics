@@ -3,10 +3,11 @@ app.directive 'dotChart', ($timeout) ->
   replace: true
   templateUrl: 'templates/directives/dot-chart.html'
   scope:
+    data: '='
     substanceFilters: '='
     sampleFilters: '='
     rscFilterValues: '='
-    filteredSamples: '='
+    sampleFilterValues: '='
     barChart: '='
     dotChart: '='
     colorScale: '='
@@ -32,6 +33,7 @@ app.directive 'dotChart', ($timeout) ->
     substance = undefined
     cohort = undefined
 
+    filteredSamples = []
     cohorts = {}
     nOfCohorts = 0
     bins = []
@@ -80,12 +82,27 @@ app.directive 'dotChart', ($timeout) ->
       cohort = $scope.rscFilterValues.cohort.value
       return
 
+    filterSamples = ->
+      filteredSamples = $scope.data.samples.filter (s) ->
+        _.every $scope.sampleFilters, (sF) ->
+          filterValues = $scope.sampleFilterValues[sF.key]
+
+          if filterValues.length
+            _.some filterValues, (fV) ->
+              if sF.key is 'f-ages'
+                fV.value[0] <= s[sF.key] <= fV.value[1]
+              else
+                s[sF.key] is fV.value
+          else
+            true
+      return
+
     updateCohorts = ->
       cohorts = {}
       nOfCohorts = 0
 
       _.find($scope.sampleFilters, {'key': cohort}).dataset.forEach (p) ->
-        cohorts[p.title] = $scope.filteredSamples.filter (fS) ->
+        cohorts[p.title] = filteredSamples.filter (fS) ->
           if cohort is 'f-ages'
             p.value[0] <= fS[cohort] <= p.value[1]
           else
@@ -99,7 +116,7 @@ app.directive 'dotChart', ($timeout) ->
       return
 
     updateHistograms = ->
-      extent = d3.extent $scope.filteredSamples.map (fS) ->
+      extent = d3.extent filteredSamples.map (fS) ->
         if substance then fS[resistance][substance] else d3.sum _.values fS[resistance]
       bins = d3.range(extent[0], extent[1], extent[1] / nOfBins).concat extent[1]
       histograms = {}
@@ -213,6 +230,10 @@ app.directive 'dotChart', ($timeout) ->
             .style 'fill', if substance then $scope.colorScale(substance) else '#aaa'
             .style 'opacity', .7
             .on 'mouseover', ->
+              $scope.dotChart.sample = s
+              $scope.dotChart.cohort = key
+              $scope.$apply()
+
               abund = if substance then s[resistance][substance] else d3.sum _.values s[resistance]
               power = parseInt(abund.toExponential().split('-')[1])
               multiplier = Math.pow 10, power
@@ -230,6 +251,10 @@ app.directive 'dotChart', ($timeout) ->
               .style 'left', d3.event.pageX + tooltipOffset + 'px'
               return
             .on 'mouseout', ->
+              $scope.dotChart.sample = undefined
+              $scope.dotChart.cohort = undefined
+              $scope.$apply()
+
               tooltip.style 'display', ''
               return
             .on 'click', ->
@@ -259,6 +284,7 @@ app.directive 'dotChart', ($timeout) ->
     updateResistance()
     updateSubstance()
     updateCohort()
+    filterSamples()
     updateCohorts()
     updateHistograms()
     updateSampleScales()
@@ -287,8 +313,9 @@ app.directive 'dotChart', ($timeout) ->
         $timeout (->updateGraph()), 500
       return
 
-    $scope.$watch 'filteredSamples', (newValue, oldValue) ->
+    $scope.$watch 'sampleFilterValues', (newValue, oldValue) ->
       unless newValue is oldValue
+        filterSamples()
         updateCohorts()
         updateHistograms()
         updateSampleScales()
@@ -296,7 +323,7 @@ app.directive 'dotChart', ($timeout) ->
       return
     , true
 
-    $scope.$watch 'barChart', (newValue, oldValue) ->
+    $scope.$watch 'barChart.substance', (newValue, oldValue) ->
       unless newValue is oldValue
         console.log 'W: bar chart'
       return

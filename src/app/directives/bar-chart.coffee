@@ -3,10 +3,11 @@ app.directive 'barChart', ->
   replace: true
   templateUrl: 'templates/directives/bar-chart.html'
   scope:
+    data: '='
     substanceFilters: '='
     sampleFilters: '='
     rscFilterValues: '='
-    filteredSamples: '='
+    sampleFilterValues: '='
     barChart: '='
     dotChart: '='
     quantityCheckbox: '='
@@ -34,6 +35,7 @@ app.directive 'barChart', ->
 
     substances = []
 
+    filteredSamples = []
     cohorts = {}
     nOfCohorts = 0
 
@@ -86,12 +88,27 @@ app.directive 'barChart', ->
       cohort = $scope.rscFilterValues.cohort.value
       return
 
+    filterSamples = ->
+      filteredSamples = $scope.data.samples.filter (s) ->
+        _.every $scope.sampleFilters, (sF) ->
+          filterValues = $scope.sampleFilterValues[sF.key]
+
+          if filterValues.length
+            _.some filterValues, (fV) ->
+              if sF.key is 'f-ages'
+                fV.value[0] <= s[sF.key] <= fV.value[1]
+              else
+                s[sF.key] is fV.value
+          else
+            true
+      return
+
     updateCohorts = ->
       cohorts = {}
       nOfCohorts = 0
 
       _.find($scope.sampleFilters, {'key': cohort}).dataset.forEach (p) ->
-        cohorts[p.title] = $scope.filteredSamples.filter (fS) ->
+        cohorts[p.title] = filteredSamples.filter (fS) ->
           if cohort is 'f-ages'
             p.value[0] <= fS[cohort] <= p.value[1]
           else
@@ -108,7 +125,7 @@ app.directive 'barChart', ->
 
     updateBarWidthScale = ->
       if $scope.quantityCheckbox.on
-        barWidthScale.domain [0, $scope.filteredSamples.length]
+        barWidthScale.domain [0, filteredSamples.length]
       else
         barWidthScale.domain [0, nOfCohorts]
 
@@ -166,6 +183,9 @@ app.directive 'barChart', ->
           .attr 'height', 0
           .style 'fill', $scope.colorScale s
           .on 'mouseover', ->
+            $scope.barChart.substance = s
+            $scope.$apply()
+
             samples = cohorts[key].filter (cs) -> cs[resistance][s]
             median = getSubstanceMedianValue s, samples
             abundance = (median * multiplier).toFixed(2)
@@ -186,6 +206,9 @@ app.directive 'barChart', ->
             .style 'left', d3.event.pageX + tooltipOffset + 'px'
             return
           .on 'mouseout', ->
+            $scope.barChart.substance = undefined
+            $scope.$apply()
+
             tooltip.style 'display', ''
             return
           .on 'click', ->
@@ -240,13 +263,30 @@ app.directive 'barChart', ->
         substances.forEach (s) ->
           bar = cohortBars.filter (b) -> b is s
           median = getSubstanceMedianValue s, cohortSamples
+          barHeight = barYScale(medianSum) - barYScale(medianSum + median)
 
           bar
           .transition()
           .duration 300
           .attr 'y', barYScale(medianSum + median)
           .attr 'width', barWidth
-          .attr 'height', barYScale(medianSum) - barYScale(medianSum + median)
+          .attr 'height', barHeight
+          .style 'y', ->
+            if $scope.rscFilterValues.substance.value
+              if s is $scope.rscFilterValues.substance.value
+                height - barHeight
+              else
+                ''
+            else
+              ''
+          .style 'visibility', ->
+            if $scope.rscFilterValues.substance.value
+              if s is $scope.rscFilterValues.substance.value
+                'visible'
+              else
+                'hidden'
+            else
+              'visible'
 
           medianSum += median
           return
@@ -255,48 +295,10 @@ app.directive 'barChart', ->
         return
       return
 
-    showSpecificSubstance = (substance) ->
-      bars = d3element.selectAll('.bar')
-
-      if substance
-        bars
-        .filter (b) -> b isnt substance
-        .transition()
-        .duration 300
-        .style 'opacity', 0
-        .transition()
-        .delay 300
-        .style 'display', 'none'
-        .style 'y', ''
-
-        bars
-        .filter (b) -> b is substance
-        .style 'display', ''
-        .transition()
-        .duration 300
-        .style 'opacity', 1
-        .transition()
-        .delay 300
-        .duration 300
-        .style 'y', (d) -> height - d3.select(@).node().getBBox().height
-      else
-        bars
-        .style 'display', ''
-        .style 'y', ''
-        .attr 'y', (d) -> height - d3.select(@).node().getBBox().height
-
-        updateGraph()
-
-        bars
-        .transition()
-        .delay 300
-        .duration 300
-        .style 'opacity', 1
-      return
-
     updateResistance()
     updateSubstances()
     updateCohort()
+    filterSamples()
     updateCohorts()
     updateBarWidthScale()
     updateBarYScaleAndAxis()
@@ -313,7 +315,7 @@ app.directive 'barChart', ->
 
     $scope.$watch 'rscFilterValues.substance', (newValue, oldValue) ->
       unless newValue is oldValue
-        showSpecificSubstance $scope.rscFilterValues.substance.value
+        updateGraph()
       return
 
     $scope.$watch 'rscFilterValues.cohort', (newValue, oldValue) ->
@@ -326,8 +328,9 @@ app.directive 'barChart', ->
         updateGraph()
       return
 
-    $scope.$watch 'filteredSamples', (newValue, oldValue) ->
+    $scope.$watch 'sampleFilterValues', (newValue, oldValue) ->
       unless newValue is oldValue
+        filterSamples()
         updateCohorts()
         updateBarWidthScale()
         updateBarYScaleAndAxis()
@@ -339,6 +342,7 @@ app.directive 'barChart', ->
       unless newValue is oldValue
         console.log 'W: dot chart'
       return
+    , true
 
     $scope.$watch 'quantityCheckbox.on', (newValue, oldValue) ->
       unless newValue is oldValue

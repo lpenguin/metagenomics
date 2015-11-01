@@ -69,14 +69,15 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   $scope.sampleFilters = []
   $scope.sampleFilterValues = {}
 
-  $scope.barChart = {}
+  $scope.barChart =
+    substance: undefined
 
-  $scope.dotChart = {}
-
+  $scope.dotChart =
+    sample: undefined
+    cohort: undefined
+    
   $scope.quantityCheckbox =
     on: true
-
-  $scope.filteredSamples = []
 
   parseData = (error, rawData) ->
     if error
@@ -213,23 +214,5 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
 
     $scope.rscFilterValues.substance = _.find($scope.substanceFilters, {'key': $scope.rscFilterValues.resistance.value}).dataset[0]
     return
-
-  $scope.$watch 'sampleFilterValues', ->
-    return unless $scope.data.samples
-
-    $scope.filteredSamples = $scope.data.samples.filter (s) ->
-      _.every $scope.sampleFilters, (sF) ->
-        filterValues = $scope.sampleFilterValues[sF.key]
-
-        if filterValues.length
-          _.some filterValues, (fV) ->
-            if sF.key is 'f-ages'
-              fV.value[0] <= s[sF.key] <= fV.value[1]
-            else
-              s[sF.key] is fV.value
-        else
-          true
-    return
-  , true
 
   return
