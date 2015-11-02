@@ -48,6 +48,10 @@
   cursor: pointer;
 }
 
+.dot-chart__svg .median {
+  pointer-events: none;
+}
+
 .dot-chart__svg .cohort-caption {
   font-size: $s-font-size;
   text-anchor: start;

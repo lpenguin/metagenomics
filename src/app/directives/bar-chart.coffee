@@ -1,4 +1,4 @@
-app.directive 'barChart', ->
+app.directive 'barChart', ($timeout) ->
   restrict: 'E'
   replace: true
   templateUrl: 'templates/directives/bar-chart.html'
@@ -31,6 +31,7 @@ app.directive 'barChart', ->
     cohortGap = width * .01
 
     resistance = undefined
+    substance = undefined
     cohort = undefined
 
     substances = []
@@ -49,6 +50,8 @@ app.directive 'barChart', ->
     .scale barYScale
     .tickSize width
     .orient 'right'
+
+    timer = undefined
 
     svg = d3element.append 'svg'
     .classed 'bar-chart__svg', true
@@ -78,6 +81,10 @@ app.directive 'barChart', ->
 
     updateResistance = ->
       resistance = $scope.rscFilterValues.resistance.value
+      return
+
+    updateSubstance = ->
+      substance = $scope.rscFilterValues.substance.value
       return
 
     updateSubstances = ->
@@ -183,8 +190,12 @@ app.directive 'barChart', ->
           .attr 'height', 0
           .style 'fill', $scope.colorScale s
           .on 'mouseover', ->
-            $scope.barChart.substance = s
-            $scope.$apply()
+            d3.select(@).style 'opacity', .7
+
+            timer = $timeout ->
+              $scope.barChart.substance = s
+              $scope.$apply()
+            , 500
 
             samples = cohorts[key].filter (cs) -> cs[resistance][s]
             median = getSubstanceMedianValue s, samples
@@ -206,8 +217,13 @@ app.directive 'barChart', ->
             .style 'left', d3.event.pageX + tooltipOffset + 'px'
             return
           .on 'mouseout', ->
-            $scope.barChart.substance = undefined
-            $scope.$apply()
+            d3.select(@).style 'opacity', 1
+
+            $timeout.cancel timer
+
+            if $scope.barChart.substance
+              $scope.barChart.substance = undefined
+              $scope.$apply()
 
             tooltip.style 'display', ''
             return
@@ -219,7 +235,7 @@ app.directive 'barChart', ->
         return
       return
 
-    updateGraph = ->
+    updateAxis = ->
       yAxisGroup.call yAxis
 
       yAxisGroup.selectAll 'text'
@@ -234,6 +250,10 @@ app.directive 'barChart', ->
 
       yAxisGroup.select 'line'
       .style 'display', 'none'
+      return
+
+    updateGraph = ->
+      updateAxis()
 
       x = 0
 
@@ -269,8 +289,8 @@ app.directive 'barChart', ->
           .transition()
           .duration 300
           .attr 'y', ->
-            if $scope.rscFilterValues.substance.value
-              if s is $scope.rscFilterValues.substance.value
+            if substance
+              if s is substance
                 height - barHeight
               else
                 barYScale(medianSum + median)
@@ -279,8 +299,8 @@ app.directive 'barChart', ->
           .attr 'width', barWidth
           .attr 'height', barHeight
           .style 'visibility', ->
-            if $scope.rscFilterValues.substance.value
-              if s is $scope.rscFilterValues.substance.value
+            if substance
+              if s is substance
                 'visible'
               else
                 'hidden'
@@ -294,7 +314,62 @@ app.directive 'barChart', ->
         return
       return
 
+    showSampleBars = (newValue, oldValue) ->
+      currentCohort = newValue.cohort or oldValue.cohort
+      sampleCohort = cohortsGroup.selectAll('.cohort').filter (c) -> c is currentCohort
+      barWidth = barWidthScale if $scope.quantityCheckbox.on then cohorts[currentCohort].length else 1
+      barWidth = (barWidth - cohortGap) / 2 if newValue.cohort
+
+      sampleCohort.selectAll '.bar'
+      .transition()
+      .duration 300
+      .attr 'width', barWidth
+
+      if newValue.sample
+        sampleBars = sampleCohort.append 'g'
+        .classed 'sample-bars', true
+
+        if substance
+          sampleBars.append 'rect'
+          .attr 'x', barWidth + cohortGap
+          .attr 'y', height
+          .attr 'width', barWidth
+          .attr 'height', 0
+          .style 'fill', $scope.colorScale substance
+          .transition()
+          .delay 300
+          .duration 300
+          .attr 'y', barYScale(newValue.sample[resistance][substance])
+          .attr 'height', height - barYScale(newValue.sample[resistance][substance])
+        else
+          sumAbund = 0
+
+          substances.forEach (s) ->
+            bar = sampleBars.append 'rect'
+            abund = newValue.sample[resistance][s]
+            abund = 0 unless abund
+            barHeight = barYScale(sumAbund) - barYScale(sumAbund + abund)
+
+            bar
+            .attr 'x', barWidth + cohortGap
+            .attr 'y', height
+            .attr 'width', barWidth
+            .attr 'height', 0
+            .style 'fill', $scope.colorScale s
+            .transition()
+            .delay 300
+            .duration 300
+            .attr 'y', barYScale(sumAbund + abund)
+            .attr 'height', barHeight
+
+            sumAbund += abund
+            return
+      else
+        sampleCohort.select('.sample-bars').remove()
+      return
+
     updateResistance()
+    updateSubstance()
     updateSubstances()
     updateCohort()
     filterSamples()
@@ -314,6 +389,7 @@ app.directive 'barChart', ->
 
     $scope.$watch 'rscFilterValues.substance', (newValue, oldValue) ->
       unless newValue is oldValue
+        updateSubstance()
         updateGraph()
       return
 
@@ -339,7 +415,7 @@ app.directive 'barChart', ->
 
     $scope.$watch 'dotChart', (newValue, oldValue) ->
       unless newValue is oldValue
-        console.log 'W: dot chart'
+        showSampleBars newValue, oldValue
       return
     , true
 

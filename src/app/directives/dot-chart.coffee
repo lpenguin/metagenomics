@@ -47,6 +47,8 @@ app.directive 'dotChart', ($timeout) ->
     .tickSize width + 10
     .orient 'right'
 
+    timer = undefined
+
     svg = d3element.append 'svg'
     .classed 'dot-chart__svg', true
     .attr 'width', outerWidth
@@ -140,6 +142,26 @@ app.directive 'dotChart', ($timeout) ->
       sampleYScale.domain [bins[0], bins[bins.length - 1]]
       return
 
+    updateAxis = ->
+      yAxisGroup.call yAxis
+
+      yAxisGroup.selectAll '.tick'
+      .style 'display', 'none'
+
+      goodTicks = yAxisGroup.selectAll '.tick'
+      .filter (d) -> d / 10 ** Math.ceil(Math.log(d) / Math.LN10 - 1e-12) is 1
+
+      goodTicks.style 'display', ''
+
+      goodTicks.selectAll 'text'
+      .attr 'dy', 0
+      .attr 'x', -20
+      .text 10
+      .append 'tspan'
+      .style 'baseline-shift', 'super'
+      .text (d) -> Math.round Math.log(d) / Math.LN10
+      return
+
     updateGraph = ->
       cohortsGroup.selectAll('*').remove()
       captionsGroup.selectAll('*').remove()
@@ -171,23 +193,7 @@ app.directive 'dotChart', ($timeout) ->
         .classed 'median', true
         return
 
-      yAxisGroup.call yAxis
-
-      yAxisGroup.selectAll '.tick'
-      .style 'display', 'none'
-
-      goodTicks = yAxisGroup.selectAll '.tick'
-      .filter (d) -> d / 10 ** Math.ceil(Math.log(d) / Math.LN10 - 1e-12) is 1
-
-      goodTicks.style 'display', ''
-
-      goodTicks.selectAll 'text'
-      .attr 'dy', 0
-      .attr 'x', -20
-      .text 10
-      .append 'tspan'
-      .style 'baseline-shift', 'super'
-      .text (d) -> Math.round Math.log(d) / Math.LN10
+      updateAxis()
 
       x = 0
 
@@ -225,14 +231,19 @@ app.directive 'dotChart', ($timeout) ->
           bin.forEach (s, i) ->
             groupBin.append 'circle'
             .classed 'sample', true
+            .datum s
             .attr 'cx', 0
             .attr 'r', 3
             .style 'fill', if substance then $scope.colorScale(substance) else '#aaa'
             .style 'opacity', .7
             .on 'mouseover', ->
-              $scope.dotChart.sample = s
-              $scope.dotChart.cohort = key
-              $scope.$apply()
+              d3.select(@).style 'opacity', 1
+
+              timer = $timeout ->
+                $scope.dotChart.sample = s
+                $scope.dotChart.cohort = key
+                $scope.$apply()
+              , 500
 
               abund = if substance then s[resistance][substance] else d3.sum _.values s[resistance]
               power = parseInt(abund.toExponential().split('-')[1])
@@ -251,9 +262,14 @@ app.directive 'dotChart', ($timeout) ->
               .style 'left', d3.event.pageX + tooltipOffset + 'px'
               return
             .on 'mouseout', ->
-              $scope.dotChart.sample = undefined
-              $scope.dotChart.cohort = undefined
-              $scope.$apply()
+              d3.select(@).style 'opacity', .7
+
+              $timeout.cancel timer
+
+              if $scope.dotChart.sample or $scope.dotChart.cohort
+                $scope.dotChart.sample = undefined
+                $scope.dotChart.cohort = undefined
+                $scope.$apply()
 
               tooltip.style 'display', ''
               return
@@ -279,6 +295,20 @@ app.directive 'dotChart', ($timeout) ->
 
         x += cohortWidth + cohortGap if cohortWidth
         return
+      return
+
+    highlightSamples = ->
+      d3element.selectAll '.sample'
+      .transition()
+      .duration 300
+      .style 'fill', (d) ->
+        if $scope.barChart.substance
+          if d[resistance][$scope.barChart.substance]
+            $scope.colorScale $scope.barChart.substance
+          else
+            '#aaa'
+        else
+          '#aaa'
       return
 
     updateResistance()
@@ -325,7 +355,8 @@ app.directive 'dotChart', ($timeout) ->
 
     $scope.$watch 'barChart.substance', (newValue, oldValue) ->
       unless newValue is oldValue
-        console.log 'W: bar chart'
+        unless substance
+          highlightSamples()
       return
 
     return
