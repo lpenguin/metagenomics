@@ -51,8 +51,12 @@ $info-block-width: 250px;
   text-overflow: ellipsis;
 }
 
+.info-block__card .title::first-letter {
+  text-transform: uppercase;
+}
+
 .info-block__card .info {
-  height: 499px;
+  height: 507px;
   overflow: auto;
 }
 

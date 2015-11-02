@@ -10,14 +10,22 @@
   </div>
   <div
     class="info-block__card"
-    data-ng-if="false">
-    <div class="title"></div>
+    data-ng-if="!areSubstancesShown()">
+    <div class="title">{{getSubstanceInfo()['category_name']}}</div>
     <div class="info">
-      <div class="text-block"></div>
+      <div class="text-block">{{getSubstanceInfo()['category_description']}}</div>
       <div class="caption">Resistance</div>
-      <div class="column left"></div>
-      <div class="column right"></div>
-      <br class="clear-both" />
+      <div
+        class="row"
+        data-ng-repeat="rows in genesData">
+        <div class="column left">
+          <div class="column-item">{{rows[0]['gene_name']}}</div>
+        </div>
+        <div class="column right">
+          <div class="column-item">{{rows[1]['gene_name']}}</div>
+        </div>
+        <br class="clear-both" />
+      </div>
     </div>
   </div>
   <div

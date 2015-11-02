@@ -1,4 +1,4 @@
-app.directive 'barChart', ($timeout) ->
+app.directive 'barChart', ->
   restrict: 'E'
   replace: true
   templateUrl: 'templates/directives/bar-chart.html'
@@ -50,8 +50,6 @@ app.directive 'barChart', ($timeout) ->
     .scale barYScale
     .tickSize width
     .orient 'right'
-
-    timer = undefined
 
     svg = d3element.append 'svg'
     .classed 'bar-chart__svg', true
@@ -192,10 +190,8 @@ app.directive 'barChart', ($timeout) ->
           .on 'mouseover', ->
             d3.select(@).style 'opacity', .7
 
-            timer = $timeout ->
-              $scope.barChart.substance = s
-              $scope.$apply()
-            , 500
+            $scope.barChart.substance = s
+            $scope.$apply()
 
             samples = cohorts[key].filter (cs) -> cs[resistance][s]
             median = getSubstanceMedianValue s, samples
@@ -219,11 +215,8 @@ app.directive 'barChart', ($timeout) ->
           .on 'mouseout', ->
             d3.select(@).style 'opacity', 1
 
-            $timeout.cancel timer
-
-            if $scope.barChart.substance
-              $scope.barChart.substance = undefined
-              $scope.$apply()
+            $scope.barChart.substance = undefined
+            $scope.$apply()
 
             tooltip.style 'display', ''
             return

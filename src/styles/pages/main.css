@@ -85,3 +85,18 @@ $graph-height: 465px;
   margin-top: 20px;
   padding-left: $common-padding;
 }
+
+.datalab-footer {
+  margin: 30px 0 0 $common-padding;
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
+}
+
+.datalab-footer__dl-caption {
+  font-family: $garamond-original-italic;
+  font-size: $dl-font-size;
+}
+
+.datalab-footer .additional-info {
+  margin-top: 5px;
+}

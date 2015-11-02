@@ -75,9 +75,11 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
   $scope.dotChart =
     sample: undefined
     cohort: undefined
-    
+
   $scope.quantityCheckbox =
     on: true
+
+  $scope.studies = ''
 
   parseData = (error, rawData) ->
     if error
@@ -149,7 +151,9 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
     # Cohort filter
     $scope.cohortFilter =
       key: 'cohort'
-      dataset: filteringFields.map (ff) -> { title: ff.split('-')[1], value: ff }
+      dataset: filteringFields
+      .filter (ff) -> ff isnt 'f-studies'
+      .map (ff) -> { title: ff.split('-')[1], value: ff }
       multi: false
       toggleFormat: -> $scope.rscFilterValues.cohort.title
       disabled: false
@@ -169,6 +173,9 @@ app.controller 'mainCtrl', ($scope, $timeout) ->
           return 1 if a.toLowerCase() > b.toLowerCase()
           0
         .map (u) -> { title: u, value: u }
+
+      if ff is 'f-studies'
+        $scope.studies = _.pluck(dataset, 'title').join(', ')
 
       filter =
         key: ff
