@@ -1,7 +1,7 @@
-app.directive 'infoBlock', ($timeout) ->
+app.directive 'infoBlock', (tools) ->
   restrict: 'E'
   replace: true
-  templateUrl: 'templates/directives/info-block.html'
+  templateUrl: 'directives/info-block.html'
   scope:
     data: '='
     substanceFilters: '='
@@ -16,32 +16,25 @@ app.directive 'infoBlock', ($timeout) ->
       !$scope.rscFilterValues.substance.value
 
     $scope.getSubstances = ->
-      _.pluck _.find($scope.substanceFilters, {'key': $scope.rscFilterValues.resistance.value}).dataset.slice(1), 'title'
+      sFilter = _.find $scope.substanceFilters, 'key': $scope.rscFilterValues.resistance.value
+      _.map sFilter.dataset.slice(1), 'title'
 
     $scope.getSubstanceStyle = (substance) ->
       color: $scope.colorScale substance
 
     $scope.selectSubstance = (substance) ->
-      $scope.rscFilterValues.substance = _.find _.find($scope.substanceFilters, {'key': $scope.rscFilterValues.resistance.value}).dataset, {'value': substance}
+      sFilter = _.find $scope.substanceFilters, 'key': $scope.rscFilterValues.resistance.value
+      $scope.rscFilterValues.substance = _.find sFilter.dataset, 'value': substance
       return
 
     $scope.getSubstanceInfo = ->
-      _.find $scope.data.substances, {'category_name': $scope.rscFilterValues.substance.value}
-
-    getChunkedData = (arr, size) ->
-      newArr = []
-      i = 0
-
-      while i < arr.length
-        newArr.push arr.slice(i, i + size)
-        i += size
-
-      newArr
+      _.find $scope.data.substances, 'category_name': $scope.rscFilterValues.substance.value
 
     $scope.$watch 'rscFilterValues.substance', (newValue, oldValue) ->
       unless newValue is oldValue
         if $scope.rscFilterValues.substance.value
-          $scope.genesData = getChunkedData _.find($scope.data.substances, {'category_name': $scope.rscFilterValues.substance.value})['genes'], 2
+          s = _.find $scope.data.substances, 'category_name': $scope.rscFilterValues.substance.value
+          $scope.genesData = tools.getChunkedData s['genes'], 2
         else
           $scope.genesData = []
       return

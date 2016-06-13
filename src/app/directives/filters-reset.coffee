@@ -1,7 +1,7 @@
 app.directive 'filtersReset', ->
   restrict: 'E'
   replace: true
-  templateUrl: 'templates/directives/filters-reset.html'
+  templateUrl: 'directives/filters-reset.html'
   scope:
     sampleFilters: '='
     sampleFilterValues: '='
@@ -17,7 +17,7 @@ app.directive 'filtersReset', ->
 
     $scope.resetFilters = ->
       _.keys($scope.sampleFilterValues).forEach (key) ->
-        filter = _.find $scope.sampleFilters, {'key': key}
+        filter = _.find $scope.sampleFilters, 'key': key
 
         $scope.sampleFilterValues[key] = if filter.multi then [] else filter.dataset[0]
         return

@@ -1,7 +1,7 @@
 app.directive 'dotGraphTitle', ->
   restrict: 'E'
   replace: true
-  templateUrl: 'templates/directives/dot-graph-title.html'
+  template: '<div>{{getGraphTitle()}}</div>'
   scope:
     rscFilterValues: '='
   link: ($scope, $element, $attrs) ->

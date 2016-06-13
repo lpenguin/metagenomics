@@ -3,8 +3,8 @@
     class="info-block__legend"
     data-ng-if="areSubstancesShown()">
     <div
-      data-ng-repeat="substance in getSubstances() track by $index"
       class="item"
+      data-ng-repeat="substance in getSubstances() track by $index"
       data-ng-style="getSubstanceStyle(substance)"
       data-ng-click="selectSubstance(substance)">{{substance}}</div>
   </div>

@@ -10,8 +10,8 @@
     class="custom-select__dropdown"
     data-ng-style="{'visibility': isListShown ? 'visible' : 'hidden'}">
     <div
-      data-ng-repeat="item in dataset track by $index"
       class="item"
+      data-ng-repeat="item in dataset track by $index"
       data-ng-class="{'selected': isItemSelected(item)}"
       data-ng-click="selectItem(item)">{{item.title}}</div>
   </div>

@@ -1,7 +1,7 @@
-app.directive 'barChart', ->
+app.directive 'barChart', (tools) ->
   restrict: 'E'
   replace: true
-  templateUrl: 'templates/directives/bar-chart.html'
+  templateUrl: 'directives/bar-chart.html'
   scope:
     data: '='
     substanceFilters: '='
@@ -44,31 +44,7 @@ app.directive 'barChart', ->
     power = 0
     multiplier = 0
 
-    barWidthScale = d3.scale.linear()
-    barYScale = d3.scale.linear().range [height, 0]
-    yAxis = d3.svg.axis()
-    .scale barYScale
-    .tickSize width
-    .orient 'right'
-
-    svg = d3element.append 'svg'
-    .classed 'bar-chart__svg', true
-    .attr 'width', outerWidth
-    .attr 'height', outerHeight
-
-    g = svg.append 'g'
-    .classed 'main', true
-    .attr 'transform', 'translate(' + padding.left + ', ' + padding.top + ')'
-
-    cohortsGroup = g.append 'g'
-    .classed 'cohorts', true
-
-    captionsGroup = g.append 'g'
-    .classed 'captions', true
-    .attr 'transform', 'translate(0, ' + height + ')'
-
-    yAxisGroup = g.append 'g'
-    .classed 'y-axis', true
+    duration = 300
 
     tooltip = d3element.select '.bar-chart__tooltip'
     tooltipSubstance = tooltip.select '.substance'
@@ -76,6 +52,35 @@ app.directive 'barChart', ->
     tooltipCohort = tooltip.select '.cohort'
     tooltipNofSamples = tooltip.select '.n-of-samples'
     tooltipOffset = 20
+
+    barWidthScale = d3.scale.linear()
+
+    barYScale = d3.scale.linear()
+      .range [height, 0]
+
+    yAxis = d3.svg.axis()
+      .scale barYScale
+      .tickSize width
+      .orient 'right'
+
+    svg = d3element.append 'svg'
+      .classed 'bar-chart__svg', true
+      .attr 'width', outerWidth
+      .attr 'height', outerHeight
+
+    g = svg.append 'g'
+      .classed 'main', true
+      .attr 'transform', 'translate(' + padding.left + ', ' + padding.top + ')'
+
+    cohortsGroup = g.append 'g'
+      .classed 'cohorts', true
+
+    captionsGroup = g.append 'g'
+      .classed 'captions', true
+      .attr 'transform', 'translate(0, ' + height + ')'
+
+    yAxisGroup = g.append 'g'
+      .classed 'y-axis', true
 
     updateResistance = ->
       resistance = $scope.rscFilterValues.resistance.value
@@ -86,7 +91,9 @@ app.directive 'barChart', ->
       return
 
     updateSubstances = ->
-      substances = _.pluck(_.find($scope.substanceFilters, {'key': resistance}).dataset.slice(1), 'value').reverse()
+      sFilter = _.find $scope.substanceFilters, 'key': resistance
+      substances = _.map sFilter.dataset.slice(1), 'value'
+      substances = substances.reverse()
       return
 
     updateCohort = ->
@@ -112,7 +119,7 @@ app.directive 'barChart', ->
       cohorts = {}
       nOfCohorts = 0
 
-      _.find($scope.sampleFilters, {'key': cohort}).dataset.forEach (p) ->
+      _.find($scope.sampleFilters, 'key': cohort).dataset.forEach (p) ->
         cohorts[p.title] = filteredSamples.filter (fS) ->
           if cohort is 'f-ages'
             p.value[0] <= fS[cohort] <= p.value[1]
@@ -124,7 +131,7 @@ app.directive 'barChart', ->
       return
 
     getSubstanceMedianValue = (substance, samples) ->
-      median = d3.median _.pluck(samples, resistance).map (p) -> _.result p, substance
+      median = d3.median _.map(samples, resistance).map (p) -> _.result p, substance
       median = 0 unless median
       median
 
@@ -140,7 +147,7 @@ app.directive 'barChart', ->
     updateBarYScaleAndAxis = ->
       max = d3.max _.keys(cohorts).map (key) ->
         d3.sum substances.map (s) ->
-          d3.median _.pluck(cohorts[key], resistance).map (cR) -> _.result cR, s
+          d3.median _.map(cohorts[key], resistance).map (cR) -> _.result cR, s
 
       barYScale.domain [0, max]
 
@@ -148,14 +155,12 @@ app.directive 'barChart', ->
       multiplier = Math.pow 10, power
 
       yAxis
-      .tickValues ->
-        values = d3.range 0, max + max / (nOfAxisCaptions - 1), max / (nOfAxisCaptions - 1)
-
-        values.map (v, i) -> unless i is values.length - 1 then (v * multiplier).toFixed(0) / multiplier else v
-      .tickFormat (d, i) ->
-        isLast = i is nOfAxisCaptions - 1
-
-        (d * multiplier).toFixed(unless isLast then 0 else 2) + (unless isLast then '' else ' × 10')
+        .tickValues ->
+          values = d3.range 0, max + max / (nOfAxisCaptions - 1), max / (nOfAxisCaptions - 1)
+          values.map (v, i) -> unless i is values.length - 1 then (v * multiplier).toFixed(0) / multiplier else v
+        .tickFormat (d, i) ->
+          isLast = i is nOfAxisCaptions - 1
+          (d * multiplier).toFixed(unless isLast then 0 else 2) + (unless isLast then '' else ' × 10')
       return
 
     prepareGraph = ->
@@ -164,66 +169,67 @@ app.directive 'barChart', ->
 
       _.keys(cohorts).forEach (key) ->
         captionGroup = captionsGroup.append 'g'
-        .classed 'caption', true
-        .datum key
+          .classed 'caption', true
+          .datum key
 
         captionGroup.append 'text'
-        .classed 'cohort-caption', true
-        .attr 'y', 3
-        .text -> key
+          .classed 'cohort-caption', true
+          .attr 'y', 3
+          .text -> key
 
         captionGroup.append 'text'
-        .classed 'quantity-caption', true
-        .attr 'y', 18
+          .classed 'quantity-caption', true
+          .attr 'y', 18
 
         cohortGroup = cohortsGroup.append 'g'
-        .classed 'cohort', true
-        .datum key
+          .classed 'cohort', true
+          .datum key
 
         substances.forEach (s) ->
           cohortGroup.append 'rect'
-          .classed 'bar', true
-          .datum s
-          .attr 'y', height
-          .attr 'height', 0
-          .style 'fill', $scope.colorScale s
-          .on 'mouseover', ->
-            d3.select(@).style 'opacity', .7
+            .classed 'bar', true
+            .datum s
+            .attr 'y', height
+            .attr 'height', 0
+            .style 'fill', $scope.colorScale s
+            .on 'mouseover', ->
+              d3.select(@).style 'opacity', .7
 
-            $scope.barChart.substance = s
-            $scope.$apply()
+              $scope.barChart.substance = s
+              $scope.$apply()
 
-            samples = cohorts[key].filter (cs) -> cs[resistance][s]
-            median = getSubstanceMedianValue s, samples
-            abundance = (median * multiplier).toFixed(2)
+              samples = cohorts[key].filter (cs) -> cs[resistance][s]
+              median = getSubstanceMedianValue s, samples
+              abundance = (median * multiplier).toFixed(2)
 
-            tooltipSubstance.html s
-            tooltipAbundance.html 'Median abundance: ' + abundance + ' × 10<sup>−' + power + '</sup>'
-            tooltipCohort.html key
-            tooltipNofSamples.html samples.length + ' ' + if samples.length is 1 then 'sample' else 'samples'
+              tooltipSubstance.html s
+              tooltipAbundance.html 'Median abundance: ' + abundance + ' × 10<sup>' + tools.goodMinus() + power + '</sup>'
+              tooltipCohort.html key
+              tooltipNofSamples.html samples.length + ' ' + if samples.length is 1 then 'sample' else 'samples'
 
-            tooltip
-            .style 'display', 'block'
-            .style 'top', d3.event.pageY + 'px'
-            .style 'left', d3.event.pageX + tooltipOffset + 'px'
-            return
-          .on 'mousemove', ->
-            tooltip
-            .style 'top', d3.event.pageY + 'px'
-            .style 'left', d3.event.pageX + tooltipOffset + 'px'
-            return
-          .on 'mouseout', ->
-            d3.select(@).style 'opacity', 1
+              tooltip
+                .style 'display', 'block'
+                .style 'top', d3.event.pageY + 'px'
+                .style 'left', d3.event.pageX + tooltipOffset + 'px'
+              return
+            .on 'mousemove', ->
+              tooltip
+                .style 'top', d3.event.pageY + 'px'
+                .style 'left', d3.event.pageX + tooltipOffset + 'px'
+              return
+            .on 'mouseout', ->
+              d3.select(@).style 'opacity', 1
 
-            $scope.barChart.substance = undefined
-            $scope.$apply()
+              $scope.barChart.substance = undefined
+              $scope.$apply()
 
-            tooltip.style 'display', ''
-            return
-          .on 'click', ->
-            $scope.rscFilterValues.substance = _.find _.find($scope.substanceFilters, {'key': resistance}).dataset, {'value': s}
-            $scope.$apply()
-            return
+              tooltip.style 'display', ''
+              return
+            .on 'click', ->
+              sFilter = _.find $scope.substanceFilters, 'key': resistance
+              $scope.rscFilterValues.substance = _.find sFilter.dataset, 'value': s
+              $scope.$apply()
+              return
           return
         return
       return
@@ -232,17 +238,17 @@ app.directive 'barChart', ->
       yAxisGroup.call yAxis
 
       yAxisGroup.selectAll 'text'
-      .attr 'x', -15
-      .attr 'dy', 0
+        .attr 'x', -15
+        .attr 'dy', 0
 
       d3.select yAxisGroup.selectAll('text')[0].pop()
-      .attr 'dy', -5
-      .append 'tspan'
-      .style 'baseline-shift', 'super'
-      .text '−' + power
+        .attr 'dy', -5
+        .append 'tspan'
+        .style 'baseline-shift', 'super'
+        .text tools.goodMinus() + power
 
       yAxisGroup.select 'line'
-      .style 'display', 'none'
+        .style 'display', 'none'
       return
 
     updateGraph = ->
@@ -259,46 +265,40 @@ app.directive 'barChart', ->
         cohortBars = cohortGroup.selectAll '.bar'
 
         caption
-        .transition()
-        .duration 300
-        .attr 'transform', 'translate(' + x + ', 0)'
+          .transition()
+          .duration duration
+          .attr 'transform', 'translate(' + x + ', 0)'
 
         caption.select '.quantity-caption'
-        .text cohortSamples.length
+          .text cohortSamples.length
 
         caption.style 'display', -> 'none' unless cohortSamples.length and caption.node().getBBox().width < barWidth
 
         cohortGroup
-        .transition()
-        .duration 300
-        .attr 'transform', 'translate(' + x + ', 0)'
+          .transition()
+          .duration duration
+          .attr 'transform', 'translate(' + x + ', 0)'
 
         substances.forEach (s) ->
           bar = cohortBars.filter (b) -> b is s
           median = getSubstanceMedianValue s, cohortSamples
-          barHeight = barYScale(medianSum) - barYScale(medianSum + median)
+          barHeight = barYScale(medianSum) - barYScale medianSum + median
 
           bar
-          .transition()
-          .duration 300
-          .attr 'y', ->
-            if substance
-              if s is substance
-                height - barHeight
+            .transition()
+            .duration duration
+            .attr 'y', ->
+              if substance
+                if s is substance then height - barHeight else barYScale medianSum + median
               else
-                barYScale(medianSum + median)
-            else
-              barYScale(medianSum + median)
-          .attr 'width', barWidth
-          .attr 'height', barHeight
-          .style 'visibility', ->
-            if substance
-              if s is substance
+                barYScale medianSum + median
+            .attr 'width', barWidth
+            .attr 'height', barHeight
+            .style 'visibility', ->
+              if substance
+                if s is substance then 'visible' else 'hidden'
+              else
                 'visible'
-              else
-                'hidden'
-            else
-              'visible'
 
           medianSum += median
           return
@@ -314,26 +314,26 @@ app.directive 'barChart', ->
       barWidth = (barWidth - cohortGap) / 2 if newValue.cohort
 
       sampleCohort.selectAll '.bar'
-      .transition()
-      .duration 300
-      .attr 'width', barWidth
+        .transition()
+        .duration duration
+        .attr 'width', barWidth
 
       if newValue.sample
         sampleBars = sampleCohort.append 'g'
-        .classed 'sample-bars', true
+          .classed 'sample-bars', true
 
         if substance
           sampleBars.append 'rect'
-          .attr 'x', barWidth + cohortGap
-          .attr 'y', height
-          .attr 'width', barWidth
-          .attr 'height', 0
-          .style 'fill', $scope.colorScale substance
-          .transition()
-          .delay 300
-          .duration 300
-          .attr 'y', barYScale(newValue.sample[resistance][substance])
-          .attr 'height', height - barYScale(newValue.sample[resistance][substance])
+            .attr 'x', barWidth + cohortGap
+            .attr 'y', height
+            .attr 'width', barWidth
+            .attr 'height', 0
+            .style 'fill', $scope.colorScale substance
+            .transition()
+            .delay duration
+            .duration duration
+            .attr 'y', barYScale newValue.sample[resistance][substance]
+            .attr 'height', height - barYScale newValue.sample[resistance][substance]
         else
           sumAbund = 0
 
@@ -341,19 +341,19 @@ app.directive 'barChart', ->
             bar = sampleBars.append 'rect'
             abund = newValue.sample[resistance][s]
             abund = 0 unless abund
-            barHeight = barYScale(sumAbund) - barYScale(sumAbund + abund)
+            barHeight = barYScale(sumAbund) - barYScale sumAbund + abund
 
             bar
-            .attr 'x', barWidth + cohortGap
-            .attr 'y', height
-            .attr 'width', barWidth
-            .attr 'height', 0
-            .style 'fill', $scope.colorScale s
-            .transition()
-            .delay 300
-            .duration 300
-            .attr 'y', barYScale(sumAbund + abund)
-            .attr 'height', barHeight
+              .attr 'x', barWidth + cohortGap
+              .attr 'y', height
+              .attr 'width', barWidth
+              .attr 'height', 0
+              .style 'fill', $scope.colorScale s
+              .transition()
+              .delay duration
+              .duration duration
+              .attr 'y', barYScale sumAbund + abund
+              .attr 'height', barHeight
 
             sumAbund += abund
             return

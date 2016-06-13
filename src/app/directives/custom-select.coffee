@@ -1,7 +1,7 @@
 app.directive 'customSelect', ($document, $timeout) ->
   restrict: 'E'
   replace: true
-  templateUrl: 'templates/directives/custom-select.html'
+  templateUrl: 'directives/custom-select.html'
   scope:
     key: '='
     dataset: '='
@@ -26,14 +26,14 @@ app.directive 'customSelect', ($document, $timeout) ->
 
     $scope.isItemSelected = (item) ->
       if $scope.multi
-        index = _.indexOf _.pluck($scope.selected, 'title'), item.title
+        index = _.indexOf _.map($scope.selected, 'title'), item.title
         index isnt -1
       else
         $scope.selected.title is item.title
 
     $scope.selectItem = (item) ->
       if $scope.multi
-        index = _.indexOf _.pluck($scope.selected, 'title'), item.title
+        index = _.indexOf _.map($scope.selected, 'title'), item.title
 
         if index isnt -1
           $scope.selected.splice index, 1
