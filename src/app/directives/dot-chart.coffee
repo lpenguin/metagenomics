@@ -291,7 +291,7 @@ app.directive 'dotChart', ($timeout, tools) ->
           .attr 'width', 0
           .attr 'height', 1
           .attr 'x', -3
-          .attr 'y', sampleYScale medianValue
+          .attr 'y', if medianValue then sampleYScale(medianValue) else 0
           .style 'fill', '#333'
           .transition()
           .delay duration * 2
