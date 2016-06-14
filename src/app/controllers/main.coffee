@@ -3,7 +3,7 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
 
   $scope.data = {}
 
-  $scope.colorScale = d3.scale.ordinal().range colors.list
+  $scope.colorScale = d3.scale.ordinal().range colors.bigList
 
   $scope.resistanceFilter = {}
   $scope.substanceFilters = []

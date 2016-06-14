@@ -1,5 +1,5 @@
 app.constant 'colors',
-  list: [
+  bigList: [
     '#3dac65'
     '#a54cae'
     '#e4447c'
@@ -50,5 +50,19 @@ app.constant 'colors',
     '#8878d3'
     '#4b7f43'
     '#ff559c'
+  ]
+  smallList: [
+    '#6fbb3f'
+    '#09c085'
+    '#1cbbe0'
+    '#09a1ff'
+    '#6582fe'
+    '#bb83fe'
+    '#fd72d8'
+    '#fd4e89'
+    '#fc6a56'
+    '#fc803f'
+    '#e59823'
+    '#c0ad0f'
   ]
   neutral: '#aaa'
