@@ -172,7 +172,7 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
     return
 
   dataLoader
-    .getData()
+    .getSamplesGroupsData()
     .awaitAll parseData
 
   $scope.$watch 'rscFilterValues.resistance', ->
