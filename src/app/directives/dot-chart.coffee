@@ -1,4 +1,4 @@
-app.directive 'dotChart', ($timeout, tools) ->
+app.directive 'dotChart', ($timeout, tools, colors) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/dot-chart.html'
@@ -39,6 +39,8 @@ app.directive 'dotChart', ($timeout, tools) ->
     bins = []
     nOfBins = 200
     histograms = {}
+
+    sampleRadius = 3
 
     timer = undefined
 
@@ -123,10 +125,11 @@ app.directive 'dotChart', ($timeout, tools) ->
       return
 
     updateHistograms = ->
+      histograms = {}
       extent = d3.extent filteredSamples.map (fS) ->
         if substance then fS[resistance][substance] else d3.sum _.values fS[resistance]
-      bins = d3.range(extent[0], extent[1], extent[1] / nOfBins).concat extent[1]
-      histograms = {}
+      step = (extent[1] - extent[0]) / (nOfBins - 1)
+      bins = d3.range extent[0], extent[1] + step, step
 
       _.forOwn cohorts, (value, key) ->
         histograms[key] = d3.layout.histogram()
@@ -217,7 +220,7 @@ app.directive 'dotChart', ($timeout, tools) ->
         caption
           .transition()
           .duration duration
-          .attr 'transform', 'translate(' + x + ', 0)'
+          .attr 'transform', 'translate(' + (x - sampleRadius) + ', 0)'
 
         caption.select '.quantity-caption'
           .text cohorts[key].length
@@ -240,8 +243,8 @@ app.directive 'dotChart', ($timeout, tools) ->
               .classed 'sample', true
               .datum s
               .attr 'cx', 0
-              .attr 'r', 3
-              .style 'fill', if substance then $scope.colorScale(substance) else '#aaa'
+              .attr 'r', sampleRadius
+              .style 'fill', if substance then $scope.colorScale(substance) else colors.neutral
               .style 'opacity', .7
               .on 'mouseover', ->
                 d3.select(@).style 'opacity', 1
@@ -291,7 +294,7 @@ app.directive 'dotChart', ($timeout, tools) ->
           .attr 'width', 0
           .attr 'height', 1
           .attr 'x', -3
-          .attr 'y', if medianValue then sampleYScale(medianValue) else 0
+          .attr 'y', tools.preventNaN sampleYScale medianValue
           .style 'fill', '#333'
           .transition()
           .delay duration * 2
@@ -308,9 +311,9 @@ app.directive 'dotChart', ($timeout, tools) ->
         .duration duration
         .style 'fill', (d) ->
           if $scope.barChart.substance
-            if d[resistance][$scope.barChart.substance] then $scope.colorScale $scope.barChart.substance else '#aaa'
+            if d[resistance][$scope.barChart.substance] then $scope.colorScale($scope.barChart.substance) else colors.neutral
           else
-            '#aaa'
+            colors.neutral
       return
 
     updateResistance()

@@ -131,9 +131,7 @@ app.directive 'barChart', (tools) ->
       return
 
     getSubstanceMedianValue = (substance, samples) ->
-      median = d3.median _.map(samples, resistance).map (p) -> _.result p, substance
-      median = 0 unless median
-      median
+      tools.preventNaN d3.median _.map(samples, resistance).map (p) -> p[substance]
 
     updateBarWidthScale = ->
       if $scope.quantityCheckbox.on
@@ -147,16 +145,18 @@ app.directive 'barChart', (tools) ->
     updateBarYScaleAndAxis = ->
       max = d3.max _.keys(cohorts).map (key) ->
         d3.sum substances.map (s) ->
-          d3.median _.map(cohorts[key], resistance).map (cR) -> _.result cR, s
+          getSubstanceMedianValue s, cohorts[key]
 
       barYScale.domain [0, max]
 
-      power = parseInt(max.toExponential().split('-')[1]) + 1
+      power = parseInt max.toExponential().split('-')[1]
+      power += 1
       multiplier = Math.pow 10, power
 
       yAxis
         .tickValues ->
-          values = d3.range 0, max + max / (nOfAxisCaptions - 1), max / (nOfAxisCaptions - 1)
+          step = max / (nOfAxisCaptions - 1)
+          values = d3.range 0, max + step, step
           values.map (v, i) -> unless i is values.length - 1 then (v * multiplier).toFixed(0) / multiplier else v
         .tickFormat (d, i) ->
           isLast = i is nOfAxisCaptions - 1
@@ -280,11 +280,11 @@ app.directive 'barChart', (tools) ->
           .attr 'transform', 'translate(' + x + ', 0)'
 
         substances.forEach (s) ->
-          bar = cohortBars.filter (b) -> b is s
+          sBar = cohortBars.filter (b) -> b is s
           median = getSubstanceMedianValue s, cohortSamples
           barHeight = barYScale(medianSum) - barYScale medianSum + median
 
-          bar
+          sBar
             .transition()
             .duration duration
             .attr 'y', ->

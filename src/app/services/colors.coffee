@@ -51,3 +51,4 @@ app.constant 'colors',
     '#4b7f43'
     '#ff559c'
   ]
+  neutral: '#aaa'

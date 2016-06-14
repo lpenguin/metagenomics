@@ -1,7 +1,7 @@
 app.factory 'dataLoader', ->
   json = d3.json
   tsv = d3.tsv
-  
+
   getData = ->
     d3.queue()
       .defer json, '../data/samples_description.json'
