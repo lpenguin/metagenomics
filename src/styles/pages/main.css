@@ -2,6 +2,8 @@
 
 $graph-width: 500px;
 $graph-height: 465px;
+$map-width: 500px;
+$heatmap-width: 500px;
 
 .head__third-floor {
   width: calc($graph-width * 2);
@@ -71,6 +73,14 @@ $graph-height: 465px;
   margin-top: 20px;
 }
 
+.content__map {
+  width: $map-width;
+}
+
+.content__heatmap {
+  width: $heatmap-width;
+}
+
 .content__bar-chart {
   width: $graph-width;
   height: $graph-height;
@@ -87,7 +97,7 @@ $graph-height: 465px;
 }
 
 .datalab-footer {
-  margin: 30px 0 0 $common-padding;
+  margin: 30px 0 30px $common-padding;
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
@@ -98,5 +108,5 @@ $graph-height: 465px;
 }
 
 .datalab-footer .additional-info {
-  margin: 5px 0 20px 0;
+  margin: 5px 0 0 0;
 }
