@@ -1,10 +1,10 @@
 @import '../variables';
 
-.map {
+.map-chart {
   font-family: $helvetica-neue-regular;
 }
 
-.map__tooltip {
+.map-chart__tooltip {
   position: absolute;
   display: none;
   padding: 3px;
@@ -15,6 +15,12 @@
   z-index: 1;
 }
 
-.map__svg {
+.map-chart__svg {
   display: block;
+}
+
+.map-chart__svg .country {
+  stroke: #fafafa;
+  stroke-width: 0.5;
+  fill: #ccc;
 }

@@ -1,10 +1,10 @@
 @import '../variables';
 
-.heatmap {
+.heatmap-chart {
   font-family: $helvetica-neue-regular;
 }
 
-.heatmap__tooltip {
+.heatmap-chart__tooltip {
   position: absolute;
   display: none;
   padding: 3px;
@@ -15,6 +15,6 @@
   z-index: 1;
 }
 
-.heatmap__svg {
+.heatmap-chart__svg {
   display: block;
 }

@@ -73,11 +73,12 @@ $heatmap-width: 500px;
   margin-top: 20px;
 }
 
-.content__map {
+.content__map-chart {
   width: $map-width;
+  margin-left: 30px;
 }
 
-.content__heatmap {
+.content__heatmap-chart {
   width: $heatmap-width;
 }
 

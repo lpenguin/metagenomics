@@ -2,6 +2,7 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
   $scope.initializing = true
 
   $scope.data = {}
+  $scope.mapData = {}
 
   $scope.colorScale = d3.scale.ordinal().range colors.bigList
 
@@ -26,11 +27,14 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
   $scope.studies = ''
 
   parseData = (error, rawData) ->
-    $scope.data.samples = _.values rawData[0]
-    $scope.data.substances = _.values rawData[1]['categories']
+    $scope.mapData.world = rawData[0]
+    $scope.mapData.countries = rawData[1]
+    
+    $scope.data.samples = _.values rawData[2]
+    $scope.data.substances = _.values rawData[3]['categories']
 
     $scope.data.samples.forEach (s) ->
-      sampleAbundances = rawData[2].filter (a) -> a['sample'] is s['names']
+      sampleAbundances = rawData[4].filter (a) -> a['sample'] is s['names']
 
       _.forOwn _.groupBy(sampleAbundances, 'f_groups'), (value, key) ->
         s[key] = {}
@@ -172,7 +176,7 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
     return
 
   dataLoader
-    .getSamplesGroupsData()
+    .getData()
     .awaitAll parseData
 
   $scope.$watch 'rscFilterValues.resistance', ->

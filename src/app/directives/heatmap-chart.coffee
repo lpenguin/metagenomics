@@ -1,15 +1,15 @@
-app.directive 'map', ->
+app.directive 'heatmapChart', ->
   restrict: 'E'
   replace: true
-  templateUrl: 'directives/map.html'
+  templateUrl: 'directives/heatmap-chart.html'
   scope:
     data: '='
     substanceFilters: '='
     sampleFilters: '='
     rscFilterValues: '='
     sampleFilterValues: '='
-    map: '='
-    heatmap: '='
+    mapChart: '='
+    heatmapChart: '='
     mapHeatmapColorScale: '='
   link: ($scope, $element, $attrs) ->
     element = $element[0]
@@ -27,11 +27,11 @@ app.directive 'map', ->
     width = outerWidth - padding.left - padding.right
     height = outerHeight - padding.top - padding.bottom
 
-    tooltip = d3element.select '.map__tooltip'
+    tooltip = d3element.select '.heatmap__tooltip'
     tooltipOffset = 20
 
     svg = d3element.append 'svg'
-      .classed 'map__svg', true
+      .classed 'heatmap__svg', true
       .attr 'width', outerWidth
       .attr 'height', outerHeight
 
