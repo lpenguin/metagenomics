@@ -2,17 +2,8 @@
 
 .map-chart {
   font-family: $helvetica-neue-regular;
-}
-
-.map-chart__tooltip {
-  position: absolute;
-  display: none;
-  padding: 3px;
-  background-color: rgba(255, 255, 255, .7);
-  border-radius: 1px;
-  text-align: left;
-  font-size: $s-font-size;
-  z-index: 1;
+  width: 500px;
+  height: 333px;
 }
 
 .map-chart__svg {
@@ -22,5 +13,4 @@
 .map-chart__svg .country {
   stroke: #fafafa;
   stroke-width: 0.5;
-  fill: #ccc;
 }

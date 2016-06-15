@@ -51,18 +51,6 @@ app.constant 'colors',
     '#4b7f43'
     '#ff559c'
   ]
-  smallList: [
-    '#6fbb3f'
-    '#09c085'
-    '#1cbbe0'
-    '#09a1ff'
-    '#6582fe'
-    '#bb83fe'
-    '#fd72d8'
-    '#fd4e89'
-    '#fc6a56'
-    '#fc803f'
-    '#e59823'
-    '#c0ad0f'
+  gradient: [
   ]
   neutral: '#aaa'

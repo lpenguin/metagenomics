@@ -1,10 +1,12 @@
 app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
   $scope.initializing = true
 
-  $scope.data = {}
   $scope.mapData = {}
+  $scope.countries = []
+  $scope.data = {}
 
-  $scope.colorScale = d3.scale.ordinal().range colors.bigList
+  $scope.substanceColorScale = d3.scale.ordinal()
+    .range colors.bigList
 
   $scope.resistanceFilter = {}
   $scope.substanceFilters = []
@@ -27,9 +29,12 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
   $scope.studies = ''
 
   parseData = (error, rawData) ->
-    $scope.mapData.world = rawData[0]
-    $scope.mapData.countries = rawData[1]
-    
+    $scope.mapData = rawData[0]
+    $scope.countries = rawData[1].map (d) ->
+      code: parseInt d['iso_3166_code']
+      continent: d['continent']
+      name: d['name']
+
     $scope.data.samples = _.values rawData[2]
     $scope.data.substances = _.values rawData[3]['categories']
 
@@ -48,8 +53,6 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
     return
 
   prepareFilters = ->
-    resistances = {}
-
     filteringFields = [
       'f-studies'
       'f-countries'
@@ -57,14 +60,11 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
       'f-genders'
     ]
 
-    ageIntervals = [
-      [10, 16]
-      [17, 25]
-      [26, 35]
-      [36, 50]
-      [51, 70]
-      [71, Infinity]
-    ]
+    filteringFields = filteringFields.concat _.keys($scope.data.samples[0]).filter (key) ->
+      key.indexOf('f-') isnt -1 and filteringFields.indexOf(key) is -1
+
+    # Resistance filter
+    resistances = {}
 
     _.uniq _.map $scope.data.substances, 'group'
       .forEach (resistance) ->
@@ -72,10 +72,6 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
         resistances[resistance] = _.uniq _.map substances, 'category_name'
         return
 
-    filteringFields = filteringFields.concat _.keys($scope.data.samples[0]).filter (key) ->
-      key.indexOf('f-') isnt -1 and filteringFields.indexOf(key) is -1
-
-    # Resistance filter
     $scope.resistanceFilter =
       key: 'resistance'
       dataset: _.keys(resistances).map (key) ->
@@ -124,6 +120,15 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
     $scope.rscFilterValues.cohort = $scope.cohortFilter.dataset[0]
 
     # Sample filters
+    ageIntervals = [
+      [10, 16]
+      [17, 25]
+      [26, 35]
+      [36, 50]
+      [51, 70]
+      [71, Infinity]
+    ]
+
     filteringFields.forEach (ff) ->
       dataset = []
 
@@ -182,7 +187,8 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
   $scope.$watch 'rscFilterValues.resistance', ->
     return unless $scope.rscFilterValues.resistance
 
-    $scope.rscFilterValues.substance = _.find($scope.substanceFilters, 'key': $scope.rscFilterValues.resistance.value).dataset[0]
+    sFilter = _.find $scope.substanceFilters, 'key': $scope.rscFilterValues.resistance.value
+    $scope.rscFilterValues.substance = sFilter.dataset[0]
     return
 
   return

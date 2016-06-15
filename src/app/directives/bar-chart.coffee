@@ -11,7 +11,7 @@ app.directive 'barChart', (tools) ->
     barChart: '='
     dotChart: '='
     quantityCheckbox: '='
-    colorScale: '='
+    substanceColorScale: '='
   link: ($scope, $element, $attrs) ->
     element = $element[0]
     d3element = d3.select element
@@ -126,6 +126,9 @@ app.directive 'barChart', (tools) ->
           else
             fS[cohort] is p.value
 
+        if substance
+          cohorts[p.title] = cohorts[p.title].filter (cS) -> cS[resistance][substance]
+
         nOfCohorts++ if cohorts[p.title].length
         return
       return
@@ -191,7 +194,7 @@ app.directive 'barChart', (tools) ->
             .datum s
             .attr 'y', height
             .attr 'height', 0
-            .style 'fill', $scope.colorScale s
+            .style 'fill', $scope.substanceColorScale s
             .on 'mouseover', ->
               d3.select(@).style 'opacity', .7
 
@@ -328,7 +331,7 @@ app.directive 'barChart', (tools) ->
             .attr 'y', height
             .attr 'width', barWidth
             .attr 'height', 0
-            .style 'fill', $scope.colorScale substance
+            .style 'fill', $scope.substanceColorScale substance
             .transition()
             .delay duration
             .duration duration
@@ -348,7 +351,7 @@ app.directive 'barChart', (tools) ->
               .attr 'y', height
               .attr 'width', barWidth
               .attr 'height', 0
-              .style 'fill', $scope.colorScale s
+              .style 'fill', $scope.substanceColorScale s
               .transition()
               .delay duration
               .duration duration

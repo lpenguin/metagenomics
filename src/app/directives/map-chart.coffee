@@ -1,13 +1,11 @@
 app.directive 'mapChart', ->
   restrict: 'E'
   replace: true
-  templateUrl: 'directives/map-chart.html'
+  template: '<div class="map-chart"></div>'
   scope:
     data: '='
     mapData: '='
-    substanceFilters: '='
     sampleFilters: '='
-    rscFilterValues: '='
     sampleFilterValues: '='
     mapChart: '='
     heatmapChart: '='
@@ -16,11 +14,8 @@ app.directive 'mapChart', ->
     element = $element[0]
     d3element = d3.select element
 
-    width = $element.parent().width()
-    height = width / 1.5
-
-    tooltip = d3element.select '.map-chart__tooltip'
-    tooltipOffset = 20
+    width = $element.width()
+    height = $element.height()
 
     projection = d3.geo.mercator()
       .center [0, 45]
@@ -28,7 +23,7 @@ app.directive 'mapChart', ->
       .rotate [-10, 0]
       .translate [width / 2, height / 2]
 
-    path = d3.geo.path().projection projection
+    countryPathGenerator = d3.geo.path().projection projection
 
     svg = d3element.append 'svg'
       .classed 'map-chart__svg', true
@@ -38,16 +33,23 @@ app.directive 'mapChart', ->
     g = svg.append 'g'
       .classed 'main', true
 
+    countryPaths = []
+
     prepareMap = ->
-      g.selectAll 'path'
-        .data topojson.feature($scope.mapData.world, $scope.mapData.world.objects.countries).features
+      countryPaths = g.selectAll 'path'
+        .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
         .enter()
         .append 'path'
         .classed 'country', true
-        .attr 'd', path
-        .attr 'id', (d) -> d.id
+        .attr 'd', countryPathGenerator
+      return
+
+    paintMap = ->
+      countryPaths
+        .attr 'fill', '#ccc'
       return
 
     prepareMap()
+    paintMap()
 
     return

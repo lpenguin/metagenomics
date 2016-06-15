@@ -8,7 +8,7 @@ app.directive 'infoBlock', (tools) ->
     rscFilterValues: '='
     barChart: '='
     dotChart: '='
-    colorScale: '='
+    substanceColorScale: '='
   link: ($scope, $element, $attrs) ->
     $scope.genesData = []
 
@@ -20,7 +20,7 @@ app.directive 'infoBlock', (tools) ->
       _.map sFilter.dataset.slice(1), 'title'
 
     $scope.getSubstanceStyle = (substance) ->
-      color: $scope.colorScale substance
+      color: $scope.substanceColorScale substance
 
     $scope.selectSubstance = (substance) ->
       sFilter = _.find $scope.substanceFilters, 'key': $scope.rscFilterValues.resistance.value

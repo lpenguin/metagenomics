@@ -1,5 +1,6 @@
 <div data-ng-if="!initializing">
   <div class="head">
+    <!--
     <div class="head__third-floor">
       <div class="title inline">Genes abundance</div>
       <custom-select
@@ -56,15 +57,14 @@
         </custom-select>
         <br class="clear-both" />
       </div>
-      <!--
       <div class="right-section inline">
         <div class="title">
           <dot-graph-title data-rsc-filter-values="rscFilterValues"></dot-graph-title>
         </div>
       </div>
-      -->
       <br class="clear-both" />
     </div>
+    -->
   </div>
   <div class="content">
     <!--
@@ -78,7 +78,7 @@
         data-bar-chart="barChart"
         data-dot-chart="dotChart"
         data-quantity-checkbox="quantityCheckbox"
-        data-color-scale="colorScale">
+        data-substance-color-scale="substanceColorScale">
       </bar-chart>
     </div>
     <div class="content__dot-chart inline">
@@ -90,7 +90,7 @@
         data-sample-filter-values="sampleFilterValues"
         data-bar-chart="barChart"
         data-dot-chart="dotChart"
-        data-color-scale="colorScale">
+        data-substance-color-scale="substanceColorScale">
       </dot-chart>
     </div>
     <div class="content__info-block inline">
@@ -100,31 +100,30 @@
         data-rsc-filter-values="rscFilterValues"
         data-bar-chart="barChart"
         data-dot-chart="dotChart"
-        data-color-scale="colorScale">
+        data-substance-color-scale="substanceColorScale">
       </info-block>
     </div>
     <br class="clear-both" />
     <quantity-checkbox data-quantity-checkbox="quantityCheckbox"></quantity-checkbox>
     -->
+    <!--
     <div class="content__map-chart">
       <map-chart
         data-data="data"
         data-map-data="mapData"
-        data-substance-filters="substanceFilters"
         data-sample-filters="sampleFilters"
-        data-rsc-filter-values="rscFilterValues"
         data-sample-filter-values="sampleFilterValues"
         data-map-chart="mapChart"
         data-heatmap-chart="heatmapChart"
         data-map-heatmap-color-scale="mapHeatmapColorScale">
       </map-chart>
     </div>
+    -->
     <div class="content__heatmap-chart">
       <heatmap-chart
         data-data="data"
-        data-substance-filters="substanceFilters"
+        data-countries="countries"
         data-sample-filters="sampleFilters"
-        data-rsc-filter-values="rscFilterValues"
         data-sample-filter-values="sampleFilterValues"
         data-map-chart="mapChart"
         data-heatmap-chart="heatmapChart"
