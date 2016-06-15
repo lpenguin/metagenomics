@@ -10,7 +10,7 @@ app.directive 'dotChart', ($timeout, tools, colors) ->
     sampleFilterValues: '='
     barChart: '='
     dotChart: '='
-    substanceColorScale: '='
+    colorScale: '='
   link: ($scope, $element, $attrs) ->
     element = $element[0]
     d3element = d3.select element
@@ -244,7 +244,7 @@ app.directive 'dotChart', ($timeout, tools, colors) ->
               .datum s
               .attr 'cx', 0
               .attr 'r', sampleRadius
-              .style 'fill', if substance then $scope.substanceColorScale(substance) else colors.neutral
+              .style 'fill', if substance then $scope.colorScale(substance) else colors.neutral
               .style 'opacity', .7
               .on 'mouseover', ->
                 d3.select(@).style 'opacity', 1
@@ -311,7 +311,7 @@ app.directive 'dotChart', ($timeout, tools, colors) ->
         .duration duration
         .style 'fill', (d) ->
           if $scope.barChart.substance
-            if d[resistance][$scope.barChart.substance] then $scope.substanceColorScale($scope.barChart.substance) else colors.neutral
+            if d[resistance][$scope.barChart.substance] then $scope.colorScale($scope.barChart.substance) else colors.neutral
           else
             colors.neutral
       return

@@ -2,7 +2,8 @@
 
 $graph-width: 500px;
 $graph-height: 465px;
-$map-heatmap-width: 500px;
+$map-width: 500px;
+$heatmap-width: 500px;
 
 .head__third-floor {
   width: calc($graph-width * 2);
@@ -72,8 +73,13 @@ $map-heatmap-width: 500px;
   margin-top: 20px;
 }
 
-.content__map-heatmap {
-  width: $map-heatmap-width;
+.content__map-chart {
+  width: $map-width;
+  margin-left: 30px;
+}
+
+.content__heatmap-chart {
+  width: $heatmap-width;
 }
 
 .content__bar-chart {

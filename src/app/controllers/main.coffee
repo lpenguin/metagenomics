@@ -1,13 +1,10 @@
 app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
   $scope.initializing = true
 
-  $scope.mapData = {}
   $scope.data = {}
+  $scope.mapData = {}
 
-  $scope.substanceColorScale = d3.scale.ordinal()
-    .range colors.bigList
-
-  $scope.resistanceColorScale = d3.scale.ordinal()
+  $scope.colorScale = d3.scale.ordinal().range colors.bigList
 
   $scope.resistanceFilter = {}
   $scope.substanceFilters = []
@@ -16,8 +13,6 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
 
   $scope.sampleFilters = []
   $scope.sampleFilterValues = {}
-
-  $scope.mapHeatmap = {}
 
   $scope.barChart =
     substance: undefined
@@ -32,12 +27,9 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
   $scope.studies = ''
 
   parseData = (error, rawData) ->
-    $scope.mapData = rawData[0]
-    countries = rawData[1].map (d) ->
-      code: parseInt d['code']
-      fullName: d['full_name']
-      shortName: d['short_name']
-
+    $scope.mapData.world = rawData[0]
+    $scope.mapData.countries = rawData[1]
+    
     $scope.data.samples = _.values rawData[2]
     $scope.data.substances = _.values rawData[3]['categories']
 
@@ -56,6 +48,8 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
     return
 
   prepareFilters = ->
+    resistances = {}
+
     filteringFields = [
       'f-studies'
       'f-countries'
@@ -63,11 +57,14 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
       'f-genders'
     ]
 
-    filteringFields = filteringFields.concat _.keys($scope.data.samples[0]).filter (key) ->
-      key.indexOf('f-') isnt -1 and filteringFields.indexOf(key) is -1
-
-    # Resistance filter
-    resistances = {}
+    ageIntervals = [
+      [10, 16]
+      [17, 25]
+      [26, 35]
+      [36, 50]
+      [51, 70]
+      [71, Infinity]
+    ]
 
     _.uniq _.map $scope.data.substances, 'group'
       .forEach (resistance) ->
@@ -75,10 +72,10 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
         resistances[resistance] = _.uniq _.map substances, 'category_name'
         return
 
-    $scope.resistanceColorScale
-      .domain _.keys resistances
-      .range colors.smallList.filter (c, i) -> !(i % Math.round(colors.smallList.length / _.keys(resistances).length))
+    filteringFields = filteringFields.concat _.keys($scope.data.samples[0]).filter (key) ->
+      key.indexOf('f-') isnt -1 and filteringFields.indexOf(key) is -1
 
+    # Resistance filter
     $scope.resistanceFilter =
       key: 'resistance'
       dataset: _.keys(resistances).map (key) ->
@@ -127,15 +124,6 @@ app.controller 'MainController', ($scope, $timeout, colors, dataLoader) ->
     $scope.rscFilterValues.cohort = $scope.cohortFilter.dataset[0]
 
     # Sample filters
-    ageIntervals = [
-      [10, 16]
-      [17, 25]
-      [26, 35]
-      [36, 50]
-      [51, 70]
-      [71, Infinity]
-    ]
-
     filteringFields.forEach (ff) ->
       dataset = []
 

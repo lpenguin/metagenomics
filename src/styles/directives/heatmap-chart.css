@@ -1,0 +1,20 @@
+@import '../variables';
+
+.heatmap-chart {
+  font-family: $helvetica-neue-regular;
+}
+
+.heatmap-chart__tooltip {
+  position: absolute;
+  display: none;
+  padding: 3px;
+  background-color: rgba(255, 255, 255, .7);
+  border-radius: 1px;
+  text-align: left;
+  font-size: $s-font-size;
+  z-index: 1;
+}
+
+.heatmap-chart__svg {
+  display: block;
+}

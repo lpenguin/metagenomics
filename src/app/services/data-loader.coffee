@@ -5,7 +5,7 @@ app.factory 'dataLoader', ->
   getData = ->
     d3.queue()
       .defer json, '../data/map/world-110m.json'
-      .defer tsv, '../data/map/country-codes.tsv'
+      .defer tsv, '../data/map/world-country-names.tsv'
       .defer json, '../data/samples-groups/samples_description.json'
       .defer json, '../data/samples-groups/group_description.json'
       .defer tsv, '../data/samples-groups/per_sample_groups_stat.tsv'
