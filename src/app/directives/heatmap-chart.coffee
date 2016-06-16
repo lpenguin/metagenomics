@@ -16,7 +16,7 @@ app.directive 'heatmapChart', (calculators, colors) ->
 
     filteredSamples = []
 
-    legendWidth = 100
+    legendWidth = $element.find('.legend-gradient').width()
 
     legendScale = d3.scale.linear()
       .domain $scope.abundanceValuesExtent

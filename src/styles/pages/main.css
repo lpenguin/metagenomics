@@ -1,5 +1,6 @@
 @import '../variables';
-.head {
+
+.header {
   margin: 30px 0 30px $common-offset;
 }
 
@@ -22,7 +23,7 @@
   font-size: $s-font-size;
 }
 
-.datalab-footer__dl-caption {
+.datalab-footer .dl-caption {
   font-family: $garamond-original-italic;
   font-size: $dl-font-size;
 }

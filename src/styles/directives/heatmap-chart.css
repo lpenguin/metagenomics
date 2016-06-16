@@ -25,15 +25,15 @@
   visibility: hidden;
 }
 
-.heatmap-chart__tooltip .abundance-value {
+.heatmap-chart__tooltip .tooltip-abundance-value {
   margin-top: -3px;
 }
 
-.heatmap-chart__tooltip .abundance-value sup {
+.heatmap-chart__tooltip .tooltip-abundance-value sup {
   font-size: $xs-font-size;
 }
 
-.heatmap-chart__heatmap .country-row {
+.heatmap-chart__rows .country-row {
   height: 20px;
 
   transition: opacity 0.25s linear;
@@ -41,21 +41,21 @@
   font-size: $s-font-size;
 }
 
-.heatmap-chart__heatmap .country-row.pushed {
+.heatmap-chart__rows .country-row.pushed {
   margin-top: 10px;
 }
 
-.heatmap-chart__heatmap .country-row.unavailable {
+.heatmap-chart__rows .country-row.unavailable {
   pointer-events: none;
 
   opacity: 0.5;
 }
 
-.heatmap-chart__heatmap .country-row .flag {
+.heatmap-chart__rows .country-row .flag {
   margin-top: 4px;
 }
 
-.heatmap-chart__heatmap .country-row .name {
+.heatmap-chart__rows .country-row .name {
   overflow: hidden;
 
   width: 80px;
@@ -65,14 +65,14 @@
   text-overflow: ellipsis;
 }
 
-.heatmap-chart__heatmap .country-row .n-of-samples {
+.heatmap-chart__rows .country-row .n-of-samples {
   width: 40px;
   margin: 3px 10px 3px 5px;
 
   text-align: right;
 }
 
-.heatmap-chart__heatmap .country-row .substance-cell {
+.heatmap-chart__rows .country-row .substance-cell {
   width: 20px;
   height: 18px;
 
@@ -82,7 +82,7 @@
   border: 1px solid #fff;
 }
 
-.heatmap-chart__heatmap .country-row .substance-cell:hover {
+.heatmap-chart__rows .country-row .substance-cell:hover {
   opacity: .5;
 }
 
@@ -92,18 +92,18 @@
   margin: 20px 0 0 157px;
 }
 
-.heatmap-chart__legend .caption {
+.heatmap-chart__legend .legend-caption {
   position: absolute;
 
   font-size: $xs-font-size;
 }
 
-.heatmap-chart__legend .caption sup {
+.heatmap-chart__legend .legend-caption sup {
   font-size: $xxs-font-size;
 }
 
-.heatmap-chart__legend .caption.left {
-  top: -1px;
+.heatmap-chart__legend .legend-caption.left {
+  bottom: 7px;
   left: -105px;
 
   width: 100px;
@@ -111,8 +111,8 @@
   text-align: right;
 }
 
-.heatmap-chart__legend .caption.right {
-  top: -3px;
+.heatmap-chart__legend .legend-caption.right {
+  bottom: 7px;
   left: 105px;
 
   width: 100px;
@@ -123,7 +123,7 @@
   height: 10px;
 }
 
-.heatmap-chart__legend .pointer {
+.heatmap-chart__legend .legend-pointer {
   position: absolute;
   top: -5px;
 

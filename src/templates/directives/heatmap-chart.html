@@ -1,5 +1,5 @@
 <div class="heatmap-chart">
-  <div class="heatmap-chart__heatmap">
+  <div class="heatmap-chart__rows">
     <div
       class="country-row"
       data-ng-repeat="country in (sortedCountries = (data.countries | orderBy:['-continent', 'name'])) track by $index"
@@ -21,17 +21,16 @@
   </div>
   <div class="heatmap-chart__legend">
     <div
-      class="caption left"
+      class="legend-caption left"
       data-ng-bind-html="abundanceValuesExtent[0] | prepareAbundanceValue:maxPower | trust"></div>
     <div
-      class="caption right"
+      class="legend-caption right"
       data-ng-bind-html="abundanceValuesExtent[1] | prepareAbundanceValue:maxPower | trust"></div>
     <div
-      class="legend-gradient inline"
+      class="legend-gradient"
       data-ng-style="{'background': 'linear-gradient(to right, ' + gradient[0] + ', ' + gradient[1] + ')'}"></div>
-    <br class="clear-both" />
     <div
-      class="pointer"
+      class="legend-pointer"
       data-ng-style="{'left': getLegendPointerX() + 'px'}"></div>
   </div>
   <div
@@ -39,8 +38,8 @@
     data-ng-class="{'hidden': !tooltip.substance}"
     data-ng-style="{'transform': 'translate(' + tooltip.coordinates.x + 'px, ' + tooltip.coordinates.y + 'px)'}">
     <div
-      class="abundance-value"
+      class="tooltip-abundance-value"
       data-ng-bind-html="'Median abundance: ' + (tooltip.abundanceValue | prepareAbundanceValue:maxPower) | trust"></div>
-    <div class="n-of-samples">{{tooltip.nOfSamples + ' ' + (tooltip.nOfSamples === 1 ? 'sample' : 'samples')}}</div>
+    <div class="tooltip-n-of-samples">{{tooltip.nOfSamples + ' ' + (tooltip.nOfSamples === 1 ? 'sample' : 'samples')}}</div>
   </div>
 </div>
