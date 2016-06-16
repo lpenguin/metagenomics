@@ -4,7 +4,7 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
   $scope.mapData = {}
   $scope.data = {}
 
-  $scope.colorScale = d3.scale.quantize()
+  $scope.colorScale = d3.scale.linear()
     .range colors.gradient
 
   $scope.filteredSamples = []

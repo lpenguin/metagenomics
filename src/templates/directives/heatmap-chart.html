@@ -27,9 +27,8 @@
       class="caption right"
       data-ng-bind-html="abundanceValuesExtent[1] | prepareAbundanceValue:maxPower | trust"></div>
     <div
-      class="legend-cell inline"
-      data-ng-repeat="color in gradient track by $index"
-      data-ng-style="{'background-color': color}"></div>
+      class="legend-gradient inline"
+      data-ng-style="{'background': 'linear-gradient(to right, ' + gradient[0] + ', ' + gradient[1] + ')'}"></div>
     <br class="clear-both" />
     <div
       class="pointer"
