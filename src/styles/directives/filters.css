@@ -1,0 +1,16 @@
+.filters .custom-select:not(:first-child) {
+  margin-left: 10px;
+}
+
+.filters .filters-reset {
+  height: 20px;
+  margin-left: 15px;
+
+  cursor: pointer;
+  user-select: none;
+
+  color: #dc322f;
+
+  font-size: 20px;
+  line-height: 20px;
+}

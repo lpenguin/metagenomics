@@ -1,9 +1,10 @@
 @import '../variables';
 
 .map-chart {
-  font-family: $helvetica-neue-regular;
   width: 500px;
   height: 333px;
+
+  font-family: $helvetica-neue-regular;
 }
 
 .map-chart__svg {

@@ -6,27 +6,34 @@ $max-width: 200px;
 
 .custom-select {
   position: relative;
-  font-family: $helvetica-neue-regular;
-  font-size: $m-font-size;
-  color: #333;
+
   cursor: pointer;
   user-select: none;
+
+  color: #333;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
 }
 
 .custom-select.disabled {
-  opacity: .5;
   cursor: default;
+
+  opacity: .5;
 }
 
 .custom-select__toggle {
+  overflow: hidden;
+
+  box-sizing: border-box;
   max-width: $max-width;
   padding: 2px 19px 2px 5px;
-  background-color: $background-color;
-  border-radius: 4px 4px 4px 4px;
-  box-sizing: border-box;
+
   white-space: nowrap;
-  overflow: hidden;
   text-overflow: ellipsis;
+
+  border-radius: 4px 4px 4px 4px;
+  background-color: $background-color;
 }
 
 .custom-select__toggle.activated {
@@ -37,16 +44,19 @@ $max-width: 200px;
   position: absolute;
   top: 8px;
   right: 5px;
+
+  content: '';
+
   border-top: 4px solid #333;
   border-right: 3px solid transparent;
   border-bottom: none;
   border-left: 3px solid transparent;
-  content: '';
 }
 
 .custom-select__toggle.activated::after {
   top: 8px;
   right: 5px;
+
   border-top: none;
   border-right: 3px solid transparent;
   border-bottom: 4px solid #333;
@@ -55,22 +65,29 @@ $max-width: 200px;
 
 .custom-select__dropdown {
   position: absolute;
+  z-index: 99;
+
+  overflow: auto;
+
   max-width: $max-width;
   max-height: 260px;
-  overflow: auto;
+
   border-radius: 0 0 4px 4px;
   background-color: $background-color;
-  z-index: 99;
 }
 
 .custom-select__dropdown .item {
   position: relative;
-  line-height: 22px;
-  padding: 2px 19px 2px 5px;
-  box-sizing: border-box;
-  white-space: nowrap;
+
   overflow: hidden;
+
+  box-sizing: border-box;
+  padding: 2px 19px 2px 5px;
+
+  white-space: nowrap;
   text-overflow: ellipsis;
+
+  line-height: 22px;
 }
 
 .custom-select__dropdown .item:hover {
@@ -79,11 +96,14 @@ $max-width: 200px;
 
 .custom-select__dropdown .item.selected::after {
   position: absolute;
-  width: 9px;
-  height: 10px;
   top: 8px;
   right: 5px;
+
+  width: 9px;
+  height: 10px;
+
   content: '';
+
   background: transparent url('../img/accessories/check.png') no-repeat left top;
   background-size: 9px 10px;
 }
@@ -93,14 +113,14 @@ $max-width: 200px;
 }
 
 .custom-select__dropdown::-webkit-scrollbar-track {
-  background-color: $background-color;
   border-radius: 4px;
+  background-color: $background-color;
 }
 
 .custom-select__dropdown::-webkit-scrollbar-thumb {
-  background-color: #ccc;
   border: 5px solid transparent;
   border-radius: 10px;
+  background-color: #ccc;
   background-clip: content-box;
 }
 

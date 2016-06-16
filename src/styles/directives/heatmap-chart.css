@@ -5,12 +5,134 @@
 }
 
 .heatmap-chart__tooltip {
-  position: absolute;
-  display: none;
-  padding: 3px;
-  background-color: rgba(255, 255, 255, .7);
-  border-radius: 1px;
-  text-align: left;
-  font-size: $s-font-size;
+  position: fixed;
   z-index: 1;
+  top: 0;
+  left: 0;
+
+  margin-left: 20px;
+  padding: 3px;
+
+  text-align: left;
+
+  border-radius: 1px;
+  background-color: rgba(255, 255, 255, .7);
+
+  font-size: $s-font-size;
+}
+
+.heatmap-chart__tooltip.hidden {
+  visibility: hidden;
+}
+
+.heatmap-chart__tooltip .abundance-value {
+  margin-top: -3px;
+}
+
+.heatmap-chart__tooltip .abundance-value sup {
+  font-size: $xs-font-size;
+}
+
+.heatmap-chart__heatmap .country-row {
+  height: 20px;
+
+  transition: opacity 0.25s linear;
+
+  font-size: $s-font-size;
+}
+
+.heatmap-chart__heatmap .country-row.pushed {
+  margin-top: 10px;
+}
+
+.heatmap-chart__heatmap .country-row.unavailable {
+  pointer-events: none;
+
+  opacity: 0.5;
+}
+
+.heatmap-chart__heatmap .country-row .flag {
+  margin-top: 4px;
+}
+
+.heatmap-chart__heatmap .country-row .name {
+  overflow: hidden;
+
+  width: 80px;
+  margin: 3px 0 3px 5px;
+
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.heatmap-chart__heatmap .country-row .n-of-samples {
+  width: 40px;
+  margin: 3px 10px 3px 5px;
+
+  text-align: right;
+}
+
+.heatmap-chart__heatmap .country-row .substance-cell {
+  width: 20px;
+  height: 18px;
+
+  cursor: pointer;
+  transition: background-color 0.25s linear;
+
+  border: 1px solid #fff;
+}
+
+.heatmap-chart__heatmap .country-row .substance-cell:hover {
+  opacity: .5;
+}
+
+.heatmap-chart__legend {
+  position: relative;
+
+  margin: 20px 0 0 157px;
+}
+
+.heatmap-chart__legend .caption {
+  position: absolute;
+  top: 3px;
+
+  font-size: $xs-font-size;
+}
+
+.heatmap-chart__legend .caption sup {
+  font-size: $xxs-font-size;
+}
+
+.heatmap-chart__legend .caption.left {
+  left: -105px;
+
+  width: 100px;
+
+  text-align: right;
+}
+
+.heatmap-chart__legend .caption.right {
+  left: 105px;
+
+  width: 100px;
+}
+
+.heatmap-chart__legend .legend-cell {
+  width: 20px;
+  height: 18px;
+}
+
+.heatmap-chart__legend .pointer {
+  position: absolute;
+  top: -5px;
+
+  width: 0;
+  height: 0;
+  margin-left: -5px;
+
+  transition: left 0.25s linear;
+
+  border-top: 5px solid #777;
+  border-right: 5px solid transparent;
+  border-left: 5px solid transparent;
 }

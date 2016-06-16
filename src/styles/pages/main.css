@@ -1,70 +1,6 @@
 @import '../variables';
-
-$graph-width: 500px;
-$graph-height: 465px;
-
-.head__third-floor {
-  width: calc($graph-width * 2);
-  margin-top: 30px;
-  padding-left: $common-offset;
-  box-sizing: border-box;
-}
-
-.head__third-floor .title {
-  margin: 2px 10px 0 0;
-  font-family: $helvetica-neue-bold;
-  font-size: $xl-font-size;
-}
-
-.head__third-floor .custom-select {
-  margin: 5px 10px 0 0;
-}
-
-.head__second-floor {
-  width: calc($graph-width * 2);
-  padding-left: $common-offset;
-  box-sizing: border-box;
-}
-
-.head__second-floor .title {
-  margin: 7px 10px 0 0;
-  font-family: $helvetica-neue-regular;
-  font-size: $m-font-size;
-}
-
-.head__second-floor .custom-select {
-  margin: 5px 10px 0 0;
-}
-
-.head__second-floor .filters-reset {
-  margin: 7px 0 0 10px;
-}
-
-.head__first-floor {
-  width: calc($graph-width * 2);
-  margin-top: 20px;
-}
-
-.head__first-floor .left-section {
-  width: $graph-width;
-  padding-left: $common-offset;
-  box-sizing: border-box;
-}
-
-.head__first-floor .right-section {
-  width: $graph-width;
-  padding-left: 50px;
-  box-sizing: border-box;
-}
-
-.head__first-floor .title {
-  margin-top: 2px;
-  font-family: $helvetica-neue-regular;
-  font-size: $m-font-size;
-}
-
-.head__first-floor .custom-select {
-  margin-left: 5px;
+.head {
+  margin: 30px 0 30px $common-offset;
 }
 
 .content {
@@ -79,23 +15,9 @@ $graph-height: 465px;
   margin-left: $common-offset;
 }
 
-.content__bar-chart {
-  width: $graph-width;
-  height: $graph-height;
-}
-
-.content__dot-chart {
-  width: $graph-width;
-  height: $graph-height;
-}
-
-.content .quantity-checkbox {
-  margin-top: 20px;
-  padding-left: $common-offset;
-}
-
 .datalab-footer {
   margin: 30px 0 30px $common-offset;
+
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
