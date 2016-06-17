@@ -40,6 +40,7 @@ vendors =
     'node_modules/d3/d3.min.js'
     'node_modules/d3-queue/build/d3-queue.min.js'
     'node_modules/topojson/build/topojson.min.js'
+    'node_modules/d3-geo-projection/d3.geo.projection.min.js'
     'node_modules/angular/angular.min.js'
     'node_modules/angular-route/angular-route.min.js'
     'node_modules/lodash/lodash.min.js'
