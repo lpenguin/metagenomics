@@ -78,7 +78,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
     $scope.substanceCellMouseover = (countryName, resistance, substance) ->
       csSamples = filteredSamples.filter (fs) ->
         fs['f-countries'] is countryName and
-        fs[resistance][substance]
+        if substance is 'overall' then true else fs[resistance][substance]
 
       $scope.tooltip.resistance = resistance
       $scope.tooltip.substance = substance

@@ -9,20 +9,22 @@
         data-ng-src="img/flags/{{country.name}}.png" />
       <div class='name inline'>{{country.name}}</div>
       <div class='n-of-samples inline'>{{SMP[country.name] ? SMP[country.name] : ''}}</div>
-      <div class="resistance-group inline">
+      <div
+        class="resistance-group inline"
+        data-ng-repeat="(resistance, substances) in data.resistances track by $index">
         <div
           class="substance-cell inline"
-          data-ng-repeat="substance in ['overall'].concat(data.resistances['antibiotic resistance']) track by $index"
-          data-ng-style="{'background-color': getCellColor(country.name, 'antibiotic resistance', substance)}"
+          data-ng-repeat="substance in ['overall'].concat(substances) track by $index"
+          data-ng-style="{'background-color': getCellColor(country.name, resistance, substance)}"
           data-ng-class="{'overall': substance === 'overall'}"
-          data-ng-mouseover="substanceCellMouseover(country.name, 'antibiotic resistance', substance)"
+          data-ng-mouseover="substanceCellMouseover(country.name, resistance, substance)"
           data-ng-mouseout="substanceCellMouseout()"
           data-ng-mousemove="substanceCellMousemove($event)"></div>
         <br class="clear-both" />
         <div
           class="substance-caption"
-          data-ng-if="!$index"
-          data-ng-show="tooltip.substance && tooltip.resistance === 'antibiotic resistance' && tooltip.substance !== 'overall'">{{tooltip.substance}}</div>
+          data-ng-if="!$parent.$index"
+          data-ng-show="tooltip.substance && tooltip.resistance === resistance && tooltip.substance !== 'overall'">{{tooltip.substance}}</div>
       </div>
       <br class="clear-both" />
     </div>
