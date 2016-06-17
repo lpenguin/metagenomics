@@ -9,13 +9,17 @@
         data-ng-src="img/flags/{{country.name}}.png" />
       <div class='name inline'>{{country.name}}</div>
       <div class='n-of-samples inline'>{{SMP[country.name] ? SMP[country.name] : ''}}</div>
-      <div
-        class="substance-cell inline"
-        data-ng-repeat="substance in data.resistances['antibiotic resistance'] track by $index"
-        data-ng-style="{'background-color': getCellColor(country.name, 'antibiotic resistance', substance)}"
-        data-ng-mouseover="substanceCellMouseover(country.name, 'antibiotic resistance', substance)"
-        data-ng-mouseout="substanceCellMouseout()"
-        data-ng-mousemove="substanceCellMousemove($event)"></div>
+      <div class="resistance-group inline">
+        <div
+          class="substance-cell inline"
+          data-ng-repeat="substance in ['overall'].concat(data.resistances['antibiotic resistance']) track by $index"
+          data-ng-style="{'background-color': getCellColor(country.name, 'antibiotic resistance', substance)}"
+          data-ng-class="{'overall': substance === 'overall'}"
+          data-ng-mouseover="substanceCellMouseover(country.name, 'antibiotic resistance', substance)"
+          data-ng-mouseout="substanceCellMouseout()"
+          data-ng-mousemove="substanceCellMousemove($event)"></div>
+        <br class="clear-both" />
+      </div>
       <br class="clear-both" />
     </div>
   </div>

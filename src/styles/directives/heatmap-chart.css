@@ -67,18 +67,26 @@
 
 .heatmap-chart__rows .country-row .n-of-samples {
   width: 40px;
-  margin: 3px 10px 3px 5px;
+  margin: 3px 0 3px 5px;
 
   text-align: right;
 }
 
+.heatmap-chart__rows .country-row .resistance-group {
+  margin-left: 10px;
+}
+
 .heatmap-chart__rows .country-row .substance-cell {
-  width: 20px;
+  width: 5px;
   height: 18px;
 
   transition: background-color .25s linear;
 
   border: 1px solid #fff;
+}
+
+.heatmap-chart__rows .country-row .substance-cell.overall {
+  width: 20px;
 }
 
 .heatmap-chart__rows .country-row .substance-cell:hover {

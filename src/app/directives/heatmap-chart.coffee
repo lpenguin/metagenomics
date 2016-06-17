@@ -27,7 +27,8 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
       $scope.data.countries.forEach (c) ->
         $scope.cells[c.name] = {}
         _.keys($scope.data.resistances).forEach (r) ->
-          $scope.cells[c.name][r] = {}
+          $scope.cells[c.name][r] =
+            'overall': 0
           $scope.data.substances.forEach (s) ->
             $scope.cells[c.name][r][s['category_name']] = 0
             return
@@ -43,9 +44,10 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
 
     updateCells = ->
       $scope.data.countries.forEach (c) ->
+        cSamples = filteredSamples.filter (fs) -> fs['f-countries'] is c.name
         _.keys($scope.data.resistances).forEach (r) ->
+          $scope.cells[c.name][r].overall = calculators.getAbundanceValue cSamples, r, 'overall'
           $scope.data.substances.forEach (s) ->
-            cSamples = filteredSamples.filter (fs) -> fs['f-countries'] is c.name
             $scope.cells[c.name][r][s['category_name']] = calculators.getAbundanceValue cSamples, r, s
             return
           return
