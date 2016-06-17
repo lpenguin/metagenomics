@@ -73,6 +73,8 @@
 }
 
 .heatmap-chart__rows .country-row .resistance-group {
+  position: relative;
+
   margin-left: 10px;
 }
 
@@ -91,6 +93,20 @@
 
 .heatmap-chart__rows .country-row .substance-cell:hover {
   opacity: .5;
+}
+
+.heatmap-chart__rows .substance-caption {
+  position: absolute;
+  top: -15px;
+  left: 0;
+
+  white-space: nowrap;
+
+  font-size: $s-font-size;
+}
+
+.heatmap-chart__rows .substance-caption::first-letter {
+  text-transform: uppercase;
 }
 
 .heatmap-chart__legend {

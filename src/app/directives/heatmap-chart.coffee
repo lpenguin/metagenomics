@@ -27,8 +27,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
       $scope.data.countries.forEach (c) ->
         $scope.cells[c.name] = {}
         _.keys($scope.data.resistances).forEach (r) ->
-          $scope.cells[c.name][r] =
-            'overall': 0
+          $scope.cells[c.name][r] = 'overall': 0
           $scope.data.substances.forEach (s) ->
             $scope.cells[c.name][r][s['category_name']] = 0
             return

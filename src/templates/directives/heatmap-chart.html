@@ -19,6 +19,10 @@
           data-ng-mouseout="substanceCellMouseout()"
           data-ng-mousemove="substanceCellMousemove($event)"></div>
         <br class="clear-both" />
+        <div
+          class="substance-caption"
+          data-ng-if="!$index"
+          data-ng-show="tooltip.substance && tooltip.substance !== 'overall'">{{tooltip.substance}}</div>
       </div>
       <br class="clear-both" />
     </div>
