@@ -3,4 +3,7 @@ app.constant 'colors',
     '#fef0d9'
     '#b30000'
   ]
-  neutral: '#eee'
+  heatmapNeutral: '#eee'
+  mapNeutral: '#eee'
+  mapBorders: '#fafafa'
+  mapActiveBorders: '#777'

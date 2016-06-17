@@ -10,16 +10,16 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
 
     $scope.data.countries = rawData[1].map (d) ->
       code: parseInt d['iso_3166_code']
-      continent: d['continent']
-      name: d['name']
+      continent: d.continent
+      name: d.name
 
     $scope.data.samples = _.values rawData[2]
-    $scope.data.substances = _.values rawData[3]['categories']
+    $scope.data.substances = _.values rawData[3].categories
 
     $scope.studies = _.uniq(_.map($scope.data.samples, 'f-studies')).sort().join ', '
 
     $scope.data.samples.forEach (s) ->
-      sampleAbundances = rawData[4].filter (a) -> a['sample'] is s['names']
+      sampleAbundances = rawData[4].filter (a) -> a.sample is s.names
 
       _.forOwn _.groupBy(sampleAbundances, 'f_groups'), (value, key) ->
         s[key] = {}
@@ -33,7 +33,7 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
 
     _.uniq _.map $scope.data.substances, 'group'
       .forEach (resistance) ->
-        substances = $scope.data.substances.filter (s) -> s['group'] is resistance
+        substances = $scope.data.substances.filter (s) -> s.group is resistance
         $scope.data.resistances[resistance] = _.uniq _.map substances, 'category_name'
         return
 
@@ -48,7 +48,7 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
     $scope.data.countries.forEach (c) ->
       _.keys($scope.data.resistances).forEach (r) ->
         $scope.data.substances.forEach (s) ->
-          cSamples = filteredSamples.filter (s) -> s['f-countries'] is c['name']
+          cSamples = filteredSamples.filter (s) -> s['f-countries'] is c.name
           abundanceValue = calculators.getAbundanceValue cSamples, r, s
           max = Math.max max, abundanceValue
           return

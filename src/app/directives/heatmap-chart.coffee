@@ -25,11 +25,11 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
 
     prepareCells = ->
       $scope.data.countries.forEach (c) ->
-        $scope.cells[c['name']] = {}
+        $scope.cells[c.name] = {}
         _.keys($scope.data.resistances).forEach (r) ->
-          $scope.cells[c['name']][r] = {}
+          $scope.cells[c.name][r] = {}
           $scope.data.substances.forEach (s) ->
-            $scope.cells[c['name']][r][s['category_name']] = 0
+            $scope.cells[c.name][r][s['category_name']] = 0
             return
           return
         return
@@ -37,7 +37,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
 
     prepareSMP = ->
       $scope.data.countries.forEach (c) ->
-        $scope.SMP[c['name']] = 0
+        $scope.SMP[c.name] = 0
         return
       return
 
@@ -45,8 +45,8 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
       $scope.data.countries.forEach (c) ->
         _.keys($scope.data.resistances).forEach (r) ->
           $scope.data.substances.forEach (s) ->
-            cSamples = filteredSamples.filter (fs) -> fs['f-countries'] is c['name']
-            $scope.cells[c['name']][r][s['category_name']] = calculators.getAbundanceValue cSamples, r, s
+            cSamples = filteredSamples.filter (fs) -> fs['f-countries'] is c.name
+            $scope.cells[c.name][r][s['category_name']] = calculators.getAbundanceValue cSamples, r, s
             return
           return
         return
@@ -54,8 +54,8 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
 
     updateSMP = ->
       $scope.data.countries.forEach (c) ->
-        cSamples = filteredSamples.filter (fs) -> fs['f-countries'] is c['name']
-        $scope.SMP[c['name']] = cSamples.length
+        cSamples = filteredSamples.filter (fs) -> fs['f-countries'] is c.name
+        $scope.SMP[c.name] = cSamples.length
         return
       return
 
@@ -71,7 +71,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
 
     $scope.getCellColor = (countryName, resistance, substance) ->
       value = $scope.cells[countryName][resistance][substance]
-      unless value then colors.neutral else $scope.colorScale value
+      unless value then colors.heatmapNeutral else $scope.colorScale value
 
     $scope.substanceCellMouseover = (countryName, resistance, substance) ->
       csSamples = filteredSamples.filter (fs) ->
@@ -84,6 +84,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
 
       eventData =
         data: $scope.cells
+        countryName: countryName
         resistance: resistance
         substance: substance
       $rootScope.$broadcast 'substanceCellHovered', eventData
