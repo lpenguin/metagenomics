@@ -1,4 +1,4 @@
-app.directive 'heatmapChart', (calculators, colors) ->
+app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/heatmap-chart.html'
@@ -6,22 +6,14 @@ app.directive 'heatmapChart', (calculators, colors) ->
     data: '='
     colorScale: '='
   link: ($scope, $element, $attrs) ->
-    $scope.cells = {}
-    $scope.SMP = {}
-
-    $scope.gradient = colors.gradient
-
-    $scope.abundanceValuesExtent = $scope.colorScale.domain()
-    $scope.maxPower = parseInt $scope.abundanceValuesExtent[1].toExponential().split('-')[1]
-
     filteredSamples = []
-
     legendWidth = $element.find('.legend-gradient').width()
-
     legendScale = d3.scale.linear()
-      .domain $scope.abundanceValuesExtent
       .range [0, legendWidth]
 
+    $scope.cells = {}
+    $scope.SMP = {}
+    $scope.gradient = colors.gradient
     $scope.tooltip =
       substance: ''
       abundanceValue: undefined
@@ -29,6 +21,7 @@ app.directive 'heatmapChart', (calculators, colors) ->
       coordinates:
         x: undefined
         y: undefined
+    $scope.hoveredCountryId = undefined
 
     prepareCells = ->
       $scope.data.countries.forEach (c) ->
@@ -66,6 +59,13 @@ app.directive 'heatmapChart', (calculators, colors) ->
         return
       return
 
+    updateLegendScale = ->
+      $scope.abundanceValuesExtent = $scope.colorScale.domain()
+      $scope.maxPower = parseInt $scope.abundanceValuesExtent[1].toExponential().split('-')[1]
+
+      legendScale.domain $scope.abundanceValuesExtent
+      return
+
     prepareCells()
     prepareSMP()
 
@@ -81,11 +81,19 @@ app.directive 'heatmapChart', (calculators, colors) ->
       $scope.tooltip.substance = substance
       $scope.tooltip.abundanceValue = $scope.cells[countryName][resistance][substance]
       $scope.tooltip.nOfSamples = csSamples.length
+
+      eventData =
+        data: $scope.cells
+        resistance: resistance
+        substance: substance
+      $rootScope.$broadcast 'substanceCellHovered', eventData
       return
 
     $scope.substanceCellMouseout = ->
       $scope.tooltip.substance = ''
       $scope.tooltip.abundanceValue = undefined
+
+      $rootScope.$broadcast 'substanceCellHovered', undefined
       return
 
     $scope.substanceCellMousemove = ($event) ->
@@ -94,12 +102,17 @@ app.directive 'heatmapChart', (calculators, colors) ->
       return
 
     $scope.getLegendPointerX = ->
-      Math.min legendWidth, legendScale $scope.tooltip.abundanceValue ? 0
+      legendScale $scope.tooltip.abundanceValue ? 0
 
-    $scope.$on 'samplesFiltered', (event, data) ->
-      filteredSamples = data
+    $scope.$on 'samplesFiltered', (event, eventData) ->
+      filteredSamples = eventData
       updateCells()
       updateSMP()
+      updateLegendScale()
+      return
+
+    $scope.$on 'countryHovered', (event, eventData) ->
+      $scope.hoveredCountryId = eventData
       return
 
     return

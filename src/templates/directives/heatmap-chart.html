@@ -3,7 +3,7 @@
     <div
       class="country-row"
       data-ng-repeat="country in (sortedCountries = (data.countries | orderBy:['-continent', 'name'])) track by $index"
-      data-ng-class="{'pushed': $index && sortedCountries[$index]['continent'] !== sortedCountries[$index - 1]['continent'], 'unavailable': !SMP[country['name']]}">
+      data-ng-class="{'pushed': $index && sortedCountries[$index]['continent'] !== sortedCountries[$index - 1]['continent'], 'unavailable': !SMP[country['name']] || (hoveredCountryId ? country['code'] !== hoveredCountryId : false)}">
       <img
         class="flag inline"
         data-ng-src="img/flags/{{country['name']}}.png" />

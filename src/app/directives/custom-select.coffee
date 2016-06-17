@@ -13,6 +13,14 @@ app.directive 'customSelect', ($document, $timeout) ->
     $scope.isSelectPrepared = false
     $scope.isListShown = false
 
+    clickHandler = (event) ->
+      return if $element.find(event.target).length
+
+      $scope.isListShown = false
+      $scope.$apply()
+      $document.unbind 'click', clickHandler
+      return
+
     $scope.toggleList = ->
       return if $scope.disabled
 
@@ -42,14 +50,6 @@ app.directive 'customSelect', ($document, $timeout) ->
       else
         $scope.selected = item
         $scope.isListShown = false
-      return
-
-    clickHandler = (event) ->
-      return if $element.find(event.target).length
-
-      $scope.isListShown = false
-      $scope.$apply()
-      $document.unbind 'click', clickHandler
       return
 
     $timeout ->

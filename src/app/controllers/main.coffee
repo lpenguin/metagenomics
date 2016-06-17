@@ -1,26 +1,7 @@
 app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoader) ->
   $scope.initializing = true
-
-  prepareColorScale = ->
-    max = -Infinity
-
-    $scope.colorScale = d3.scale.linear()
-      .range colors.gradient
-
-    $scope.data.countries.forEach (c) ->
-      _.keys($scope.data.resistances).forEach (r) ->
-        $scope.data.substances.forEach (s) ->
-          cSamples = $scope.data.samples.filter (s) -> s['f-countries'] is c['name']
-          abundanceValue = calculators.getAbundanceValue cSamples, r, s
-          max = Math.max max, abundanceValue
-          return
-        return
-      return
-
-    $scope.colorScale = d3.scale.linear()
-      .domain [0, max]
-      .range colors.gradient
-    return
+  $scope.colorScale = d3.scale.linear()
+    .range colors.gradient
 
   parseData = (error, rawData) ->
     $scope.mapData = rawData[0]
@@ -56,15 +37,33 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
         $scope.data.resistances[resistance] = _.uniq _.map substances, 'category_name'
         return
 
-    prepareColorScale()
-
     $scope.initializing = false
     $scope.$apply()
     $timeout -> $('.loading-cover').fadeOut()
     return
 
+  updateColorScale = (filteredSamples) ->
+    max = -Infinity
+
+    $scope.data.countries.forEach (c) ->
+      _.keys($scope.data.resistances).forEach (r) ->
+        $scope.data.substances.forEach (s) ->
+          cSamples = filteredSamples.filter (s) -> s['f-countries'] is c['name']
+          abundanceValue = calculators.getAbundanceValue cSamples, r, s
+          max = Math.max max, abundanceValue
+          return
+        return
+      return
+
+    $scope.colorScale.domain [0, max]
+    return
+
   dataLoader
     .getData()
     .awaitAll parseData
+
+  $scope.$on 'samplesFiltered', (event, eventData) ->
+    updateColorScale eventData
+    return
 
   return

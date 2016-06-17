@@ -5,16 +5,12 @@ app.directive 'filters', ($rootScope) ->
   scope:
     data: '='
   link: ($scope, $element, $attrs) ->
-    $scope.filters = []
-    $scope.filterValues = {}
-
     filteringFields = [
       'f-studies'
       'f-ages'
       'f-genders'
       'f-diagnosis'
     ]
-
     ageIntervals = [
       [10, 16]
       [17, 25]
@@ -23,6 +19,9 @@ app.directive 'filters', ($rootScope) ->
       [51, 70]
       [71, Infinity]
     ]
+
+    $scope.filters = []
+    $scope.filterValues = {}
 
     prepareFilters = ->
       filteringFields.forEach (ff) ->
@@ -103,8 +102,7 @@ app.directive 'filters', ($rootScope) ->
       return
 
     $scope.$watch 'filterValues', ->
-      filteredSamples = filterSamples()
-      $rootScope.$broadcast 'samplesFiltered', filteredSamples
+      $rootScope.$broadcast 'samplesFiltered', filterSamples()
       return
     , true
 
