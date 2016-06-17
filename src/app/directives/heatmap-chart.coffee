@@ -15,6 +15,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
     $scope.SMP = {}
     $scope.gradient = colors.gradient
     $scope.tooltip =
+      resistance: ''
       substance: ''
       abundanceValue: undefined
       nOfSamples: undefined
@@ -79,6 +80,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
         fs['f-countries'] is countryName and
         fs[resistance][substance]
 
+      $scope.tooltip.resistance = resistance
       $scope.tooltip.substance = substance
       $scope.tooltip.abundanceValue = $scope.cells[countryName][resistance][substance]
       $scope.tooltip.nOfSamples = csSamples.length
