@@ -37,15 +37,6 @@ app.directive 'mapChart', ($rootScope, colors) ->
       g = svg.append 'g'
         .classed 'main', true
 
-      ###
-      g.append 'rect'
-        .attr 'width', width
-        .attr 'height', height
-        .style 'fill', 'none'
-        .style 'stroke', '#f00'
-        .style 'stroke-width', .5
-      ###
-
       g.selectAll 'path'
         .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
         .enter()
