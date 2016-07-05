@@ -1,109 +1,114 @@
-app.directive 'filters', ($rootScope) ->
+app.directive 'filters', ($rootScope, tools) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/filters.html'
   scope:
     data: '='
   link: ($scope, $element, $attrs) ->
+    # Substance filter
+    dataset = []
+
+    _.keys $scope.data.resistances
+      .sort tools.sortAlphabeticaly
+      .forEach (key) ->
+        dataset.push
+          title: key
+          value: key
+          type: 'r'
+
+        return if $scope.data.resistances[key].length < 2
+
+        $scope.data.resistances[key].sort tools.sortAlphabeticaly
+          .forEach (s) ->
+            dataset.push
+              title: s
+              value: s
+              type: 's'
+            return
+        return
+
+    $scope.substanceFilter =
+      key: 'substance'
+      dataset: dataset
+      multi: false
+      toggleFormat: -> 'Resistomap for ' + $scope.substanceFilterValue.title
+      disabled: false
+
+    $scope.substanceFilterValue = dataset[0]
+
+    # Study & country filters
     filteringFields = [
-      'f-studies'
-      'f-ages'
-      'f-genders'
-      'f-diagnosis'
-    ]
-    ageIntervals = [
-      [10, 16]
-      [17, 25]
-      [26, 35]
-      [36, 50]
-      [51, 70]
-      [71, Infinity]
+      'studies'
+      'countries'
     ]
 
-    $scope.filters = []
-    $scope.filterValues = {}
+    $scope.studyCountryFilters = []
+    $scope.studyCountryFiltersValues = {}
 
-    prepareFilters = ->
-      filteringFields.forEach (ff) ->
-        dataset = []
+    filteringFields.forEach (ff) ->
+      dataset = _.uniq _.map $scope.data.samples, 'f-' + ff
+        .sort tools.sortAlphabeticaly
+        .map (u) ->
+          title: u
+          value: u
 
-        if ff is 'f-ages'
-          dataset = ageIntervals.map (aI) ->
-            title: aI[0] + (if aI[1] is Infinity then '+' else '–' + aI[1])
-            value: aI
-        else
-          dataset = _.uniq _.map $scope.data.samples, ff
-            .sort (a, b) ->
-              return -1 if a.toLowerCase() < b.toLowerCase()
-              return 1 if a.toLowerCase() > b.toLowerCase()
-              0
-            .map (u) ->
-              title: u
-              value: u
+      plural =
+        title: ''
+        value: undefined
 
-        filter =
-          key: ff
-          dataset: dataset
-          multi: true
-          toggleFormat: ->
-            toggleTitle = ''
+      if ff is 'studies'
+        plural.title = 'all studies'
+      else if ff is 'countries'
+        plural.title = 'in all countries'
 
-            unless $scope.filterValues[ff].length
-              toggleTitle = ff.split('-')[1]
-            else if $scope.filterValues[ff].length is 1
-              toggleTitle = $scope.filterValues[ff][0].title
-            else
-              toggleTitle = $scope.filterValues[ff][0].title
+      dataset = [ plural ].concat dataset
 
-              $scope.filterValues[ff].forEach (fV, i) ->
-                toggleTitle += ', ' + fV.title if i
-                return
+      filter =
+        key: ff
+        dataset: dataset
+        multi: false
+        toggleFormat: -> $scope.studyCountryFiltersValues[ff].title
+        disabled: false
 
-            toggleTitle
-          disabled: false
+      $scope.studyCountryFilters.push filter
 
-        $scope.filters.push filter
-
-        $scope.filterValues[ff] = []
-        return
+      $scope.studyCountryFiltersValues[ff] = dataset[0]
       return
 
-    filterSamples = ->
-      $scope.data.samples.filter (s) ->
-        _.every $scope.filters, (sF) ->
-          filterValues = $scope.filterValues[sF.key]
+    # Checkboxes
+    $scope.checkboxes = [
+      'studies'
+      'countries'
+      'diagnosis'
+      'gender'
+      'age'
+    ]
 
-          if filterValues.length
-            _.some filterValues, (fV) ->
-              if sF.key is 'f-ages'
-                fV.value[0] <= s[sF.key] <= fV.value[1]
-              else
-                s[sF.key] is fV.value
-          else
-            true
+    $scope.checkboxesValues = {}
 
-    prepareFilters()
-
-    $scope.isResetShown = ->
-      _.some $scope.filters, (f) ->
-        filterValue = $scope.filterValues[f.key]
-
-        if f.multi
-          filterValue.length
-        else
-          filterValue isnt f.dataset[0]
-
-    $scope.resetFilters = ->
-      _.keys($scope.filterValues).forEach (key) ->
-        filter = _.find $scope.filters, 'key': key
-
-        $scope.filterValues[key] = if filter.multi then [] else filter.dataset[0]
-        return
+    $scope.checkboxes.forEach (c) ->
+      $scope.checkboxesValues[c] = true
       return
 
-    $scope.$watch 'filterValues', ->
-      $rootScope.$broadcast 'samplesFiltered', filterSamples()
+    # Watches
+    $scope.$watch 'substanceFilterValue', ->
+      eventData =
+        value: $scope.substanceFilterValue.value
+        type: $scope.substanceFilterValue.type
+      $rootScope.$broadcast 'filters.substanceChanged', eventData
+      return
+
+    $scope.$watch '[studyCountryFiltersValues, checkboxesValues]', ->
+      eventData =
+        studyCountryFiltersValues: $scope.studyCountryFiltersValues
+        checkboxesValues: $scope.checkboxesValues
+      $rootScope.$broadcast 'filters.groupingChanged', eventData
       return
     , true
+
+    # Events
+    $scope.$on 'heatmap.substanceChanged', (event, eventData) ->
+      $scope.substanceFilterValue = _.find $scope.substanceFilter.dataset, 'value': eventData
+      return
 
     return

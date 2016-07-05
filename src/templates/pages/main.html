@@ -1,24 +1,26 @@
 <div data-ng-if="!initializing">
-  <div class="header">
+  <div class="filters-container">
     <filters data-data="data"></filters>
   </div>
   <div class="content">
     <div class="content__map-chart">
-      <map-chart
+      <!--<map-chart
         data-data="data"
         data-map-data="mapData"
         data-color-scale="colorScale">
-      </map-chart>
+      </map-chart>-->
     </div>
-    <div class="content__heatmap-chart">
-      <heatmap-chart
+    <div class="content__heatmap-chart inline">
+      <!--<heatmap-chart
         data-data="data"
         data-color-scale="colorScale">
-      </heatmap-chart>
+      </heatmap-chart>-->
     </div>
+    <div class="content__info-block inline"></div>
+    <br class="clear-both" />
   </div>
-  <div class="datalab-footer">
+  <!--<div class="datalab-footer">
     <div class="typical-info">Visualization by <a class="common-link" href="http://www.datalaboratory.pro/" target="_blank"><span class="dl-caption">Data Laboratory</span></a></div>
     <div class="additional-info">Data from {{studies}}</div>
-  </div>
+  </div>-->
 </div>

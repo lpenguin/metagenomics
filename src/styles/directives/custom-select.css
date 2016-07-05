@@ -1,9 +1,5 @@
 @import '../variables';
 
-$background-color: #e5e5e5;
-$hover-color: #d3d3d3;
-$max-width: 200px;
-
 .custom-select {
   position: relative;
 
@@ -13,54 +9,50 @@ $max-width: 200px;
   color: #333;
 
   font-family: $helvetica-neue-regular;
-  font-size: $m-font-size;
-}
-
-.custom-select.disabled {
-  cursor: default;
-
-  opacity: .5;
+  font-size: $l-font-size;
 }
 
 .custom-select__toggle {
   overflow: hidden;
 
   box-sizing: border-box;
-  max-width: $max-width;
-  padding: 2px 19px 2px 5px;
+  max-width: 700px;
+  padding: 5px 24px 5px 10px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  border-radius: 4px 4px 4px 4px;
-  background-color: $background-color;
+  border: 1px solid #aaa;
+  border-radius: 12px;
+  background-color: #fff;
 }
 
 .custom-select__toggle.activated {
-  border-radius: 4px 4px 0 0;
+  border-bottom: none;
+  border-radius: 12px 12px 0 0;
 }
 
 .custom-select__toggle::after {
   position: absolute;
-  top: 8px;
-  right: 5px;
+  top: 12px;
+  right: 10px;
 
   content: '';
 
-  border-top: 4px solid #333;
-  border-right: 3px solid transparent;
+  border-top: 6px solid #333;
+  border-right: 4px solid transparent;
   border-bottom: none;
-  border-left: 3px solid transparent;
+  border-left: 4px solid transparent;
 }
 
 .custom-select__toggle.activated::after {
-  top: 8px;
-  right: 5px;
+  top: 12px;
+  right: 10px;
 
   border-top: none;
-  border-right: 3px solid transparent;
-  border-bottom: 4px solid #333;
-  border-left: 3px solid transparent;
+  border-right: 4px solid transparent;
+  border-bottom: 6px solid #333;
+  border-left: 4px solid transparent;
 }
 
 .custom-select__dropdown {
@@ -69,11 +61,13 @@ $max-width: 200px;
 
   overflow: auto;
 
-  max-width: $max-width;
-  max-height: 260px;
+  max-width: 700px;
+  max-height: 340px;
 
-  border-radius: 0 0 4px 4px;
-  background-color: $background-color;
+  border: 1px solid #aaa;
+  border-top: none;
+  border-radius: 0 0 12px 12px;
+  background-color: #fff;
 }
 
 .custom-select__dropdown .item {
@@ -82,21 +76,21 @@ $max-width: 200px;
   overflow: hidden;
 
   box-sizing: border-box;
-  padding: 2px 19px 2px 5px;
+  padding: 5px 24px 5px 10px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  line-height: 22px;
+  line-height: 24px;
 }
 
 .custom-select__dropdown .item:hover {
-  background-color: $hover-color;
+  background-color: #d3d3d3;
 }
 
 .custom-select__dropdown .item.selected::after {
   position: absolute;
-  top: 8px;
+  top: 11px;
   right: 5px;
 
   width: 9px;
@@ -113,8 +107,7 @@ $max-width: 200px;
 }
 
 .custom-select__dropdown::-webkit-scrollbar-track {
-  border-radius: 4px;
-  background-color: $background-color;
+  background-color: transparent;
 }
 
 .custom-select__dropdown::-webkit-scrollbar-thumb {

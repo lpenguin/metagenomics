@@ -1,16 +1,50 @@
-.filters .custom-select:not(:first-child) {
+@import '../variables';
+
+.filters {
+  height: 100%;
+}
+
+.filters .substance-filter .custom-select {
+  margin-left: -10px;
+}
+
+.filters .substance-filter .custom-select .custom-select__toggle {
+  font-family: $helvetica-neue-bold;
+}
+
+.filters .study-country-filters {
+  margin-left: 200px;
+}
+
+.filters .study-country-filters .custom-select ~ .custom-select {
   margin-left: 10px;
 }
 
-.filters .filters-reset {
-  height: 20px;
-  margin-left: 15px;
+.filters .checkboxes {
+  position: absolute;
+  bottom: 0;
 
-  cursor: pointer;
+  font-size: $s-font-size;
+}
+
+.filters .checkboxes .caption {
+  margin-top: 3px;
+
+  font-family: $helvetica-neue-bold;
+}
+
+.filters .checkboxes .checkbox {
   user-select: none;
 
-  color: #dc322f;
+  font-family: $helvetica-neue-regular;
+}
 
-  font-size: 20px;
-  line-height: 20px;
+.filters .checkboxes .checkbox label {
+  cursor: pointer;
+}
+
+.filters .checkboxes .checkbox input {
+  cursor: pointer;
+
+  font-size: $l-font-size;
 }

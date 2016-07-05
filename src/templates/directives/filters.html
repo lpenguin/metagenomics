@@ -1,17 +1,42 @@
 <div class="filters">
-  <custom-select
-    class="inline"
-    data-ng-repeat="filter in filters track by filter.key"
-    data-key="filter.key"
-    data-dataset="filter.dataset"
-    data-multi="filter.multi"
-    data-toggle-format="filter.toggleFormat"
-    data-disabled="false"
-    data-selected="filterValues[filter.key]">
-  </custom-select>
-  <div
-    class="filters-reset inline"
-    data-ng-show="isResetShown()"
-    data-ng-click="resetFilters()">&times;</div>
+  <div class="substance-filter inline">
+    <custom-select
+      data-key="substanceFilter.key"
+      data-dataset="substanceFilter.dataset"
+      data-multi="substanceFilter.multi"
+      data-toggle-format="substanceFilter.toggleFormat"
+      data-disabled="substanceFilter.disabled"
+      data-selected="substanceFilterValue">
+    </custom-select>
+  </div>
+  <div class="study-country-filters inline">
+    <custom-select
+      class="inline"
+      data-ng-repeat="filter in studyCountryFilters track by $index"
+      data-key="filter.key"
+      data-dataset="filter.dataset"
+      data-multi="filter.multi"
+      data-toggle-format="filter.toggleFormat"
+      data-disabled="filter.disabled"
+      data-selected="studyCountryFiltersValues[filter.key]">
+    </custom-select>
+    <br class="clear-both" />
+  </div>
   <br class="clear-both" />
+  <div
+    class="checkboxes"
+    data-ng-if="studyCountryFiltersValues['studies'].value || studyCountryFiltersValues['countries'].value">
+    <div class="caption inline">Pool by</div>
+    <div
+      class="checkbox inline"
+      data-ng-repeat="checkbox in checkboxes track by $index"
+      data-ng-class="{'disabled': studyCountryFiltersValues[checkbox].value}">
+      <label>
+        <input
+          type="checkbox"
+          ng-model="checkboxesValues[checkbox]">{{checkbox + ($index !== checkboxes.length - 1 ? ',' : '')}}
+      </label>
+    </div>
+    <br class="clear-both" />
+  </div>
 </div>
