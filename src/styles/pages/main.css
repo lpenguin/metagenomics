@@ -1,15 +1,18 @@
 @import '../variables';
 
 .filters-container {
-  position: fixed;
+  position: absolute;
   top: 30px;
   left: $common-offset;
 
-  height: 400px;
+  height: 410px;
 }
 
 .content__map-chart {
-  margin-left: $common-offset;
+  width: 100%;
+  height: 450px;
+
+  background-color: #7fd2d1;
 }
 
 .content__heatmap-chart {

@@ -1,9 +1,22 @@
 <div class="heatmap-chart">
+  <div class="heatmap-chart__header">
+    <div
+      class="resistance-group inline"
+      data-ng-repeat="(resistance, substances) in data.resistances track by $index">
+      <div class="resistance-caption">{{resistance}}</div>
+      <div
+        class="substance-caption inline"
+        data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
+        data-ng-class="{'overall': substance === 'overall'}">{{substance === 'overall' ? 'median' : substance.charAt(0)}}</div>
+      <br class="clear-both" />
+    </div>
+    <br class="clear-both" />
+  </div>
   <div class="heatmap-chart__rows">
     <div
-      class="country-row"
-      data-ng-repeat="country in (sortedCountries = (data.countries | orderBy:['-continent', 'name'])) track by $index"
-      data-ng-class="{'pushed': $index && sortedCountries[$index].continent !== sortedCountries[$index - 1].continent, 'unavailable': !SMP[country.name] || (hoveredCountryId ? country.code !== hoveredCountryId : false)}">
+      class="row"
+      data-ng-repeat="cohort in [] track by $index"
+      data-ng-class="{'pushed': false, 'unavailable': false)}">
       <img
         class="flag inline"
         data-ng-src="img/flags/{{country.name}}.png" />
@@ -14,42 +27,14 @@
         data-ng-repeat="(resistance, substances) in data.resistances track by $index">
         <div
           class="substance-cell inline"
-          data-ng-repeat="substance in ['overall'].concat(substances) track by $index"
-          data-ng-style="{'background-color': getCellColor(country.name, resistance, substance)}"
+          data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
+          data-ng-style="{'background-color': getCellColor()}"
           data-ng-class="{'overall': substance === 'overall'}"
-          data-ng-mouseover="substanceCellMouseover(country.name, resistance, substance)"
-          data-ng-mouseout="substanceCellMouseout()"
-          data-ng-mousemove="substanceCellMousemove($event)"></div>
+          data-ng-mouseover="substanceCellMouseover()"
+          data-ng-mouseout="substanceCellMouseout()"></div>
         <br class="clear-both" />
-        <div
-          class="substance-caption"
-          data-ng-if="!$parent.$index"
-          data-ng-show="tooltip.substance && tooltip.resistance === resistance && tooltip.substance !== 'overall'">{{tooltip.substance}}</div>
       </div>
       <br class="clear-both" />
     </div>
-  </div>
-  <div class="heatmap-chart__legend">
-    <div
-      class="legend-caption left"
-      data-ng-bind-html="abundanceValuesExtent[0] | prepareAbundanceValue:maxPower | trust"></div>
-    <div
-      class="legend-caption right"
-      data-ng-bind-html="abundanceValuesExtent[1] | prepareAbundanceValue:maxPower | trust"></div>
-    <div
-      class="legend-gradient"
-      data-ng-style="{'background': 'linear-gradient(to right, ' + gradient[0] + ', ' + gradient[1] + ')'}"></div>
-    <div
-      class="legend-pointer"
-      data-ng-style="{'left': getLegendPointerX() + 'px'}"></div>
-  </div>
-  <div
-    class="heatmap-chart__tooltip"
-    data-ng-class="{'hidden': !tooltip.substance}"
-    data-ng-style="{'transform': 'translate(' + tooltip.coordinates.x + 'px, ' + tooltip.coordinates.y + 'px)'}">
-    <div
-      class="tooltip-abundance-value"
-      data-ng-bind-html="'Median abundance: ' + (tooltip.abundanceValue | prepareAbundanceValue:maxPower) | trust"></div>
-    <div class="tooltip-n-of-samples">{{tooltip.nOfSamples + ' ' + (tooltip.nOfSamples === 1 ? 'sample' : 'samples')}}</div>
   </div>
 </div>

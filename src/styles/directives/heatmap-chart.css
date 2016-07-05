@@ -1,61 +1,57 @@
 @import '../variables';
 
-.heatmap-chart {
-  font-family: $helvetica-neue-regular;
+.heatmap-chart__header {
+  margin-left: 156px;
 }
 
-.heatmap-chart__tooltip {
-  position: fixed;
-  z-index: 1;
+.heatmap-chart__header .resistance-group {
+  position: relative;
+}
+
+.heatmap-chart__header .resistance-caption {
+  position: absolute;
   top: 0;
-  left: 0;
+  left: 1px;
 
-  margin-left: 20px;
-  padding: 3px;
+  white-space: nowrap;
 
-  text-align: left;
+  font-family: $helvetica-neue-bold;
+  font-size: $m-font-size;
+}
 
-  border-radius: 1px;
-  background-color: rgba(255, 255, 255, .7);
+.heatmap-chart__header .substance-caption {
+  margin-top: 20px;
 
+  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
 
-.heatmap-chart__tooltip.hidden {
-  visibility: hidden;
+.heatmap-chart__rows {
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
 }
 
-.heatmap-chart__tooltip .tooltip-abundance-value {
-  margin-top: -3px;
-}
-
-.heatmap-chart__tooltip .tooltip-abundance-value sup {
-  font-size: $xs-font-size;
-}
-
-.heatmap-chart__rows .country-row {
+.heatmap-chart__rows .row {
   height: 20px;
 
   transition: opacity .25s linear;
-
-  font-size: $s-font-size;
 }
 
-.heatmap-chart__rows .country-row.pushed {
+.heatmap-chart__rows .row.pushed {
   margin-top: 10px;
 }
 
-.heatmap-chart__rows .country-row.unavailable {
+.heatmap-chart__rows .row.unavailable {
   pointer-events: none;
 
-  opacity: .2;
+  opacity: .1;
 }
 
-.heatmap-chart__rows .country-row .flag {
+.heatmap-chart__rows .row .flag {
   margin-top: 4px;
 }
 
-.heatmap-chart__rows .country-row .name {
+.heatmap-chart__rows .row .name {
   overflow: hidden;
 
   width: 80px;
@@ -65,97 +61,36 @@
   text-overflow: ellipsis;
 }
 
-.heatmap-chart__rows .country-row .n-of-samples {
+.heatmap-chart__rows .row .n-of-samples {
   width: 40px;
-  margin: 3px 0 3px 5px;
+  margin: 3px 10px 3px 5px;
 
   text-align: right;
 }
 
-.heatmap-chart__rows .country-row .resistance-group {
-  position: relative;
-
-  margin-left: 10px;
+.heatmap-chart__header .resistance-group ~ .resistance-group,
+.heatmap-chart__rows .row .resistance-group ~ .resistance-group {
+  margin-left: 20px;
 }
 
-.heatmap-chart__rows .country-row .substance-cell {
-  width: 5px;
-  height: 18px;
-
-  transition: background-color .25s linear;
+.heatmap-chart__header .substance-caption,
+.heatmap-chart__rows .row .substance-cell {
+  width: 15px;
 
   border: 1px solid #fff;
 }
 
-.heatmap-chart__rows .country-row .substance-cell.overall {
-  width: 20px;
+.heatmap-chart__rows .row .substance-cell {
+  height: 18px;
+
+  transition: background-color .25s linear;
 }
 
-.heatmap-chart__rows .country-row .substance-cell:hover {
+.heatmap-chart__header .substance-caption.overall,
+.heatmap-chart__rows .row .substance-cell.overall {
+  width: 40px;
+}
+
+.heatmap-chart__rows .row .substance-cell:hover {
   opacity: .5;
-}
-
-.heatmap-chart__rows .substance-caption {
-  position: absolute;
-  top: -15px;
-  left: 0;
-
-  white-space: nowrap;
-
-  font-size: $s-font-size;
-}
-
-.heatmap-chart__rows .substance-caption::first-letter {
-  text-transform: uppercase;
-}
-
-.heatmap-chart__legend {
-  position: relative;
-
-  margin: 20px 0 0 157px;
-}
-
-.heatmap-chart__legend .legend-caption {
-  position: absolute;
-  bottom: -1px;
-
-  font-size: $xs-font-size;
-}
-
-.heatmap-chart__legend .legend-caption sup {
-  font-size: $xxs-font-size;
-}
-
-.heatmap-chart__legend .legend-caption.left {
-  left: -105px;
-
-  width: 100px;
-
-  text-align: right;
-}
-
-.heatmap-chart__legend .legend-caption.right {
-  left: 105px;
-
-  width: 100px;
-}
-
-.heatmap-chart__legend .legend-gradient {
-  width: 100px;
-  height: 10px;
-}
-
-.heatmap-chart__legend .legend-pointer {
-  position: absolute;
-  top: -5px;
-
-  width: 0;
-  height: 0;
-  margin-left: -5px;
-
-  transition: left .25s linear;
-
-  border-top: 5px solid #777;
-  border-right: 5px solid transparent;
-  border-left: 5px solid transparent;
 }

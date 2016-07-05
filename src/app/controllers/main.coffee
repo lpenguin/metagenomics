@@ -1,4 +1,4 @@
-app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoader) ->
+app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoader, tools) ->
   $scope.initializing = true
   $scope.colorScale = d3.scale.linear()
     .range colors.gradient
@@ -35,6 +35,7 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
       .forEach (resistance) ->
         substances = $scope.data.substances.filter (s) -> s.group is resistance
         $scope.data.resistances[resistance] = _.uniq _.map substances, 'category_name'
+          .sort tools.sortAlphabeticaly
         return
 
     $scope.initializing = false

@@ -9,7 +9,6 @@ app.directive 'filters', ($rootScope, tools) ->
     dataset = []
 
     _.keys $scope.data.resistances
-      .sort tools.sortAlphabeticaly
       .forEach (key) ->
         dataset.push
           title: key
@@ -18,13 +17,12 @@ app.directive 'filters', ($rootScope, tools) ->
 
         return if $scope.data.resistances[key].length < 2
 
-        $scope.data.resistances[key].sort tools.sortAlphabeticaly
-          .forEach (s) ->
-            dataset.push
-              title: s
-              value: s
-              type: 's'
-            return
+        $scope.data.resistances[key].forEach (s) ->
+          dataset.push
+            title: s
+            value: s
+            type: 's'
+          return
         return
 
     $scope.substanceFilter =
@@ -35,6 +33,8 @@ app.directive 'filters', ($rootScope, tools) ->
       disabled: false
 
     $scope.substanceFilterValue = dataset[0]
+    defaultSubstanceFilterValue = dataset[0]
+    isSubstanceChangedFromOutside = false
 
     # Study & country filters
     filteringFields = [
@@ -92,9 +92,15 @@ app.directive 'filters', ($rootScope, tools) ->
 
     # Watches
     $scope.$watch 'substanceFilterValue', ->
+      unless isSubstanceChangedFromOutside
+        defaultSubstanceFilterValue = $scope.substanceFilterValue
+      else
+        isSubstanceChangedFromOutside = false
+
       eventData =
         value: $scope.substanceFilterValue.value
         type: $scope.substanceFilterValue.type
+
       $rootScope.$broadcast 'filters.substanceChanged', eventData
       return
 
@@ -102,13 +108,19 @@ app.directive 'filters', ($rootScope, tools) ->
       eventData =
         studyCountryFiltersValues: $scope.studyCountryFiltersValues
         checkboxesValues: $scope.checkboxesValues
+
       $rootScope.$broadcast 'filters.groupingChanged', eventData
       return
     , true
 
     # Events
     $scope.$on 'heatmap.substanceChanged', (event, eventData) ->
-      $scope.substanceFilterValue = _.find $scope.substanceFilter.dataset, 'value': eventData
+      isSubstanceChangedFromOutside = true unless isSubstanceChangedFromOutside
+
+      if eventData
+        $scope.substanceFilterValue = _.find $scope.substanceFilter.dataset, 'value': eventData
+      else
+        $scope.substanceFilterValue = defaultSubstanceFilterValue
       return
 
     return
