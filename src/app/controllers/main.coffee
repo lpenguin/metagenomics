@@ -34,11 +34,27 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
     $scope.data.resistances = {}
 
     _.uniq _.map $scope.data.substances, 'group'
+      .sort tools.sortAlphabeticaly
       .forEach (resistance) ->
         substances = $scope.data.substances.filter (s) -> s.group is resistance
         $scope.data.resistances[resistance] = _.uniq _.map substances, 'category_name'
           .sort tools.sortAlphabeticaly
         return
+
+    filteringFields = [
+      'studies'
+      'countries'
+      'diagnosis'
+      'gender'
+      'age'
+    ]
+
+    $scope.data.filteringFieldsValues = {}
+
+    filteringFields.forEach (ff) ->
+      $scope.data.filteringFieldsValues[ff] = _.uniq _.map $scope.data.samples, 'f-' + ff
+        .sort tools.sortAlphabeticaly
+      return
 
     $scope.initializing = false
     $scope.$apply()

@@ -6,14 +6,23 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
     data: '='
     colorScale: '='
   link: ($scope, $element, $attrs) ->
+    createCohorts = (filtersValues, checkboxesValues) ->
+      return
+
     $scope.getCellColor = ->
-      value = 0
-      unless value then colors.heatmapNeutral else $scope.colorScale value
+      '#fff'
 
     $scope.substanceCellMouseover = ->
       return
 
     $scope.substanceCellMouseout = ->
+      return
+
+    # Events →
+
+    # → Events
+    $scope.$on 'filters.groupingChanged', (event, eventData) ->
+      createCohorts eventData.studyCountryFiltersValues, eventData.checkboxesValues
       return
 
     return

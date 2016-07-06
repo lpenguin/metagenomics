@@ -19,6 +19,13 @@
   font-size: $m-font-size;
 }
 
+.heatmap-chart__header .resistance-caption .tail {
+  color: #ccc;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
+}
+
 .heatmap-chart__header .substance-caption {
   margin-top: 20px;
 
@@ -75,7 +82,7 @@
 
 .heatmap-chart__header .substance-caption,
 .heatmap-chart__rows .row .substance-cell {
-  width: 15px;
+  width: 20px;
 
   border: 1px solid #fff;
 }
@@ -88,7 +95,7 @@
 
 .heatmap-chart__header .substance-caption.overall,
 .heatmap-chart__rows .row .substance-cell.overall {
-  width: 40px;
+  width: 50px;
 }
 
 .heatmap-chart__rows .row .substance-cell:hover {

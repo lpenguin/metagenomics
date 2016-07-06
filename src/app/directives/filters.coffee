@@ -55,8 +55,7 @@ app.directive 'filters', ($rootScope, tools) ->
       else if ff is 'countries'
         plural.title = 'in all countries'
 
-      dataset = _.uniq _.map $scope.data.samples, 'f-' + ff
-        .sort tools.sortAlphabeticaly
+      dataset = $scope.data.filteringFieldsValues[ff]
         .map (u) ->
           title: u
           value: u
@@ -76,13 +75,7 @@ app.directive 'filters', ($rootScope, tools) ->
       return
 
     # Checkboxes
-    $scope.checkboxes = [
-      'studies'
-      'countries'
-      'diagnosis'
-      'gender'
-      'age'
-    ]
+    $scope.checkboxes = _.keys $scope.data.filteringFieldsValues
 
     $scope.checkboxesValues = {}
 
@@ -90,7 +83,7 @@ app.directive 'filters', ($rootScope, tools) ->
       $scope.checkboxesValues[c] = true
       return
 
-    # Watches
+    # Events →
     $scope.$watch 'substanceFilterValue', ->
       if isSubstanceChangedFromOutside
         isSubstanceChangedFromOutside = false
@@ -113,7 +106,7 @@ app.directive 'filters', ($rootScope, tools) ->
       return
     , true
 
-    # Events
+    # → Events
     $scope.$on 'heatmap.substanceChanged', (event, eventData) ->
       isSubstanceChangedFromOutside = true unless isSubstanceChangedFromOutside
 

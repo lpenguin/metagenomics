@@ -3,7 +3,10 @@
     <div
       class="resistance-group inline"
       data-ng-repeat="(resistance, substances) in data.resistances track by $index">
-      <div class="resistance-caption">{{resistance}}</div>
+      <div class="resistance-caption">
+        <span>{{resistance.indexOf('(') !== -1 ? resistance.split('(')[0] : resistance}}</span>
+        <span class="tail">{{resistance.indexOf('(') !== -1 ? '(' + resistance.split('(')[1] : ''}}</span>
+      </div>
       <div
         class="substance-caption inline"
         data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
