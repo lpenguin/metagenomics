@@ -16,7 +16,9 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
     $scope.data.samples = _.values rawData[2]
     $scope.data.substances = _.values rawData[3].categories
 
-    $scope.studies = _.uniq(_.map($scope.data.samples, 'f-studies')).sort().join ', '
+    $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
+      .sort tools.sortAlphabeticaly
+      .join ', '
 
     $scope.data.samples.forEach (s) ->
       sampleAbundances = rawData[4].filter (a) -> a.sample is s.names
@@ -43,28 +45,8 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
     $timeout -> $('.loading-cover').fadeOut()
     return
 
-  updateColorScale = (filteredSamples) ->
-    max = -Infinity
-
-    $scope.data.countries.forEach (c) ->
-      _.keys($scope.data.resistances).forEach (r) ->
-        $scope.data.substances.forEach (s) ->
-          cSamples = filteredSamples.filter (s) -> s['f-countries'] is c.name
-          abundanceValue = calculators.getAbundanceValue cSamples, r, s
-          max = Math.max max, abundanceValue
-          return
-        return
-      return
-
-    $scope.colorScale.domain [0, max]
-    return
-
   dataLoader
     .getData()
     .awaitAll parseData
-
-  $scope.$on 'samplesFiltered', (event, eventData) ->
-    updateColorScale eventData
-    return
 
   return

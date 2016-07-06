@@ -46,12 +46,6 @@ app.directive 'filters', ($rootScope, tools) ->
     $scope.studyCountryFiltersValues = {}
 
     filteringFields.forEach (ff) ->
-      dataset = _.uniq _.map $scope.data.samples, 'f-' + ff
-        .sort tools.sortAlphabeticaly
-        .map (u) ->
-          title: u
-          value: u
-
       plural =
         title: ''
         value: undefined
@@ -60,6 +54,12 @@ app.directive 'filters', ($rootScope, tools) ->
         plural.title = 'all studies'
       else if ff is 'countries'
         plural.title = 'in all countries'
+
+      dataset = _.uniq _.map $scope.data.samples, 'f-' + ff
+        .sort tools.sortAlphabeticaly
+        .map (u) ->
+          title: u
+          value: u
 
       dataset = [ plural ].concat dataset
 
@@ -92,10 +92,10 @@ app.directive 'filters', ($rootScope, tools) ->
 
     # Watches
     $scope.$watch 'substanceFilterValue', ->
-      unless isSubstanceChangedFromOutside
-        defaultSubstanceFilterValue = $scope.substanceFilterValue
-      else
+      if isSubstanceChangedFromOutside
         isSubstanceChangedFromOutside = false
+      else
+        defaultSubstanceFilterValue = $scope.substanceFilterValue
 
       eventData =
         value: $scope.substanceFilterValue.value

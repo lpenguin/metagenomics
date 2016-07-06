@@ -4,46 +4,46 @@
   height: 100%;
 }
 
-.filters .substance-filter .custom-select {
+.filters__substance-filter .custom-select {
   margin-left: -10px;
 }
 
-.filters .substance-filter .custom-select .custom-select__toggle {
+.filters__substance-filter .custom-select .custom-select__toggle {
   font-family: $helvetica-neue-bold;
 }
 
-.filters .study-country-filters {
+.filters__study-country-filters {
   margin-left: 200px;
 }
 
-.filters .study-country-filters .custom-select ~ .custom-select {
+.filters__study-country-filters .custom-select ~ .custom-select {
   margin-left: 10px;
 }
 
-.filters .checkboxes {
+.filters__checkboxes {
   position: absolute;
   bottom: 0;
 
   font-size: $s-font-size;
 }
 
-.filters .checkboxes .caption {
+.filters__checkboxes .caption {
   margin-top: 3px;
 
   font-family: $helvetica-neue-bold;
 }
 
-.filters .checkboxes .checkbox {
+.filters__checkboxes .checkbox {
   user-select: none;
 
   font-family: $helvetica-neue-regular;
 }
 
-.filters .checkboxes .checkbox label {
+.filters__checkboxes .checkbox label {
   cursor: pointer;
 }
 
-.filters .checkboxes .checkbox input {
+.filters__checkboxes .checkbox input {
   cursor: pointer;
 
   font-size: $l-font-size;

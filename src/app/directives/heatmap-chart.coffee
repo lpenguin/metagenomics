@@ -6,8 +6,6 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors) ->
     data: '='
     colorScale: '='
   link: ($scope, $element, $attrs) ->
-    
-
     $scope.getCellColor = ->
       value = 0
       unless value then colors.heatmapNeutral else $scope.colorScale value

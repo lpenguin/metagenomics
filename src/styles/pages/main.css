@@ -26,11 +26,11 @@
   font-size: $s-font-size;
 }
 
-.datalab-footer .dl-caption {
+.datalab-footer__dl-caption {
   font-family: $garamond-original-italic;
   font-size: $dl-font-size;
 }
 
-.datalab-footer .additional-info {
+.datalab-footer__additional-info {
   margin: 5px 0 0 0;
 }

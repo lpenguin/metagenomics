@@ -1,5 +1,5 @@
 <div class="filters">
-  <div class="substance-filter inline">
+  <div class="filters__substance-filter inline">
     <custom-select
       data-key="substanceFilter.key"
       data-dataset="substanceFilter.dataset"
@@ -9,7 +9,7 @@
       data-selected="substanceFilterValue">
     </custom-select>
   </div>
-  <div class="study-country-filters inline">
+  <div class="filters__study-country-filters inline">
     <custom-select
       class="inline"
       data-ng-repeat="filter in studyCountryFilters track by $index"
@@ -24,7 +24,7 @@
   </div>
   <br class="clear-both" />
   <div
-    class="checkboxes"
+    class="filters__checkboxes"
     data-ng-if="studyCountryFiltersValues['studies'].value || studyCountryFiltersValues['countries'].value">
     <div class="caption inline">Pool by</div>
     <div
@@ -34,7 +34,7 @@
       <label>
         <input
           type="checkbox"
-          ng-model="checkboxesValues[checkbox]">{{checkbox + ($index !== checkboxes.length - 1 ? ',' : '')}}
+          ng-model="checkboxesValues[checkbox]">{{checkbox + ($index < checkboxes.length - 1 ? ',' : '')}}
       </label>
     </div>
     <br class="clear-both" />
