@@ -38,8 +38,8 @@ app.directive 'filters', ($rootScope, tools) ->
 
     # Study & country filters
     filteringFields = [
-      'studies'
-      'countries'
+      'f-studies'
+      'f-countries'
     ]
 
     $scope.studyCountryFilters = []
@@ -50,9 +50,9 @@ app.directive 'filters', ($rootScope, tools) ->
         title: ''
         value: undefined
 
-      if ff is 'studies'
+      if ff is 'f-studies'
         plural.title = 'all studies'
-      else if ff is 'countries'
+      else if ff is 'f-countries'
         plural.title = 'in all countries'
 
       dataset = $scope.data.filteringFieldsValues[ff]
@@ -60,7 +60,7 @@ app.directive 'filters', ($rootScope, tools) ->
           title: u
           value: u
 
-      dataset = [ plural ].concat dataset
+      dataset = [plural].concat dataset
 
       filter =
         key: ff
@@ -88,7 +88,7 @@ app.directive 'filters', ($rootScope, tools) ->
       if isSubstanceChangedFromOutside
         isSubstanceChangedFromOutside = false
       else
-        defaultSubstanceFilterValue = $scope.substanceFilterValue
+        defaultSubstanceFilterValue = angular.copy $scope.substanceFilterValue
 
       eventData =
         value: $scope.substanceFilterValue.value
@@ -113,7 +113,7 @@ app.directive 'filters', ($rootScope, tools) ->
       if eventData
         $scope.substanceFilterValue = _.find $scope.substanceFilter.dataset, 'value': eventData
       else
-        $scope.substanceFilterValue = defaultSubstanceFilterValue
+        $scope.substanceFilterValue = angular.copy defaultSubstanceFilterValue
       return
 
     return

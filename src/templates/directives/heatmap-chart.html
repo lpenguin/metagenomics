@@ -4,13 +4,16 @@
       class="resistance-group inline"
       data-ng-repeat="(resistance, substances) in data.resistances track by $index">
       <div class="resistance-caption">
-        <span>{{resistance.indexOf('(') !== -1 ? resistance.split('(')[0] : resistance}}</span>
-        <span class="tail">{{resistance.indexOf('(') !== -1 ? '(' + resistance.split('(')[1] : ''}}</span>
+        <span once-text="resistance.indexOf('(') !== -1 ? resistance.split('(')[0] : resistance"></span>
+        <span
+          class="tail"
+          once-text="resistance.indexOf('(') !== -1 ? '(' + resistance.split('(')[1] : ''"></span>
       </div>
       <div
         class="substance-caption inline"
         data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
-        data-ng-class="{'overall': substance === 'overall'}">{{substance === 'overall' ? 'median' : substance.charAt(0)}}</div>
+        once-class="{'overall': substance === 'overall'}"
+        once-text="substance === 'overall' ? 'median' : substance.charAt(0)"></div>
       <br class="clear-both" />
     </div>
     <br class="clear-both" />
@@ -18,13 +21,16 @@
   <div class="heatmap-chart__rows">
     <div
       class="row"
-      data-ng-repeat="cohort in [] track by $index"
-      data-ng-class="{'pushed': false, 'unavailable': false)}">
+      data-ng-repeat="cohort in cohorts track by $index"
+      data-ng-class="{'pushed': cohort.isPushed}">
       <img
         class="flag inline"
-        data-ng-src="img/flags/{{country.name}}.png" />
-      <div class='name inline'>{{country.name}}</div>
-      <div class='n-of-samples inline'>{{SMP[country.name] ? SMP[country.name] : ''}}</div>
+        data-ng-if="cohort.flag"
+        data-ng-src="img/flags/{{cohort.flag}}.png" />
+      <div
+        class='name inline'
+        data-ng-class="{'country': cohort.flag}">{{cohort.name}}</div>
+      <div class='n-of-samples inline'>{{cohort.nOfSamples}}</div>
       <div
         class="resistance-group inline"
         data-ng-repeat="(resistance, substances) in data.resistances track by $index">
@@ -32,9 +38,9 @@
           class="substance-cell inline"
           data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
           data-ng-style="{'background-color': getCellColor()}"
-          data-ng-class="{'overall': substance === 'overall'}"
           data-ng-mouseover="substanceCellMouseover()"
-          data-ng-mouseout="substanceCellMouseout()"></div>
+          data-ng-mouseout="substanceCellMouseout()"
+          once-class="{'overall': substance === 'overall'}"></div>
         <br class="clear-both" />
       </div>
       <br class="clear-both" />

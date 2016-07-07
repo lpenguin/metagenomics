@@ -43,6 +43,7 @@ vendors =
     'node_modules/d3-geo-projection/d3.geo.projection.min.js'
     'node_modules/angular/angular.min.js'
     'node_modules/angular-route/angular-route.min.js'
+    'node_modules/angular-once/once.js'
     'node_modules/lodash/lodash.min.js'
     'node_modules/ilyabirman-likely/release/likely.js'
   ]

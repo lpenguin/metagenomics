@@ -33,6 +33,10 @@
   font-size: $s-font-size;
 }
 
+.heatmap-chart__header .substance-caption:not(.overall) {
+  text-align: center;
+}
+
 .heatmap-chart__rows {
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
@@ -61,15 +65,20 @@
 .heatmap-chart__rows .row .name {
   overflow: hidden;
 
-  width: 80px;
-  margin: 3px 0 3px 5px;
+  width: 111px;
+  margin: 3px 0 3px 0;
 
   white-space: nowrap;
   text-overflow: ellipsis;
 }
 
+.heatmap-chart__rows .row .name.country {
+  width: 90px;
+  margin-left: 5px;
+}
+
 .heatmap-chart__rows .row .n-of-samples {
-  width: 40px;
+  width: 30px;
   margin: 3px 10px 3px 5px;
 
   text-align: right;
@@ -82,7 +91,7 @@
 
 .heatmap-chart__header .substance-caption,
 .heatmap-chart__rows .row .substance-cell {
-  width: 20px;
+  width: 15px;
 
   border: 1px solid #fff;
 }

@@ -1,5 +1,6 @@
 appDependencies = [
   'ngRoute'
+  'once'
 ]
 
 app = angular

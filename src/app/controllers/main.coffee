@@ -14,11 +14,6 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
       name: d.name
 
     $scope.data.samples = _.values rawData[2]
-    $scope.data.substances = _.values rawData[3].categories
-
-    $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
-      .sort tools.sortAlphabeticaly
-      .join ', '
 
     $scope.data.samples.forEach (s) ->
       sampleAbundances = rawData[4].filter (a) -> a.sample is s.names
@@ -31,29 +26,47 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
         return
       return
 
+    $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
+      .sort tools.sortAlphabeticaly
+      .join ', '
+
+    substances = _.values rawData[3].categories
+
     $scope.data.resistances = {}
 
-    _.uniq _.map $scope.data.substances, 'group'
+    _.uniq _.map substances, 'group'
       .sort tools.sortAlphabeticaly
       .forEach (resistance) ->
-        substances = $scope.data.substances.filter (s) -> s.group is resistance
-        $scope.data.resistances[resistance] = _.uniq _.map substances, 'category_name'
+        resistanceSubstances = substances.filter (s) -> s.group is resistance
+        $scope.data.resistances[resistance] = _.uniq _.map resistanceSubstances, 'category_name'
           .sort tools.sortAlphabeticaly
         return
 
     filteringFields = [
-      'studies'
-      'countries'
-      'diagnosis'
-      'gender'
-      'age'
+      'f-studies'
+      'f-countries'
+      'f-diagnosis'
+      'f-genders'
+      'f-ages'
+    ]
+
+    ageIntervals = [
+      '10...16'
+      '17...25'
+      '26...35'
+      '36...50'
+      '51...70'
+      '71...∞'
     ]
 
     $scope.data.filteringFieldsValues = {}
 
     filteringFields.forEach (ff) ->
-      $scope.data.filteringFieldsValues[ff] = _.uniq _.map $scope.data.samples, 'f-' + ff
-        .sort tools.sortAlphabeticaly
+      if ff is 'f-ages'
+        $scope.data.filteringFieldsValues[ff] = ageIntervals
+      else
+        $scope.data.filteringFieldsValues[ff] = _.uniq _.map $scope.data.samples, ff
+          .sort tools.sortAlphabeticaly
       return
 
     $scope.initializing = false

@@ -1,10 +1,27 @@
 app.factory 'tools', ->
-  preventNaN = (value) -> if isNaN(value) then 0 else value
+  tools =
+    preventNaN: (value) -> if isNaN(value) then 0 else value
 
-  sortAlphabeticaly = (a, b) ->
-    return -1 if a.toLowerCase() < b.toLowerCase()
-    return 1 if a.toLowerCase() > b.toLowerCase()
-    0
+    sortAlphabeticaly: (a, b) ->
+      return -1 if a.toLowerCase() < b.toLowerCase()
+      return 1 if a.toLowerCase() > b.toLowerCase()
+      0
 
-  preventNaN: preventNaN
-  sortAlphabeticaly: sortAlphabeticaly
+    getPermutations: (array) ->
+      unless array.length
+        []
+      else if array.length is 1
+        array[0].map (a) -> [a]
+      else
+        result = []
+        allCasesOfRest = tools.getPermutations array.slice 1
+
+        j = 0
+        while j < array[0].length
+          i = 0
+          while i < allCasesOfRest.length
+            result.push [array[0][j]].concat allCasesOfRest[i]
+            i++
+          j++
+
+        result
