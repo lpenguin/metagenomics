@@ -30,14 +30,14 @@
       <div
         class='name inline'
         data-ng-class="{'country': cohort.flag}">{{cohort.name}}</div>
-      <div class='n-of-samples inline'>{{cohort.nOfSamples}}</div>
+      <div class='n-of-samples inline'>{{cohort.samples.length}}</div>
       <div
         class="resistance-group inline"
         data-ng-repeat="(resistance, substances) in data.resistances track by $index">
         <div
           class="substance-cell inline"
           data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
-          data-ng-style="{'background-color': getCellColor()}"
+          data-ng-style="{'background-color': getCellColor(cohort, resistance, substance)}"
           data-ng-mouseover="substanceCellMouseover(cohort, resistance, substance)"
           data-ng-mouseout="substanceCellMouseout()"
           once-class="{'overall': substance === 'overall'}"></div>

@@ -1,7 +1,5 @@
-app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoader, tools) ->
+app.controller 'MainController', ($scope, $timeout, dataLoader, tools) ->
   $scope.initializing = true
-  $scope.colorScale = d3.scale.linear()
-    .range colors.gradient
 
   parseData = (error, rawData) ->
     $scope.mapData = rawData[0]
@@ -12,23 +10,6 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
       code: parseInt d['iso_3166_code']
       continent: d.continent
       name: d.name
-
-    $scope.data.samples = _.values rawData[2]
-
-    $scope.data.samples.forEach (s) ->
-      sampleAbundances = rawData[4].filter (a) -> a.sample is s.names
-
-      _.forOwn _.groupBy(sampleAbundances, 'f_groups'), (value, key) ->
-        s[key] = {}
-        value.forEach (v) ->
-          s[key][v['AB_category']] = parseFloat v['sum_abund']
-          return
-        return
-      return
-
-    $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
-      .sort tools.sortAlphabeticaly
-      .join ', '
 
     substances = _.values rawData[3].categories
 
@@ -41,6 +22,26 @@ app.controller 'MainController', ($scope, $timeout, colors, calculators, dataLoa
         $scope.data.resistances[resistance] = _.uniq _.map resistanceSubstances, 'category_name'
           .sort tools.sortAlphabeticaly
         return
+
+    $scope.data.samples = _.values rawData[2]
+
+    $scope.data.samples.forEach (s) ->
+      sampleAbundances = rawData[4].filter (d) -> d['sample'] is s.names
+
+      _.keys $scope.data.resistances
+        .forEach (key) ->
+          s[key] = {}
+
+          $scope.data.resistances[key].forEach (substance) ->
+            sampleAbundance = _.find sampleAbundances, 'groups': key, 'category': substance
+            s[key][substance] = unless sampleAbundance then undefined else parseFloat(sampleAbundance['sum_abund'])
+            return
+          return
+      return
+
+    $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
+      .sort tools.sortAlphabeticaly
+      .join ', '
 
     filteringFields = [
       'f-studies'

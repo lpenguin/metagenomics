@@ -1,10 +1,9 @@
-app.directive 'heatmapChart', ($rootScope, calculators, tools) ->
+app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/heatmap-chart.html'
   scope:
     data: '='
-    colorScale: '='
   link: ($scope, $element, $attrs) ->
     getCohortSamples = (samples, cohortProperties) ->
       samples.filter (s) ->
@@ -68,7 +67,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, tools) ->
           name: name
           flag: flag
           isPushed: isPushed
-          nOfSamples: cohortSamples.length
+          samples: cohortSamples
           resistances: getCohortResistances cohortSamples
         return
 
@@ -100,7 +99,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, tools) ->
           name: name
           flag: flag
           isPushed: false
-          nOfSamples: rootSamples.length
+          samples: rootSamples
           resistances: getCohortResistances rootSamples
 
         permutationsCohorts = getPermutationsCohorts rootSamples, groupingOrder
@@ -113,27 +112,25 @@ app.directive 'heatmapChart', ($rootScope, calculators, tools) ->
         $scope.cohorts = getPermutationsCohorts $scope.data.samples, ['f-countries']
       return
 
-    $scope.getCellColor = ->
-      '#7fd2d1'
+    $scope.getCellColor = (cohort, resistance, substance) ->
+      colorScale.getColor cohort.resistances[resistance][substance]
 
     # Events →
     $scope.substanceCellMouseover = (cohort, resistance, substance) ->
       eventData =
         flag: cohort.flag
         abundanceValue: cohort.resistances[resistance][substance]
-        nOfSamples: cohort.nOfSamples
+        samples: cohort.samples.filter (s) -> if substance is 'overall' then true else s[resistance][substance]
 
       $rootScope.$broadcast 'heatmap.cohortChanged', eventData
       $rootScope.$broadcast 'heatmap.substanceChanged', if substance is 'overall' then resistance else substance
-
-      console.log eventData.abundanceValue
       return
 
     $scope.substanceCellMouseout = ->
       eventData =
         flag: undefined
         abundanceValue: undefined
-        nOfSamples: undefined
+        samples: []
 
       $rootScope.$broadcast 'heatmap.cohortChanged', eventData
       $rootScope.$broadcast 'heatmap.substanceChanged', undefined

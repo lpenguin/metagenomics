@@ -1,9 +1,6 @@
 app.constant 'colors',
   gradient: [
-    '#fef0d9'
-    '#b30000'
+    '#7fd2d1'
+    '#7fd2d1'
   ]
-  heatmapNeutral: '#eee'
-  mapNeutral: '#eee'
-  mapBorders: '#fafafa'
-  mapActiveBorders: '#777'
+  neutral: '#eee'
