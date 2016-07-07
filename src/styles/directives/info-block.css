@@ -1,0 +1,20 @@
+@import '../variables';
+
+.info-block__header {
+  font-family: $helvetica-neue-bold;
+  font-size: $l-font-size;
+}
+
+.info-block__legend {
+  margin-top: 10px;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $xl-font-size;
+}
+
+.info-block__n-of-samples {
+  margin-top: 10px;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
+}

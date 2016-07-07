@@ -38,7 +38,7 @@
           class="substance-cell inline"
           data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
           data-ng-style="{'background-color': getCellColor()}"
-          data-ng-mouseover="substanceCellMouseover(substance === 'overall' ? resistance : substance)"
+          data-ng-mouseover="substanceCellMouseover(cohort, resistance, substance)"
           data-ng-mouseout="substanceCellMouseout()"
           once-class="{'overall': substance === 'overall'}"></div>
         <br class="clear-both" />

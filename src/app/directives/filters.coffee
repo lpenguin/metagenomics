@@ -90,11 +90,7 @@ app.directive 'filters', ($rootScope, tools) ->
       else
         defaultSubstanceFilterValue = $scope.substanceFilterValue
 
-      eventData =
-        value: $scope.substanceFilterValue.value
-        type: $scope.substanceFilterValue.type
-
-      $rootScope.$broadcast 'filters.substanceChanged', eventData
+      $rootScope.$broadcast 'filters.substanceChanged', $scope.substanceFilterValue.value
       return
 
     $scope.$watch '[studyCountryFiltersValues, checkboxesValues]', ->

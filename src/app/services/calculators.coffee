@@ -5,4 +5,4 @@ app.factory 'calculators', (tools) ->
         if substance is 'overall'
           d3.median _.values r
         else
-          r[substance['category_name']]
+          r[substance]
