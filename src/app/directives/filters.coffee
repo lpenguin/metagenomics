@@ -88,7 +88,7 @@ app.directive 'filters', ($rootScope, tools) ->
       if isSubstanceChangedFromOutside
         isSubstanceChangedFromOutside = false
       else
-        defaultSubstanceFilterValue = angular.copy $scope.substanceFilterValue
+        defaultSubstanceFilterValue = $scope.substanceFilterValue
 
       eventData =
         value: $scope.substanceFilterValue.value
@@ -113,7 +113,7 @@ app.directive 'filters', ($rootScope, tools) ->
       if eventData
         $scope.substanceFilterValue = _.find $scope.substanceFilter.dataset, 'value': eventData
       else
-        $scope.substanceFilterValue = angular.copy defaultSubstanceFilterValue
+        $scope.substanceFilterValue = defaultSubstanceFilterValue
       return
 
     return

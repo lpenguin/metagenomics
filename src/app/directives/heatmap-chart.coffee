@@ -119,10 +119,12 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors, tools) ->
       '#7fd2d1'
 
     # Events →
-    $scope.substanceCellMouseover = ->
+    $scope.substanceCellMouseover = (eventData) ->
+      $rootScope.$broadcast 'heatmap.substanceChanged', eventData
       return
 
     $scope.substanceCellMouseout = ->
+      $rootScope.$broadcast 'heatmap.substanceChanged', undefined
       return
 
     # → Events
