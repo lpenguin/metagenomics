@@ -2,6 +2,6 @@
   <div class="info-block__header">{{substance}}</div>
   <div
     class="info-block__legend"
-    data-ng-bind-html="abundanceValue ? (abundanceValue | prepareAbundanceValue:maxPower | trust) : ''"></div>
+    data-ng-bind-html="abundanceValue ? (abundanceValue | prepareAbundanceValue | trust) : ''"></div>
   <div class="info-block__n-of-samples">{{nOfSamples ? (nOfSamples + ' ' + (nOfSamples === 1 ? 'sample' : 'samples')) : ''}}</div>
 </div>
