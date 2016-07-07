@@ -72,7 +72,7 @@
   text-overflow: ellipsis;
 }
 
-.heatmap-chart__rows .row .name.country {
+.heatmap-chart__rows .row.with-flag .name {
   width: 90px;
   margin-left: 5px;
 }

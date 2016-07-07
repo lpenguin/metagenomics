@@ -22,14 +22,12 @@
     <div
       class="row"
       data-ng-repeat="cohort in cohorts track by $index"
-      data-ng-class="{'pushed': cohort.isPushed}">
+      data-ng-class="{'pushed': cohort.isPushed, 'with-flag': cohort.flag}">
       <img
         class="flag inline"
         data-ng-if="cohort.flag"
         data-ng-src="img/flags/{{cohort.flag}}.png" />
-      <div
-        class='name inline'
-        data-ng-class="{'country': cohort.flag}">{{cohort.name}}</div>
+      <div class='name inline'>{{cohort.name}}</div>
       <div class='n-of-samples inline'>{{cohort.samples.length}}</div>
       <div
         class="resistance-group inline"
