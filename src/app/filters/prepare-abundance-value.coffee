@@ -6,4 +6,4 @@ app.filter 'prepareAbundanceValue', ->
 
     multiplier = Math.pow 10, power
     value = (value * multiplier).toFixed(2)
-    value + ' × 10<sup>−' + power + '</sup>'
+    value + '×10<sup>−' + power + '</sup>'

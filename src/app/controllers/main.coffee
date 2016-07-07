@@ -33,8 +33,7 @@ app.controller 'MainController', ($scope, $timeout, dataLoader, tools) ->
           s[key] = {}
 
           $scope.data.resistances[key].forEach (substance) ->
-            sampleAbundance = _.find sampleAbundances, 'groups': key, 'category': substance
-            s[key][substance] = unless sampleAbundance then undefined else parseFloat(sampleAbundance['sum_abund'])
+            s[key][substance] = parseFloat _.find(sampleAbundances, 'groups': key, 'category': substance)['sum_abund']
             return
           return
       return
