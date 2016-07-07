@@ -13,7 +13,7 @@
         class="substance-caption inline"
         data-ng-repeat="substance in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
         once-class="{'overall': substance === 'overall'}"
-        once-text="substance === 'overall' ? 'median' : substance.charAt(0)"></div>
+        once-text="substance === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : substance.charAt(0)"></div>
       <br class="clear-both" />
     </div>
     <br class="clear-both" />
