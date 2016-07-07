@@ -1,4 +1,4 @@
-app.directive 'filters', ($rootScope, tools) ->
+app.directive 'filters', ($rootScope) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/filters.html'

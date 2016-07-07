@@ -20,22 +20,22 @@ app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
           else
             sampleValue is value
 
-    getCohortResistances = (samples) ->
-      cohortResistances = {}
+    getCohortAbundances = (samples) ->
+      cohortAbundances = {}
 
       _.keys $scope.data.resistances
         .forEach (key) ->
-          cohortResistances[key] = 'overall': calculators.getAbundanceValue samples, key, 'overall'
+          cohortAbundances[key] = 'overall': calculators.getAbundanceValue samples, key, 'overall'
           resistanceSubstances = $scope.data.resistances[key]
 
           return if resistanceSubstances.length < 2
 
           resistanceSubstances.forEach (s) ->
-            cohortResistances[key][s] = calculators.getAbundanceValue samples, key, s
+            cohortAbundances[key][s] = calculators.getAbundanceValue samples, key, s
             return
           return
 
-      cohortResistances
+      cohortAbundances
 
     getPermutationsCohorts = (samples, order) ->
       permutationsCohorts = []
@@ -68,7 +68,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
           flag: flag
           isPushed: isPushed
           samples: cohortSamples
-          resistances: getCohortResistances cohortSamples
+          abundances: getCohortAbundances cohortSamples
         return
 
       permutationsCohorts
@@ -100,7 +100,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
           flag: flag
           isPushed: false
           samples: rootSamples
-          resistances: getCohortResistances rootSamples
+          abundances: getCohortAbundances rootSamples
 
         permutationsCohorts = getPermutationsCohorts rootSamples, groupingOrder
 
@@ -113,14 +113,18 @@ app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
       return
 
     $scope.getCellColor = (cohort, resistance, substance) ->
-      colorScale.getColor cohort.resistances[resistance][substance]
+      colorScale.getColor cohort.abundances[resistance][substance]
 
     # Events →
     $scope.substanceCellMouseover = (cohort, resistance, substance) ->
       eventData =
         flag: cohort.flag
-        abundanceValue: cohort.resistances[resistance][substance]
-        samples: cohort.samples.filter (s) -> if substance is 'overall' then true else s[resistance][substance]
+        abundanceValue: cohort.abundances[resistance][substance]
+        samples: cohort.samples.filter (s) ->
+          if substance is 'overall'
+            _.some s[resistance], (s) -> s
+          else
+            s[resistance][substance]
 
       $rootScope.$broadcast 'heatmap.cohortChanged', eventData
       $rootScope.$broadcast 'heatmap.substanceChanged', if substance is 'overall' then resistance else substance

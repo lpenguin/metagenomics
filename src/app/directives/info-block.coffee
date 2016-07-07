@@ -15,4 +15,7 @@ app.directive 'infoBlock', ($rootScope) ->
       $scope.nOfSamples = eventData.samples.length
       return
 
+    $scope.getLegendPointerY = ->
+      0
+
     return
