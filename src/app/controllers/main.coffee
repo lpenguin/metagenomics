@@ -1,6 +1,30 @@
 app.controller 'MainController', ($scope, $timeout, dataLoader, tools) ->
   $scope.initializing = true
 
+  initColorScales = ->
+    $scope.colorScales = {}
+
+    _.keys $scope.data.resistances
+      .forEach (key) ->
+        min = Infinity
+        max = -Infinity
+
+        $scope.data.samples.forEach (sample) ->
+          $scope.data.resistances[key].forEach (s) ->
+            min = Math.min min, sample[key][s]
+            max = Math.max max, sample[key][s]
+            return
+          return
+
+        domain = [min, max]
+        range = ['#7fd2d1', '#7fd2d1']
+
+        $scope.colorScales[key] = d3.scale.linear()
+          .domain domain
+          .range range
+        return
+    return
+
   parseData = (error, rawData) ->
     $scope.mapData = rawData[0]
 
@@ -68,6 +92,8 @@ app.controller 'MainController', ($scope, $timeout, dataLoader, tools) ->
         $scope.data.filteringFieldsValues[ff] = _.uniq _.map $scope.data.samples, ff
           .sort tools.sortAlphabeticaly
       return
+
+    initColorScales()
 
     $scope.initializing = false
     $scope.$apply()

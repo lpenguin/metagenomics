@@ -1,9 +1,10 @@
-app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
+app.directive 'heatmapChart', ($rootScope, calculators, colors, tools) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/heatmap-chart.html'
   scope:
     data: '='
+    colorScales: '='
   link: ($scope, $element, $attrs) ->
     getCohortSamples = (samples, cohortProperties) ->
       samples.filter (s) ->
@@ -113,7 +114,8 @@ app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
       return
 
     $scope.getCellColor = (cohort, resistance, substance) ->
-      colorScale.getColor cohort.abundances[resistance][substance]
+      value = cohort.abundances[resistance][substance]
+      unless value then colors.neutral else $scope.colorScales[resistance](value)
 
     # Events →
     $scope.substanceCellMouseover = (cohort, resistance, substance) ->
