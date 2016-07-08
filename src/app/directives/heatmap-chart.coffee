@@ -1,10 +1,9 @@
-app.directive 'heatmapChart', ($rootScope, calculators, colors, tools) ->
+app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/heatmap-chart.html'
   scope:
     data: '='
-    colorScales: '='
   link: ($scope, $element, $attrs) ->
     getCohortSamples = (samples, cohortProperties) ->
       samples.filter (s) ->
@@ -114,13 +113,11 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors, tools) ->
       return
 
     $scope.getCellColor = (cohort, resistance, substance) ->
-      value = cohort.abundances[resistance][substance]
-      unless value then colors.neutral else $scope.colorScales[resistance](value)
+      colorScale.getColorByValue cohort.abundances[resistance][substance]
 
     # Events →
     $scope.substanceCellMouseover = (cohort, resistance, substance) ->
       eventData =
-        flag: cohort.flag
         abundanceValue: cohort.abundances[resistance][substance]
         samples: cohort.samples.filter (s) ->
           if substance is 'overall'
@@ -128,17 +125,16 @@ app.directive 'heatmapChart', ($rootScope, calculators, colors, tools) ->
           else
             s[resistance][substance]
 
-      $rootScope.$broadcast 'heatmap.cohortChanged', eventData
+      $rootScope.$broadcast 'heatmap.cellChanged', eventData
       $rootScope.$broadcast 'heatmap.substanceChanged', if substance is 'overall' then resistance else substance
       return
 
     $scope.substanceCellMouseout = ->
       eventData =
-        flag: undefined
         abundanceValue: undefined
         samples: []
 
-      $rootScope.$broadcast 'heatmap.cohortChanged', eventData
+      $rootScope.$broadcast 'heatmap.cellChanged', eventData
       $rootScope.$broadcast 'heatmap.substanceChanged', undefined
       return
 

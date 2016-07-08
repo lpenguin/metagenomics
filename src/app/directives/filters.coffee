@@ -13,7 +13,6 @@ app.directive 'filters', ($rootScope) ->
         dataset.push
           title: key
           value: key
-          type: 'r'
 
         return if $scope.data.resistances[key].length < 2
 
@@ -21,7 +20,6 @@ app.directive 'filters', ($rootScope) ->
           dataset.push
             title: s
             value: s
-            type: 's'
           return
         return
 

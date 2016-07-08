@@ -6,10 +6,49 @@
 }
 
 .info-block__legend {
+  position: relative;
+
   margin-top: 10px;
 
   font-family: $helvetica-neue-regular;
-  font-size: $xl-font-size;
+}
+
+.info-block__legend .gradient {
+  width: 30px;
+  height: 100px;
+}
+
+.info-block__legend .abundance-value {
+  margin: 36px 0 0 15px;
+
+  font-size: $xxl-font-size;
+}
+
+.info-block__legend .caption {
+  position: absolute;
+  top: 0;
+  left: 32px;
+
+  font-size: $xs-font-size;
+}
+
+.info-block__legend .caption div {
+  transform: translateY(-50%);
+}
+
+.info-block__legend .pointer {
+  position: absolute;
+  left: 30px;
+
+  width: 0;
+  height: 0;
+
+  transition: left .25s linear;
+  transform: translateY(50%);
+
+  border-top: 5px solid transparent;
+  border-right: 5px solid #000;
+  border-bottom: 5px solid transparent;
 }
 
 .info-block__n-of-samples {

@@ -1,7 +1,22 @@
 <div class="info-block">
   <div class="info-block__header">{{substance}}</div>
-  <div
-    class="info-block__legend"
-    data-ng-bind-html="abundanceValue ? (abundanceValue | prepareAbundanceValue | trust) : ''"></div>
+  <div class="info-block__legend">
+    <div
+      class="gradient inline"
+      data-ng-style="{'background': 'linear-gradient(to top, ' + legendGradient.join(', ') + ')'}"></div>
+    <div
+      class="abundance-value inline"
+      data-ng-if="abundanceValue"
+      data-ng-bind-html="abundanceValue | prepareAbundanceValue | trust"></div>
+    <br class="clear-both" />
+    <div
+      class="caption"
+      data-ng-if="!abundanceValue">
+      <div data-ng-bind-html="legendScale.domain()[1] | prepareAbundanceValue | trust"></div>
+    </div>
+    <div
+      class="pointer"
+      data-ng-style="{'bottom': legendPointerY + 'px'}"></div>
+  </div>
   <div class="info-block__n-of-samples">{{nOfSamples ? (nOfSamples + ' ' + (nOfSamples === 1 ? 'sample' : 'samples')) : ''}}</div>
 </div>
