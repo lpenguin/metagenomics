@@ -12,11 +12,15 @@
     <div
       class="caption"
       data-ng-if="!abundanceValue">
-      <div data-ng-bind-html="legendScale.domain()[1] | prepareAbundanceValue | trust"></div>
+      <div data-ng-bind-html="legendScale.domain()[legendScale.domain().length - 1] | prepareAbundanceValue | trust"></div>
     </div>
     <div
       class="pointer"
       data-ng-style="{'bottom': legendPointerY + 'px'}"></div>
+    <div
+      class="tick"
+      data-ng-repeat="v in [1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4]"
+      data-ng-style="{'bottom': legendScale(v)}"></div>
   </div>
   <div class="info-block__n-of-samples">{{nOfSamples ? (nOfSamples + ' ' + (nOfSamples === 1 ? 'sample' : 'samples')) : ''}}</div>
 </div>

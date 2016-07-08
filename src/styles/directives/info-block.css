@@ -43,7 +43,7 @@
   width: 0;
   height: 0;
 
-  transition: left .25s linear;
+  transition: bottom .25s linear;
   transform: translateY(50%);
 
   border-top: 5px solid transparent;
@@ -56,4 +56,11 @@
 
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
+}
+
+.tick {
+  position: absolute;
+  width: 30px;
+  height: 1px;
+  background-color: rgba(0, 0, 0, .1);
 }

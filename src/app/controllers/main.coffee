@@ -1,7 +1,5 @@
-app.controller 'MainController', ($scope, $timeout, calculators, colorScale, dataLoader, tools) ->
+app.controller 'MainController', ($scope, $timeout, calculators, dataLoader, tools) ->
   $scope.initializing = true
-
-  colorScale.init [0, 1]
 
   parseData = (error, rawData) ->
     $scope.mapData = rawData[0]

@@ -1,15 +1,14 @@
 app.constant 'colors',
   gradient: [
     '#ffffff'
-    '#cbe5db'
-    '#8fcad3'
-    '#42afd2'
-    '#3f8cbc'
-    '#386ba2'
-    '#2f4e85'
-    '#253263'
-    '#191a3a'
+    '#c3e2d9'
+    '#7dc3d3'
+    '#41a1ca'
+    '#3c7cb0'
+    '#335890'
+    '#28396b'
+    '#1b1d40'
     '#000000'
   ]
 
-  neutral: '#eee'
+  neutral: '#fff'
