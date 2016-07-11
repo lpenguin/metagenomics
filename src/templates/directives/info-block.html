@@ -20,7 +20,7 @@
       <div
         class="caption"
         data-ng-if="$index && !($index % ((legendScale.domain().length - 1) / 2))"
-        data-ng-show="!abundanceValue"
+        data-ng-hide="abundanceValue"
         data-ng-bind-html="v | prepareAbundanceValue | trust"></div>
     </div>
   </div>

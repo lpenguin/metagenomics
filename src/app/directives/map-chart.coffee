@@ -1,4 +1,4 @@
-app.directive 'mapChart', ($document, $rootScope, colors) ->
+app.directive 'mapChart', ($document, $rootScope, calculators, colorScale) ->
   restrict: 'E'
   replace: true
   template: '<div class="map-chart"></div>'
@@ -40,7 +40,7 @@ app.directive 'mapChart', ($document, $rootScope, colors) ->
         redrawMap zoom.translate(), zoom.scale()
         return
 
-    $document.bind 'keyup', (event) ->
+    $document.bind 'keydown', (event) ->
       return unless event.which is 27
 
       zoom
@@ -48,13 +48,6 @@ app.directive 'mapChart', ($document, $rootScope, colors) ->
         .scale minZoom
 
       redrawMap zoom.translate(), zoom.scale()
-      return
-
-    reattach = (element) ->
-      parent = element.parentNode
-
-      parent.removeChild element
-      parent.appendChild element
       return
 
     svg = d3element.append 'svg'
@@ -77,17 +70,11 @@ app.directive 'mapChart', ($document, $rootScope, colors) ->
       .classed 'country', true
       .style 'fill', '#fff'
       .style 'stroke', '#ccc'
-      .style 'opacity', 1
       .on 'mouseover', (d) ->
-        # reattach @
-        # d3.select(@).style 'opacity', .5
-
         $rootScope.$broadcast 'map.countryHovered', d.id
         $scope.$apply()
         return
       .on 'mouseout', ->
-        # d3.select(@).style 'opacity', 1
-
         $rootScope.$broadcast 'map.countryHovered', undefined
         $scope.$apply()
         return
