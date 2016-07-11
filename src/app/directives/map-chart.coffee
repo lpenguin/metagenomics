@@ -1,14 +1,54 @@
-app.directive 'mapChart', ($rootScope, colors) ->
+app.directive 'mapChart', ($document, $rootScope, colors) ->
   restrict: 'E'
   replace: true
   template: '<div class="map-chart"></div>'
   scope:
     data: '='
     mapData: '='
-    colorScale: '='
   link: ($scope, $element, $attrs) ->
     d3element = d3.select $element[0]
-    duration = 250
+
+    width = $element.width()
+    height = $element.height()
+
+    mapCenter = [0, 44]
+    mapRotate = [0, 0]
+    minZoom = 250
+    maxZoom = minZoom * 5
+
+    projection = d3.geo.mercator()
+      .center mapCenter
+      .rotate mapRotate
+
+    countryPathGenerator = d3.geo.path()
+      .projection projection
+
+    redrawMap = (mapTranslate, mapScale) ->
+      projection
+        .translate mapTranslate
+        .scale mapScale
+
+      g.selectAll '.country'
+        .attr 'd', countryPathGenerator
+      return
+
+    zoom = d3.behavior.zoom()
+      .translate [width / 2, height /2]
+      .scale minZoom
+      .scaleExtent [minZoom, maxZoom]
+      .on 'zoom', ->
+        redrawMap zoom.translate(), zoom.scale()
+        return
+
+    $document.bind 'keyup', (event) ->
+      return unless event.which is 27
+
+      zoom
+        .translate [width / 2, height /2]
+        .scale minZoom
+
+      redrawMap zoom.translate(), zoom.scale()
+      return
 
     reattach = (element) ->
       parent = element.parentNode
@@ -17,85 +57,43 @@ app.directive 'mapChart', ($rootScope, colors) ->
       parent.appendChild element
       return
 
-    prepareMap = ->
-      width = $element.width()
-      height = $element.height()
+    svg = d3element.append 'svg'
+      .classed 'map-chart__svg', true
+      .attr 'width', width
+      .attr 'height', height
 
-      projection = d3.geo.mercator()
-        .center [0, 44]
-        .scale 79
-        .rotate [-10, 0]
-        .translate [width / 2, height / 2]
+    svg.append 'rect'
+      .attr 'width', width
+      .attr 'height', height
+      .classed 'underlay', true
 
-      countryPathGenerator = d3.geo.path().projection projection
+    g = svg.append 'g'
+      .classed 'main', true
 
-      svg = d3element.append 'svg'
-        .classed 'map-chart__svg', true
-        .attr 'width', width
-        .attr 'height', height
+    g.selectAll 'path'
+      .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
+      .enter()
+      .append 'path'
+      .classed 'country', true
+      .style 'fill', '#fff'
+      .style 'stroke', '#ccc'
+      .style 'opacity', 1
+      .on 'mouseover', (d) ->
+        # reattach @
+        # d3.select(@).style 'opacity', .5
 
-      g = svg.append 'g'
-        .classed 'main', true
+        $rootScope.$broadcast 'map.countryHovered', d.id
+        $scope.$apply()
+        return
+      .on 'mouseout', ->
+        # d3.select(@).style 'opacity', 1
 
-      g.selectAll 'path'
-        .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
-        .enter()
-        .append 'path'
-        .classed 'country', true
-        .attr 'd', countryPathGenerator
-        .style 'fill', colors.mapNeutral
-        .style 'stroke', colors.mapBorders
-        .style 'opacity', 1
-        .on 'mouseover', (d) ->
-          d3.select(@).style 'opacity', .5
+        $rootScope.$broadcast 'map.countryHovered', undefined
+        $scope.$apply()
+        return
 
-          $rootScope.$broadcast 'countryHovered', d.id
-          $scope.$apply()
-          return
-        .on 'mouseout', ->
-          d3.select(@).style 'opacity', 1
-
-          $rootScope.$broadcast 'countryHovered', undefined
-          $scope.$apply()
-          return
-      return
-
-    paintMap = (eventData) ->
-      unless eventData
-        d3element.selectAll '.country'
-          .transition()
-          .duration duration
-          .style 'fill', colors.mapNeutral
-          .style 'stroke', colors.mapBorders
-      else
-        d3element.selectAll '.country'
-          .transition()
-          .duration duration
-          .style 'fill', (d) ->
-            country = _.find $scope.data.countries, 'code': d.id
-
-            if country
-              value = eventData.data[country.name][eventData.resistance][eventData.substance]
-              unless value then colors.mapNeutral else $scope.colorScale value
-            else
-              colors.mapNeutral
-          .style 'stroke', (d) ->
-            country = _.find $scope.data.countries, 'code': d.id
-
-            if country
-              if country.name is eventData.countryName
-                reattach @
-                colors.mapActiveBorders
-              else
-                colors.mapBorders
-            else
-              colors.mapBorders
-      return
-
-    prepareMap()
-
-    $scope.$on 'substanceCellHovered', (event, eventData) ->
-      paintMap eventData
-      return
+    svg
+      .call zoom
+      .call zoom.event
 
     return

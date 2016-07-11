@@ -22,7 +22,7 @@
 
 .filters__checkboxes {
   position: absolute;
-  bottom: 0;
+  top: 390px;
 
   font-size: $s-font-size;
 }

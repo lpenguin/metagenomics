@@ -1,14 +1,16 @@
 @import '../variables';
 
 .map-chart {
-  width: 500px;
-  height: 333px;
-
-  font-family: $helvetica-neue-regular;
+  width: 100%;
+  height: 100%;
 }
 
 .map-chart__svg {
   display: block;
+}
+
+.map-chart__svg .underlay {
+  fill: none;
 }
 
 .map-chart__svg .country {

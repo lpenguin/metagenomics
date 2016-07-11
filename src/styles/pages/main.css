@@ -4,15 +4,11 @@
   position: absolute;
   top: 30px;
   left: $common-offset;
-
-  height: 410px;
 }
 
 .content__map-chart {
-  width: 100%;
+  width: 1100px;
   height: 450px;
-
-  background-color: #7fd2d1;
 }
 
 .content__heatmap-chart {
@@ -24,7 +20,7 @@
 }
 
 .datalab-footer {
-  margin: 30px 0 30px $common-offset;
+  margin: 50px 0 30px $common-offset;
 
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
