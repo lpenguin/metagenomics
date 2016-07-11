@@ -6,21 +6,23 @@
       data-ng-style="{'background': 'linear-gradient(to top, ' + legendGradient.join(', ') + ')'}"></div>
     <div
       class="abundance-value inline"
-      data-ng-if="abundanceValue"
+      data-ng-show="abundanceValue"
       data-ng-bind-html="abundanceValue | prepareAbundanceValue | trust"></div>
     <br class="clear-both" />
-    <div
-      class="caption"
-      data-ng-if="!abundanceValue">
-      <div data-ng-bind-html="legendScale.domain()[legendScale.domain().length - 1] | prepareAbundanceValue | trust"></div>
-    </div>
     <div
       class="pointer"
       data-ng-style="{'bottom': legendPointerY + 'px'}"></div>
     <div
       class="tick"
-      data-ng-repeat="v in [1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4]"
-      data-ng-style="{'bottom': legendScale(v)}"></div>
+      data-ng-repeat="v in legendScale.domain() track by $index"
+      data-ng-style="{'bottom': legendScale(v)}">
+      <div class="dash"></div>
+      <div
+        class="caption"
+        data-ng-if="$index && !($index % ((legendScale.domain().length - 1) / 2))"
+        data-ng-show="!abundanceValue"
+        data-ng-bind-html="v | prepareAbundanceValue | trust"></div>
+    </div>
   </div>
   <div class="info-block__n-of-samples">{{nOfSamples ? (nOfSamples + ' ' + (nOfSamples === 1 ? 'sample' : 'samples')) : ''}}</div>
 </div>
