@@ -1,13 +1,9 @@
 app.constant 'colors',
-  gradient: [
+  baseColors: [
     '#ffffff'
-    '#c3e2d9'
-    '#7dc3d3'
-    '#41a1ca'
-    '#3c7cb0'
-    '#335890'
-    '#28396b'
-    '#1b1d40'
+    '#dcedc8'
+    '#42b3d5'
+    '#1a237e'
     '#000000'
   ]
 

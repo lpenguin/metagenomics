@@ -1,15 +1,13 @@
-app.directive 'infoBlock', ($rootScope, colors, colorScale) ->
+app.directive 'infoBlock', ($rootScope, colorScale) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/info-block.html'
-  scope:
-    data: '='
   link: ($scope, $element, $attrs) ->
     legendHeight = $element.find('.gradient').height()
-    legendScaleRange = d3.range 0, legendHeight, legendHeight / (colors.gradient.length - 1)
+    legendScaleRange = d3.range 0, legendHeight, legendHeight / (colorScale.getRange().length - 1)
     legendScaleRange.push legendHeight
 
-    $scope.legendGradient = colors.gradient
+    $scope.legendGradient = colorScale.getRange()
     $scope.legendPointerY = 0
     $scope.legendScale = d3.scale.log()
       .domain colorScale.getDomain()

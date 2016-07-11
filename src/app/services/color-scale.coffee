@@ -1,16 +1,31 @@
 app.factory 'colorScale', (colors) ->
-  min = 1e-12
-  max = 1e-4
-  values = d3.range min, max, (max - min) / (colors.gradient.length - 1)
-  values.push max
+  scaleDomain = []
+  scaleRange = []
+
+  minPower = -12
+  maxPower = -4
+
+  scaleDomain = for num in [minPower..maxPower]
+    Math.pow 10, num
+
+  chromaScale = chroma
+    .scale chroma.bezier colors.baseColors
+    .mode 'lab'
+    .correctLightness true
+
+  for i in [0..scaleDomain.length - 1]
+    scaleRange.push chromaScale(i / (scaleDomain.length - 1)).hex()
 
   scale = d3.scale.log()
-    .domain [1e-12, 1e-11, 1e-10, 1e-9, 1e-8, 1e-7, 1e-6, 1e-5, 1e-4]
-    .range colors.gradient
+    .domain scaleDomain
+    .range scaleRange
 
   colorScale =
     getColorByValue: (value) ->
       unless value then colors.neutral else scale value
 
     getDomain: ->
-      scale.domain()
+      scaleDomain
+
+    getRange: ->
+      scaleRange
