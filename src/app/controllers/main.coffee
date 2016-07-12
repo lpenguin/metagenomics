@@ -1,4 +1,4 @@
-app.controller 'MainController', ($scope, $timeout, calculators, dataLoader, tools) ->
+app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoader, tools) ->
   $scope.initializing = true
 
   parseData = (error, rawData) ->
@@ -23,7 +23,7 @@ app.controller 'MainController', ($scope, $timeout, calculators, dataLoader, too
           .sort tools.sortAlphabeticaly
         return
 
-    calculators.init $scope.data.resistances
+    abundanceCalculator.init $scope.data.resistances
 
     $scope.data.samples = _.values rawData[2]
 

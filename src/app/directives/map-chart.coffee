@@ -1,4 +1,4 @@
-app.directive 'mapChart', ($document, $rootScope, calculators, colorScale) ->
+app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScale) ->
   restrict: 'E'
   replace: true
   template: '<div class="map-chart"></div>'

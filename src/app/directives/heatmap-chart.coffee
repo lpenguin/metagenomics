@@ -1,37 +1,22 @@
-app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
+app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samplesFilter, tools) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/heatmap-chart.html'
   scope:
     data: '='
   link: ($scope, $element, $attrs) ->
-    getCohortSamples = (samples, cohortProperties) ->
-      samples.filter (s) ->
-        _.every _.forIn(cohortProperties), (value, key) ->
-          sampleValue = s[key]
-
-          if key is 'f-ages'
-            left = parseInt value.split('...')[0]
-            right = value.split('...')[1]
-
-            if right is '∞' then right = Infinity else right = parseInt right
-
-            left <= sampleValue <= right
-          else
-            sampleValue is value
-
     getCohortAbundances = (samples) ->
       cohortAbundances = {}
 
       _.keys $scope.data.resistances
         .forEach (key) ->
-          cohortAbundances[key] = 'overall': calculators.getAbundanceValue samples, key, 'overall'
+          cohortAbundances[key] = 'overall': abundanceCalculator.getAbundanceValue samples, key, 'overall'
           resistanceSubstances = $scope.data.resistances[key]
 
           return if resistanceSubstances.length < 2
 
           resistanceSubstances.forEach (s) ->
-            cohortAbundances[key][s] = calculators.getAbundanceValue samples, key, s
+            cohortAbundances[key][s] = abundanceCalculator.getAbundanceValue samples, key, s
             return
           return
 
@@ -48,7 +33,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
           cohortProperties[o] = p[j]
           return
 
-        cohortSamples = getCohortSamples samples, cohortProperties
+        cohortSamples = samplesFilter.getFilteredSamples samples, cohortProperties
 
         return unless cohortSamples.length
         return if cohortSamples.length is samples.length
@@ -88,7 +73,7 @@ app.directive 'heatmapChart', ($rootScope, calculators, colorScale, tools) ->
         rootProperties = {}
         rootProperties['f-studies'] = studies if studies
         rootProperties['f-countries'] = countries if countries
-        rootSamples = getCohortSamples $scope.data.samples, rootProperties
+        rootSamples = samplesFilter.getFilteredSamples $scope.data.samples, rootProperties
 
         return unless rootSamples.length
 

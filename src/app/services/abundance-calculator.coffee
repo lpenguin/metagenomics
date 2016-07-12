@@ -1,7 +1,7 @@
-app.factory 'calculators', ->
+app.factory 'abundanceCalculator', ->
   resistances = {}
 
-  calculators =
+  abundanceCalculator =
     init: (data) ->
       resistances = data
       return
@@ -12,6 +12,6 @@ app.factory 'calculators', ->
 
         d3.median values
       else
-        values = resistances[resistance].map (s) -> calculators.getAbundanceValue samples, resistance, s
+        values = resistances[resistance].map (s) -> abundanceCalculator.getAbundanceValue samples, resistance, s
 
         d3.mean values
