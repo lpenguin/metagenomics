@@ -10,7 +10,11 @@
 }
 
 .map-chart__svg .underlay {
-  fill: none;
+  fill: #ccc;
+}
+
+.map-chart__svg .sphere {
+  fill: #fff;
 }
 
 .map-chart__svg .country {

@@ -23,7 +23,7 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
       .center mapCenter
       .rotate mapRotate
 
-    countryPathGenerator = d3.geo.path()
+    pathGenerator = d3.geo.path()
       .projection projection
 
     redrawMap = (mapTranslate, mapScale) ->
@@ -31,16 +31,24 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
         .translate mapTranslate
         .scale mapScale
 
-      g.selectAll '.country'
-        .attr 'd', countryPathGenerator
+      d3element.selectAll 'path'
+        .attr 'd', pathGenerator
       return
 
     zoom = d3.behavior.zoom()
       .translate [width / 2, height /2]
       .scale minZoom
       .scaleExtent [minZoom, maxZoom]
+      .on 'zoomstart', ->
+        if d3.event.sourceEvent?.type is 'mousedown'
+          $('body').css 'cursor': 'all-scroll'
+        return
       .on 'zoom', ->
         redrawMap zoom.translate(), zoom.scale()
+        return
+      .on 'zoomend', ->
+        if d3.event.sourceEvent?.type is 'mouseup'
+          $('body').css 'cursor': 'default'
         return
 
     reattach = (element) ->
@@ -63,8 +71,15 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
     g = svg.append 'g'
       .classed 'main', true
 
+    g.append 'path'
+      .datum type: 'Sphere'
+      .classed 'sphere', true
+
+    countriesG = g.append 'g'
+      .classed 'countries', true
+
     # Prepare countries and assign Events →
-    g.selectAll 'path'
+    countriesG.selectAll 'path'
       .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
       .enter()
       .append 'path'
