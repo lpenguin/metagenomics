@@ -51,6 +51,13 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
       redrawMap zoom.translate(), zoom.scale()
       return
 
+    reattach = (element) ->
+      parent = element.parentNode
+
+      parent.removeChild element
+      parent.appendChild element
+      return
+
     svg = d3element.append 'svg'
       .classed 'map-chart__svg', true
       .attr 'width', width
@@ -64,12 +71,39 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
     g = svg.append 'g'
       .classed 'main', true
 
+    # Draw countries and assign Events →
     g.selectAll 'path'
       .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
       .enter()
       .append 'path'
       .classed 'country', true
       .style 'stroke', colors.countryBorder
+      .on 'mouseover', (d) ->
+        reattach @
+        d3.select(@).style 'stroke', colors.activeCountryBorder
+
+        country = _.find $scope.data.countries, 'code': d.id
+
+        return unless countryAbundances[d.id]
+
+        r = if resistance then resistance else substance
+        s = if resistance then substance else 'overall'
+        countryAbundanceValue = countryAbundances[d.id][r][s]
+
+        eventData =
+          countryName: country.name
+          abundanceValue: countryAbundanceValue
+          nOfSamples: nOfcountrySamples[d.id]
+
+        $rootScope.$broadcast 'map.countryOver', eventData
+        $scope.$apply()
+        return
+      .on 'mouseout', ->
+        d3.select(@).style 'stroke', colors.countryBorder
+
+        $rootScope.$broadcast 'map.countryOut'
+        $scope.$apply()
+        return
 
     svg
       .call zoom
@@ -80,6 +114,7 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
     resistance = undefined
     substance = undefined
     countryAbundances = {}
+    nOfcountrySamples = {}
 
     samplesCountries.forEach (countryName) ->
       country = _.find $scope.data.countries, 'name': countryName
@@ -95,10 +130,11 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
           return
       return
 
-    prepareCountryAbundances = (samples) ->
+    recalcCountryAbundances = (filteredSamples) ->
       samplesCountries.forEach (countryName) ->
         country = _.find $scope.data.countries, 'name': countryName
-        countrySamples = samplesFilter.getFilteredSamples samples, 'f-countries': countryName
+        countrySamples = samplesFilter.getFilteredSamples filteredSamples, 'f-countries': countryName
+        nOfcountrySamples[country.code] = countrySamples.length
 
         _.keys $scope.data.resistances
           .forEach (key) ->
@@ -131,7 +167,7 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
       return
 
     $scope.$on 'filters.filtersChanged', (event, eventData) ->
-      prepareCountryAbundances samplesFilter.getFilteredSamples $scope.data.samples, eventData
+      recalcCountryAbundances samplesFilter.getFilteredSamples $scope.data.samples, eventData
       paintMap()
       return
 
