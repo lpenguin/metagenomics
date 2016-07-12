@@ -20,6 +20,7 @@ app.directive 'filters', ($rootScope) ->
           dataset.push
             title: s
             value: s
+            parent: key
           return
         return
 
@@ -45,7 +46,7 @@ app.directive 'filters', ($rootScope) ->
 
     filteringFields.forEach (ff) ->
       plural =
-        title: ''
+        title: undefined
         value: undefined
 
       if ff is 'f-studies'
@@ -88,15 +89,38 @@ app.directive 'filters', ($rootScope) ->
       else
         defaultSubstanceFilterValue = $scope.substanceFilterValue
 
-      $rootScope.$broadcast 'filters.substanceChanged', $scope.substanceFilterValue.value
+      eventData =
+        resistance: $scope.substanceFilterValue.parent
+        substance: $scope.substanceFilterValue.value
+
+      $rootScope.$broadcast 'filters.substanceChanged', eventData
       return
 
-    $scope.$watch '[studyCountryFiltersValues, checkboxesValues]', ->
+    onGroupingChanged = ->
       eventData =
         studyCountryFiltersValues: $scope.studyCountryFiltersValues
         checkboxesValues: $scope.checkboxesValues
 
       $rootScope.$broadcast 'filters.groupingChanged', eventData
+      return
+
+    $scope.$watch 'studyCountryFiltersValues', ->
+      eventData = {}
+
+      _.keys $scope.studyCountryFiltersValues
+        .forEach (key) ->
+          if $scope.studyCountryFiltersValues[key].value
+            eventData[key] = $scope.studyCountryFiltersValues[key].value
+          return
+
+      $rootScope.$broadcast 'filters.filtersChanged', eventData
+
+      onGroupingChanged()
+      return
+    , true
+
+    $scope.$watch 'checkboxesValues', ->
+      onGroupingChanged()
       return
     , true
 

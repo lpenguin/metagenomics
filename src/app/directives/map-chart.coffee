@@ -1,4 +1,4 @@
-app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScale) ->
+app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, colorScale, samplesFilter) ->
   restrict: 'E'
   replace: true
   template: '<div class="map-chart"></div>'
@@ -6,6 +6,7 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
     data: '='
     mapData: '='
   link: ($scope, $element, $attrs) ->
+    # Prepare map
     d3element = d3.select $element[0]
 
     width = $element.width()
@@ -68,19 +69,70 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
       .enter()
       .append 'path'
       .classed 'country', true
-      .style 'fill', '#fff'
-      .style 'stroke', '#ccc'
-      .on 'mouseover', (d) ->
-        $rootScope.$broadcast 'map.countryHovered', d.id
-        $scope.$apply()
-        return
-      .on 'mouseout', ->
-        $rootScope.$broadcast 'map.countryHovered', undefined
-        $scope.$apply()
-        return
+      .style 'stroke', colors.countryBorder
 
     svg
       .call zoom
       .call zoom.event
+
+    # Paint map
+    samplesCountries = _.uniq _.map $scope.data.samples, 'f-countries'
+    resistance = undefined
+    substance = undefined
+    countryAbundances = {}
+
+    samplesCountries.forEach (countryName) ->
+      country = _.find $scope.data.countries, 'name': countryName
+      countryAbundances[country.code] = {}
+
+      _.keys $scope.data.resistances
+        .forEach (key) ->
+          countryAbundances[country.code][key] = 'overall': undefined
+
+          $scope.data.resistances[key].forEach (substance) ->
+            countryAbundances[country.code][key][substance] = undefined
+            return
+          return
+      return
+
+    prepareCountryAbundances = (samples) ->
+      samplesCountries.forEach (countryName) ->
+        country = _.find $scope.data.countries, 'name': countryName
+        countrySamples = samplesFilter.getFilteredSamples samples, 'f-countries': countryName
+
+        _.keys $scope.data.resistances
+          .forEach (key) ->
+            countryAbundances[country.code][key].overall = abundanceCalculator.getAbundanceValue countrySamples, key, 'overall'
+
+            $scope.data.resistances[key].forEach (substance) ->
+              countryAbundances[country.code][key][substance] = abundanceCalculator.getAbundanceValue countrySamples, key, substance
+              return
+            return
+        return
+      return
+
+    paintMap = ->
+      d3element.selectAll '.country'
+        .transition()
+        .duration 250
+        .style 'fill', (d) ->
+          r = if resistance then resistance else substance
+          s = if resistance then substance else 'overall'
+          countryAbundanceValue = countryAbundances[d.id]?[r][s]
+
+          colorScale.getColorByValue countryAbundanceValue
+      return
+
+    # → Events
+    $scope.$on 'filters.substanceChanged', (event, eventData) ->
+      resistance = eventData.resistance
+      substance = eventData.substance
+      paintMap()
+      return
+
+    $scope.$on 'filters.filtersChanged', (event, eventData) ->
+      prepareCountryAbundances samplesFilter.getFilteredSamples $scope.data.samples, eventData
+      paintMap()
+      return
 
     return
