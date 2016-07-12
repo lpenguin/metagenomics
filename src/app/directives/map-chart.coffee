@@ -95,13 +95,13 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
           abundanceValue: countryAbundanceValue
           nOfSamples: nOfcountrySamples[d.id]
 
-        $rootScope.$broadcast 'map.countryOver', eventData
+        $rootScope.$broadcast 'map.countryInOut', eventData
         $scope.$apply()
         return
       .on 'mouseout', ->
         d3.select(@).style 'stroke', colors.countryBorder
 
-        $rootScope.$broadcast 'map.countryOut'
+        $rootScope.$broadcast 'map.countryInOut', {}
         $scope.$apply()
         return
 

@@ -13,6 +13,8 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       .domain colorScale.getDomain()
       .range legendScaleRange
 
+    getLegendPointerY = (value) -> unless value then 0 else $scope.legendScale value
+
     # → Events
     $scope.$on 'filters.substanceChanged', (event, eventData) ->
       $scope.substance = eventData.substance
@@ -21,21 +23,16 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     $scope.$on 'heatmap.cellChanged', (event, eventData) ->
       $scope.abundanceValue = eventData.abundanceValue
       $scope.nOfSamples = eventData.nOfSamples
-      $scope.legendPointerY = unless eventData.abundanceValue then 0 else $scope.legendScale eventData.abundanceValue
+
+      $scope.legendPointerY = getLegendPointerY eventData.abundanceValue
       return
 
-    $scope.$on 'map.countryOver', (event, eventData) ->
+    $scope.$on 'map.countryInOut', (event, eventData) ->
       $scope.abundanceValue = eventData.abundanceValue
       $scope.countryName = eventData.countryName
       $scope.nOfSamples = eventData.nOfSamples
-      $scope.legendPointerY = unless eventData.abundanceValue then 0 else $scope.legendScale eventData.abundanceValue
-      return
 
-    $scope.$on 'map.countryOut', ->
-      $scope.abundanceValue = undefined
-      $scope.countryName = undefined
-      $scope.nOfSamples = 0
-      $scope.legendPointerY = 0
+      $scope.legendPointerY = getLegendPointerY eventData.abundanceValue
       return
 
     return
