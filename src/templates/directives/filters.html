@@ -24,9 +24,9 @@
   <div
     class="filters__checkboxes"
     data-ng-show="studyCountryFiltersValues['f-studies'].value || studyCountryFiltersValues['f-countries'].value">
-    <div class="caption inline">Pool by</div>
+    <div class="caption">Pool by</div>
     <div
-      class="checkbox inline"
+      class="checkbox"
       data-ng-repeat="checkbox in checkboxes track by $index"
       data-ng-class="{'disabled': studyCountryFiltersValues[checkbox].value}">
       <label>

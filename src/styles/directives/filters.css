@@ -28,14 +28,18 @@
   font-size: $s-font-size;
 }
 
+.filters__checkboxes > div {
+  display: inline-block;
+
+  vertical-align: bottom;
+}
+
 .filters__checkboxes .caption {
   font-family: $helvetica-neue-regular;
   font-weight: bold;
 }
 
 .filters__checkboxes .checkbox {
-  margin-top: 1px;
-
   user-select: none;
 
   font-family: $helvetica-neue-regular;
