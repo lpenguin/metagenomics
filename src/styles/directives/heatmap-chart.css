@@ -44,18 +44,10 @@
 
 .heatmap-chart__rows .row {
   height: 20px;
-
-  transition: opacity .25s linear;
 }
 
 .heatmap-chart__rows .row.pushed {
   margin-top: 10px;
-}
-
-.heatmap-chart__rows .row.unavailable {
-  pointer-events: none;
-
-  opacity: .1;
 }
 
 .heatmap-chart__rows .row .flag {
@@ -108,5 +100,5 @@
 }
 
 .heatmap-chart__rows .row .substance-cell:hover {
-  opacity: .5;
+  border-color: #333;
 }
