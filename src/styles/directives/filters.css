@@ -9,7 +9,8 @@
 }
 
 .filters__substance-filter .custom-select .custom-select__toggle {
-  font-family: $helvetica-neue-bold;
+  font-family: $helvetica-neue-regular;
+  font-weight: bold;
 }
 
 .filters__study-country-filters {
@@ -30,7 +31,8 @@
 .filters__checkboxes .caption {
   margin-top: 3px;
 
-  font-family: $helvetica-neue-bold;
+  font-family: $helvetica-neue-regular;
+  font-weight: bold;
 }
 
 .filters__checkboxes .checkbox {

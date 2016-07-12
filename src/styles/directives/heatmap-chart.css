@@ -15,14 +15,15 @@
 
   white-space: nowrap;
 
-  font-family: $helvetica-neue-bold;
+  font-family: $helvetica-neue-regular;
   font-size: $m-font-size;
+  font-weight: bold;
 }
 
 .heatmap-chart__header .resistance-caption .tail {
   color: #ccc;
 
-  font-family: $helvetica-neue-regular;
+  font-weight: normal;
   font-size: $s-font-size;
 }
 

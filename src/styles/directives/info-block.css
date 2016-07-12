@@ -1,8 +1,9 @@
 @import '../variables';
 
 .info-block__header {
-  font-family: $helvetica-neue-bold;
+  font-family: $helvetica-neue-regular;
   font-size: $l-font-size;
+  font-weight: bold;
 }
 
 .info-block__header .flag {
