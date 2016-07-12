@@ -7,5 +7,3 @@ app.constant 'colors',
     '#000000'
   ]
   neutral: '#fff'
-  countryBorder: '#ccc'
-  activeCountryBorder: '#333'

@@ -15,4 +15,9 @@
 
 .map-chart__svg .country {
   stroke-width: 1;
+  stroke: #ccc;
+}
+
+.map-chart__svg .country:hover {
+  stroke: #333;
 }

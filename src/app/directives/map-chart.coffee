@@ -1,4 +1,4 @@
-app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, colorScale, samplesFilter) ->
+app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScale, samplesFilter) ->
   restrict: 'E'
   replace: true
   template: '<div class="map-chart"></div>'
@@ -16,6 +16,8 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
     mapRotate = [0, 0]
     minZoom = 250
     maxZoom = minZoom * 5
+
+    animationDuration = 250
 
     projection = d3.geo.mercator()
       .center mapCenter
@@ -41,16 +43,6 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
         redrawMap zoom.translate(), zoom.scale()
         return
 
-    $document.bind 'keydown', (event) ->
-      return unless event.which is 27
-
-      zoom
-        .translate [width / 2, height /2]
-        .scale minZoom
-
-      redrawMap zoom.translate(), zoom.scale()
-      return
-
     reattach = (element) ->
       parent = element.parentNode
 
@@ -71,36 +63,26 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
     g = svg.append 'g'
       .classed 'main', true
 
-    # Draw countries and assign Events →
+    # Prepare countries and assign Events →
     g.selectAll 'path'
       .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
       .enter()
       .append 'path'
       .classed 'country', true
-      .style 'stroke', colors.countryBorder
       .on 'mouseover', (d) ->
         reattach @
-        d3.select(@).style 'stroke', colors.activeCountryBorder
-
-        country = _.find $scope.data.countries, 'code': d.id
 
         return unless countryAbundances[d.id]
 
-        r = if resistance then resistance else substance
-        s = if resistance then substance else 'overall'
-        countryAbundanceValue = countryAbundances[d.id][r][s]
-
         eventData =
-          countryName: country.name
-          abundanceValue: countryAbundanceValue
+          countryName: _.find($scope.data.countries, 'code': d.id).name
+          abundanceValue: countryAbundances[d.id][resistance][substance]
           nOfSamples: nOfcountrySamples[d.id]
 
         $rootScope.$broadcast 'map.countryInOut', eventData
         $scope.$apply()
         return
       .on 'mouseout', ->
-        d3.select(@).style 'stroke', colors.countryBorder
-
         $rootScope.$broadcast 'map.countryInOut', {}
         $scope.$apply()
         return
@@ -119,6 +101,7 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
     samplesCountries.forEach (countryName) ->
       country = _.find $scope.data.countries, 'name': countryName
       countryAbundances[country.code] = {}
+      nOfcountrySamples[country.code] = undefined
 
       _.keys $scope.data.resistances
         .forEach (key) ->
@@ -150,25 +133,31 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colors, c
     paintMap = ->
       d3element.selectAll '.country'
         .transition()
-        .duration 250
-        .style 'fill', (d) ->
-          r = if resistance then resistance else substance
-          s = if resistance then substance else 'overall'
-          countryAbundanceValue = countryAbundances[d.id]?[r][s]
-
-          colorScale.getColorByValue countryAbundanceValue
+        .duration animationDuration
+        .style 'fill', (d) -> colorScale.getColorByValue countryAbundances[d.id]?[resistance][substance]
       return
 
     # → Events
     $scope.$on 'filters.substanceChanged', (event, eventData) ->
-      resistance = eventData.resistance
-      substance = eventData.substance
+      resistance = if eventData.resistance then eventData.resistance else eventData.substance
+      substance = if eventData.resistance then eventData.substance else 'overall'
       paintMap()
       return
 
     $scope.$on 'filters.filtersChanged', (event, eventData) ->
       recalcCountryAbundances samplesFilter.getFilteredSamples $scope.data.samples, eventData
       paintMap()
+      return
+
+    # Keyboard events
+    $document.bind 'keydown', (event) ->
+      return unless event.which is 27
+
+      zoom
+        .translate [width / 2, height /2]
+        .scale minZoom
+
+      redrawMap zoom.translate(), zoom.scale()
       return
 
     return

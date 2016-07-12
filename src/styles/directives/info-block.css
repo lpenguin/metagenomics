@@ -43,25 +43,18 @@
   border-bottom: 5px solid transparent;
 }
 
-.info-block__n-of-samples {
-  margin-top: 10px;
-
-  font-family: $helvetica-neue-regular;
-  font-size: $s-font-size;
-}
-
-.tick {
+.info-block__legend .tick {
   position: absolute;
 }
 
-.tick .dash {
+.info-block__legend .tick .dash {
   width: 30px;
   height: 1px;
 
   background-color: rgba(255, 255, 255, .5);
 }
 
-.tick .caption {
+.info-block__legend .tick .caption {
   position: absolute;
   top: 0;
   left: 35px;
@@ -69,4 +62,11 @@
   transform: translateY(-50%);
 
   font-size: $xs-font-size;
+}
+
+.info-block__n-of-samples {
+  margin-top: 10px;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $s-font-size;
 }

@@ -22,14 +22,14 @@
       data-ng-style="{'bottom': legendPointerY + 'px'}"></div>
     <div
       class="tick"
-      data-ng-repeat="v in legendScale.domain() track by $index"
-      data-ng-style="{'bottom': legendScale(v)}">
+      data-ng-repeat="tickValue in legendScale.domain() track by $index"
+      data-ng-style="{'bottom': legendScale(tickValue)}">
       <div class="dash"></div>
       <div
         class="caption"
         data-ng-if="$index && !($index % ((legendScale.domain().length - 1) / 2))"
         data-ng-hide="abundanceValue"
-        data-ng-bind-html="v | prepareAbundanceValue | trust"></div>
+        data-ng-bind-html="tickValue | prepareAbundanceValue | trust"></div>
     </div>
   </div>
   <div class="info-block__n-of-samples">{{nOfSamples ? (nOfSamples + ' ' + (nOfSamples === 1 ? 'sample' : 'samples')) : ''}}</div>
