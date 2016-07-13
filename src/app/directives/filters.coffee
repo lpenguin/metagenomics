@@ -79,7 +79,7 @@ app.directive 'filters', ($rootScope) ->
     $scope.checkboxesValues = {}
 
     $scope.checkboxes.forEach (c) ->
-      $scope.checkboxesValues[c] = true
+      $scope.checkboxesValues[c] = if c is 'f-countries' or c is 'f-diagnosis' then true else false
       return
 
     # Events →
