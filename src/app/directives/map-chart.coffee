@@ -52,6 +52,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     svg = d3element.append 'svg'
       .classed 'map-chart__svg', true
       .attr 'height', height
+      .call zoom
 
     underlay = svg.append 'rect'
       .attr 'height', height
@@ -166,15 +167,15 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       minZoom = width / 5
       maxZoom = minZoom * 5
 
-      zoom.translate [width / 2, height /2]
-      zoom.scale minZoom
-      zoom.scaleExtent [minZoom, maxZoom]
-
-      svg.attr 'width', width
       underlay.attr 'width', width
 
+      zoom
+        .translate [width / 2, height /2]
+        .scale minZoom
+        .scaleExtent [minZoom, maxZoom]
+
       svg
-        .call zoom
+        .attr 'width', width
         .call zoom.event
       return
 
