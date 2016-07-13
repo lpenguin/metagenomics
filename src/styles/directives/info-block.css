@@ -1,7 +1,10 @@
 @import '../variables';
 
-.info-block__header {
+.info-block {
   font-family: $helvetica-neue-regular;
+}
+
+.info-block__header {
   font-size: $l-font-size;
   font-weight: bold;
 }
@@ -14,8 +17,6 @@
   position: relative;
 
   margin-top: 10px;
-
-  font-family: $helvetica-neue-regular;
 }
 
 .info-block__legend .gradient {
@@ -68,6 +69,5 @@
 .info-block__n-of-samples {
   margin-top: 10px;
 
-  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }

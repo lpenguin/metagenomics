@@ -1,0 +1,79 @@
+@import '../variables';
+
+.tip {
+  font-family: $helvetica-neue-regular;
+}
+
+.tip__question-button {
+  position: relative;
+
+  box-sizing: border-box;
+  width: 30px;
+  height: 30px;
+
+  cursor: pointer;
+
+  border: 1px solid #aaa;
+  border-radius: 8px;
+  background-color: #fff;
+}
+
+.tip__question-button:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  content: '?';
+  text-align: center;
+
+  font-size: $l-font-size;
+  font-weight: bold;
+  line-height: 30px;
+}
+
+
+.tip__info {
+  position: fixed;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+
+  box-sizing: border-box;
+  width: 600px;
+  height: 400px;
+  padding: 30px 20px 20px 20px;
+
+  transform: translate(-50%, -50%);
+
+  background-color: #fff;
+  box-shadow: 0px 0px 10px 0px rgba(51, 51, 51, 0.5);
+}
+
+.tip__info .close-button {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+
+  width: 20px;
+  height: 20px;
+
+  cursor: pointer;
+
+  background-color: #fff;
+}
+
+.tip__info .close-button:after {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+
+  content: '\d7';
+  text-align: center;
+
+  font-size: $xxl-font-size;
+  line-height: 20px;
+}

@@ -1,5 +1,9 @@
 @import '../variables';
 
+.heatmap-chart {
+  font-family: $helvetica-neue-regular;
+}
+
 .heatmap-chart__header {
   margin-left: 156px;
 }
@@ -15,7 +19,6 @@
 
   white-space: nowrap;
 
-  font-family: $helvetica-neue-regular;
   font-size: $m-font-size;
   font-weight: bold;
 }
@@ -23,14 +26,13 @@
 .heatmap-chart__header .resistance-caption .tail {
   color: #ccc;
 
-  font-weight: normal;
   font-size: $s-font-size;
+  font-weight: normal;
 }
 
 .heatmap-chart__header .substance-caption {
   margin-top: 20px;
 
-  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
 
@@ -39,7 +41,6 @@
 }
 
 .heatmap-chart__rows {
-  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
 

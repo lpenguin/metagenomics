@@ -1,7 +1,7 @@
 @import '../variables';
 
 .filters {
-  height: 100%;
+  font-family: $helvetica-neue-regular;
 }
 
 .filters__substance-filter .custom-select {
@@ -9,7 +9,6 @@
 }
 
 .filters__substance-filter .custom-select .custom-select__toggle {
-  font-family: $helvetica-neue-regular;
   font-weight: bold;
 }
 
@@ -35,14 +34,11 @@
 }
 
 .filters__checkboxes .caption {
-  font-family: $helvetica-neue-regular;
   font-weight: bold;
 }
 
 .filters__checkboxes .checkbox {
   user-select: none;
-
-  font-family: $helvetica-neue-regular;
 }
 
 .filters__checkboxes .checkbox label {
