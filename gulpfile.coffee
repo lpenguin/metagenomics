@@ -19,7 +19,7 @@ sources =
   coffee: 'src/app/**/*.coffee'
   templates: 'src/templates/**/*.html'
   index: 'src/index.html'
-  favicon: 'src/favicon.ico'
+  favicon: 'src/favicon.png'
   img: 'src/img/**/*'
   data: 'src/data/**/*'
   fonts: 'src/fonts/**'
