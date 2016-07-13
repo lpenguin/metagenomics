@@ -1,4 +1,4 @@
-app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScale, samplesFilter) ->
+app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator, colorScale, samplesFilter) ->
   restrict: 'E'
   replace: true
   template: '<div class="map-chart"></div>'
@@ -9,19 +9,13 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
     # Prepare map
     d3element = d3.select $element[0]
 
-    width = $element.width()
     height = $element.height()
-
-    mapCenter = [0, 44]
-    mapRotate = [0, 0]
-    minZoom = 250
-    maxZoom = minZoom * 5
-
-    animationDuration = 250
+    width = undefined
+    minZoom = undefined
 
     projection = d3.geo.mercator()
-      .center mapCenter
-      .rotate mapRotate
+      .center [0, 44]
+      .rotate [0, 0]
 
     pathGenerator = d3.geo.path()
       .projection projection
@@ -36,9 +30,6 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
       return
 
     zoom = d3.behavior.zoom()
-      .translate [width / 2, height /2]
-      .scale minZoom
-      .scaleExtent [minZoom, maxZoom]
       .on 'zoomstart', ->
         if d3.event.sourceEvent?.type is 'mousedown'
           $('body').css 'cursor': 'all-scroll'
@@ -60,11 +51,9 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
 
     svg = d3element.append 'svg'
       .classed 'map-chart__svg', true
-      .attr 'width', width
       .attr 'height', height
 
-    svg.append 'rect'
-      .attr 'width', width
+    underlay = svg.append 'rect'
       .attr 'height', height
       .classed 'underlay', true
 
@@ -101,10 +90,6 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
         $rootScope.$broadcast 'map.countryInOut', {}
         $scope.$apply()
         return
-
-    svg
-      .call zoom
-      .call zoom.event
 
     # Paint map
     samplesCountries = _.uniq _.map $scope.data.samples, 'f-countries'
@@ -148,7 +133,7 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
     paintMap = ->
       d3element.selectAll '.country'
         .transition()
-        .duration animationDuration
+        .duration 250
         .style 'fill', (d) -> colorScale.getColorByValue countryAbundances[d.id]?[resistance][substance]
       return
 
@@ -174,5 +159,25 @@ app.directive 'mapChart', ($document, $rootScope, abundanceCalculator, colorScal
 
       redrawMap zoom.translate(), zoom.scale()
       return
+
+    # Resize
+    $(window).on 'resize', ->
+      width = $element.width()
+      minZoom = width / 5
+      maxZoom = minZoom * 5
+
+      zoom.translate [width / 2, height /2]
+      zoom.scale minZoom
+      zoom.scaleExtent [minZoom, maxZoom]
+
+      svg.attr 'width', width
+      underlay.attr 'width', width
+
+      svg
+        .call zoom
+        .call zoom.event
+      return
+
+    $timeout -> $(window).resize()
 
     return
