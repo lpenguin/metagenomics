@@ -27,8 +27,11 @@
         class="flag inline"
         data-ng-if="cohort.flag"
         data-ng-src="img/flags/{{cohort.flag}}.png" />
-      <div class='name inline'>{{cohort.name}}</div>
-      <div class='n-of-samples inline'>{{cohort.samples.length}}</div>
+      <div class="name inline" overflow>
+        <span class="short">{{cohort.name}}</span>
+        <span class="full">{{cohort.name}}</span>
+      </div>
+      <div class="n-of-samples inline">{{cohort.samples.length}}</div>
       <div
         class="resistance-group inline"
         data-ng-repeat="(resistance, substances) in data.resistances track by $index">

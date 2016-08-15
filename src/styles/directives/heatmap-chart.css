@@ -60,6 +60,7 @@
   overflow: hidden;
 
   width: 111px;
+  height: 14px;
   margin: 3px 0 3px 0;
 
   white-space: nowrap;
@@ -69,6 +70,27 @@
 .heatmap-chart__rows .row.with-flag .name {
   width: 90px;
   margin-left: 5px;
+}
+
+.heatmap-chart__rows .row .name .full {
+  position: absolute;
+
+  display: none;
+
+  padding: 2px;
+
+  transform: translate(-3px, -3px);
+
+  border: 1px solid rgba(0, 0, 0, .167);
+  background-color: #fff;
+}
+
+.heatmap-chart__rows .row .name.overflow:hover .short {
+  display: none;
+}
+
+.heatmap-chart__rows .row .name.overflow:hover .full {
+  display: block;
 }
 
 .heatmap-chart__rows .row .n-of-samples {
