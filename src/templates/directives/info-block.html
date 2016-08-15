@@ -14,7 +14,7 @@
       data-ng-style="{'background': 'linear-gradient(to top, ' + legendGradient.join(', ') + ')'}"></div>
     <div
       class="abundance-value inline"
-      data-ng-show="abundanceValue"
+      data-ng-show="abundanceValue !== undefined"
       data-ng-bind-html="abundanceValue | prepareAbundanceValue | trust"></div>
     <br class="clear-both" />
     <div
@@ -28,9 +28,9 @@
       <div
         class="caption"
         data-ng-if="$index && !($index % ((legendScale.domain().length - 1) / 2))"
-        data-ng-hide="abundanceValue"
+        data-ng-show="abundanceValue === undefined"
         data-ng-bind-html="tickValue | prepareAbundanceValue | trust"></div>
     </div>
   </div>
-  <div class="info-block__n-of-samples">{{nOfSamples ? (nOfSamples + ' ' + (nOfSamples === 1 ? 'sample' : 'samples')) : ''}}</div>
+  <div class="info-block__n-of-samples">{{nOfSamples === undefined ? '' : ((nOfSamples ? nOfSamples : 'No') + (nOfSamples === 1 ? ' sample' : ' samples'))}}</div>
 </div>
