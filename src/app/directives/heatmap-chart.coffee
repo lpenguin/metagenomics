@@ -38,8 +38,8 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         return unless cohortSamples.length
         return if cohortSamples.length is samples.length
 
-        name = p.join ', '
         flag = if order[0] is 'f-countries' then p[0] else undefined
+        name = (if order[0] is 'f-countries' and p.length > 1 then _.tail(p) else p).join ', '
 
         previousCohort = _.last permutationsCohorts
         isPushed = false
