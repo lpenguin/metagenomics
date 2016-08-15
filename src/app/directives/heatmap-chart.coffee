@@ -77,8 +77,8 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
         return unless rootSamples.length
 
-        name = if studies and countries then [studies, countries].join(', ') else studies or countries
         flag = if countries and not studies then countries else undefined
+        name = if studies and countries then [studies, countries].join(', ') else studies or countries
 
         $scope.cohorts.push
           name: name
