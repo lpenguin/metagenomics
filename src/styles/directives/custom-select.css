@@ -84,8 +84,9 @@
   line-height: 24px;
 }
 
-.custom-select__dropdown .item:hover {
-  background-color: #d3d3d3;
+.custom-select__dropdown .item:hover,
+.custom-select__dropdown .item.selected {
+  background-color: #aed8e6;
 }
 
 .custom-select__dropdown .item.selected::after {
