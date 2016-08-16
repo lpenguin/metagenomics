@@ -53,6 +53,7 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
     ]
 
     ageIntervals = [
+      '0...9'
       '10...16'
       '17...25'
       '26...35'
