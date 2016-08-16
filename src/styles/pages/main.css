@@ -28,7 +28,7 @@
 }
 
 .datalab-footer {
-  margin: 50px 0 30px $common-offset;
+  margin: 50px $common-offset 30px $common-offset;
 
   font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
