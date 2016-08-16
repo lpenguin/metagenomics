@@ -9,8 +9,9 @@ app.directive 'customSelect', ($document, $timeout) ->
     toggleFormat: '='
     disabled: '='
     selected: '='
+    adjustWidth: '='
   link: ($scope, $element, $attrs) ->
-    $scope.isSelectPrepared = false
+    $scope.isSelectPrepared = not $scope.adjustWidth
     $scope.isListShown = false
 
     clickHandler = (event) ->
@@ -52,19 +53,20 @@ app.directive 'customSelect', ($document, $timeout) ->
         $scope.isListShown = false
       return
 
-    $timeout ->
-      $toggle = $element.find '.custom-select__toggle'
-      $dropdown = $element.find '.custom-select__dropdown'
-      toggleWidth = $toggle[0].getBoundingClientRect().width
-      dropdownWidth = $dropdown[0].getBoundingClientRect().width
-      dropdownHasScroll = $dropdown[0].scrollHeight > $dropdown[0].offsetHeight
+    if $scope.adjustWidth
+      $timeout ->
+        $toggle = $element.find '.custom-select__toggle'
+        $dropdown = $element.find '.custom-select__dropdown'
+        toggleWidth = $toggle[0].getBoundingClientRect().width
+        dropdownWidth = $dropdown[0].getBoundingClientRect().width
+        dropdownHasScroll = $dropdown[0].scrollHeight > $dropdown[0].offsetHeight
 
-      dropdownWidth += 16 if dropdownHasScroll
+        dropdownWidth += 16 if dropdownHasScroll
 
-      $toggle.innerWidth Math.max toggleWidth, dropdownWidth
-      $dropdown.width Math.max toggleWidth, dropdownWidth
-      $scope.isSelectPrepared = true
-      return
+        $toggle.innerWidth Math.max toggleWidth, dropdownWidth
+        $dropdown.width Math.max toggleWidth, dropdownWidth
+        $scope.isSelectPrepared = true
+        return
 
     $scope.$watch 'disabled', ->
       if $scope.disabled
