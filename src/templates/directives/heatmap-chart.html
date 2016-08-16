@@ -4,10 +4,10 @@
       class="resistance-group inline"
       data-ng-repeat="(resistance, substances) in data.resistances track by $index">
       <div class="resistance-caption">
-        <span once-text="resistance.indexOf('(') !== -1 ? resistance.split('(')[0] : resistance"></span>
+        <span once-text="resistance.indexOf('ABX') !== -1 ? resistance.split(' ')[0] : resistance"></span>
         <span
           class="tail"
-          once-text="resistance.indexOf('(') !== -1 ? '(' + resistance.split('(')[1] : ''"></span>
+          once-text="resistance.indexOf('ABX') !== -1 ? resistance.split(' ')[1] : ''"></span>
       </div>
       <div
         class="substance-caption inline"

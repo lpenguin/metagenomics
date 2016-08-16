@@ -135,7 +135,15 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       d3element.selectAll '.country'
         .transition()
         .duration 250
-        .style 'fill', (d) -> colorScale.getColorByValue countryAbundances[d.id]?[resistance][substance]
+        .style 'fill', (d) ->
+          value = undefined
+
+          if resistance and
+          substance and
+          countryAbundances[d.id]
+            value = countryAbundances[d.id][resistance][substance]
+
+          colorScale.getColorByValue value
       return
 
     # → Events

@@ -5,37 +5,6 @@ app.directive 'filters', ($rootScope) ->
   scope:
     data: '='
   link: ($scope, $element, $attrs) ->
-    # Substance filter
-    dataset = []
-
-    _.keys $scope.data.resistances
-      .forEach (key) ->
-        dataset.push
-          title: key
-          value: key
-          isHighlighted: true
-
-        return if $scope.data.resistances[key].length < 2
-
-        $scope.data.resistances[key].forEach (s) ->
-          dataset.push
-            title: s
-            value: s
-            parent: key
-          return
-        return
-
-    $scope.substanceFilter =
-      key: 'substance'
-      dataset: dataset
-      multi: false
-      toggleFormat: -> 'Resistomap for ' + $scope.substanceFilterValue.title
-      disabled: false
-
-    $scope.substanceFilterValue = dataset[0]
-    defaultSubstanceFilterValue = dataset[0]
-    isSubstanceChangedFromOutside = false
-
     # Study & country filters
     filteringFields = [
       'f-studies'
@@ -84,19 +53,6 @@ app.directive 'filters', ($rootScope) ->
       return
 
     # Events →
-    $scope.$watch 'substanceFilterValue', ->
-      if isSubstanceChangedFromOutside
-        isSubstanceChangedFromOutside = false
-      else
-        defaultSubstanceFilterValue = $scope.substanceFilterValue
-
-      eventData =
-        resistance: $scope.substanceFilterValue.parent
-        substance: $scope.substanceFilterValue.value
-
-      $rootScope.$broadcast 'filters.substanceChanged', eventData
-      return
-
     onGroupingChanged = ->
       eventData =
         studyCountryFiltersValues: $scope.studyCountryFiltersValues
@@ -124,15 +80,5 @@ app.directive 'filters', ($rootScope) ->
       onGroupingChanged()
       return
     , true
-
-    # → Events
-    $scope.$on 'heatmap.substanceChanged', (event, eventData) ->
-      isSubstanceChangedFromOutside = true unless isSubstanceChangedFromOutside
-
-      if eventData
-        $scope.substanceFilterValue = _.find $scope.substanceFilter.dataset, 'value': eventData
-      else
-        $scope.substanceFilterValue = defaultSubstanceFilterValue
-      return
 
     return

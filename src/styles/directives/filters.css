@@ -4,23 +4,6 @@
   font-family: $helvetica-neue-regular;
 }
 
-.filters__substance-filter .custom-select {
-  margin-left: -10px;
-}
-
-.filters__substance-filter .custom-select .custom-select__toggle {
-  font-size: $xxl-font-size;
-  font-weight: bold;
-}
-
-.filters__substance-filter .custom-select .custom-select__toggle::after {
-  top: 15.5px;
-}
-
-.filters__substance-filter .custom-select .custom-select__toggle.activated::after {
-  top: 15.5px;
-}
-
 .filters__study-country-filters {
   float: right;
 

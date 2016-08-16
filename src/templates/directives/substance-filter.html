@@ -1,0 +1,42 @@
+<div class="substance-filter">
+  <div
+    class="substance-filter__toggle"
+    data-ng-class="{'activated': isListShown}"
+    data-ng-click="toggleList()">{{'Resistomap for ' + substanceFilterValue.title}}</div>
+  <div
+    class="substance-filter__dropdown"
+    data-ng-style="{'visibility': isListShown ? 'visible' : 'hidden'}">
+    <div class="left-section inline">
+      <div
+        class="item resistance"
+        data-ng-class="{'selected': isItemSelected('ABX determinants')}"
+        data-ng-click="selectItem('ABX determinants')">ABX determinants</div>
+      <div class="two-column">
+        <div
+          class="item"
+          data-ng-repeat="item in dataset | filter: {parent: 'ABX determinants'} track by $index"
+          data-ng-class="{'selected': isItemSelected(item)}"
+          data-ng-click="selectItem(item)">{{item.title}}</div>
+      </div>
+    </div>
+    <div class="right-section inline">
+      <div
+        class="item resistance"
+        data-ng-class="{'selected': isItemSelected('ABX mutations')}"
+        data-ng-click="selectItem('ABX mutations')">ABX mutations</div>
+      <div
+        class="item"
+        data-ng-repeat="item in dataset | filter: {parent: 'ABX mutations'} track by $index"
+        data-ng-class="{'selected': isItemSelected(item)}"
+        data-ng-click="selectItem(item)">{{item.title}}</div>
+      <div
+        class="item resistance pushed"
+        data-ng-class="{'selected': isItemSelected('Biocides')}"
+        data-ng-click="selectItem('Biocides')">Biocides</div>
+      <div
+        class="item resistance"
+        data-ng-class="{'selected': isItemSelected('Metals')}"
+        data-ng-click="selectItem('Metals')">Metals</div>
+    </div>
+  </div>
+</div>

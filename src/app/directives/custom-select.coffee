@@ -25,7 +25,7 @@ app.directive 'customSelect', ($document, $timeout) ->
     $scope.toggleList = ->
       return if $scope.disabled
 
-      $scope.isListShown = !$scope.isListShown
+      $scope.isListShown = not $scope.isListShown
 
       if $scope.isListShown
         $document.bind 'click', clickHandler
