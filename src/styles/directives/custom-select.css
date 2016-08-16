@@ -89,6 +89,10 @@
   background-color: #aed8e6;
 }
 
+.custom-select__dropdown .item.highlighted {
+  font-weight: bold;
+}
+
 .custom-select__dropdown .item.selected::after {
   position: absolute;
   top: 11px;

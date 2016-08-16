@@ -13,6 +13,7 @@ app.directive 'filters', ($rootScope) ->
         dataset.push
           title: key
           value: key
+          isHighlighted: true
 
         return if $scope.data.resistances[key].length < 2
 
