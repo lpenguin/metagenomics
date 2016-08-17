@@ -25,11 +25,15 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
 
     abundanceCalculator.init $scope.data.resistances
 
+    # Prepare samples
     $scope.data.samples = _.values rawData[2]
 
     $scope.data.samples.forEach (s) ->
-      s['f-genders'] = _.head s['f-genders']
+      # Prepare gender
+      unless s['f-genders'] is 'NA'
+        s['f-genders'] = _.capitalize _.head s['f-genders']
 
+      # Prepare sample abundances
       sampleAbundances = rawData[4].filter (d) -> d['sample'] is s.names
 
       _.keys $scope.data.resistances
@@ -42,10 +46,12 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
           return
       return
 
+    # Studies for footer
     $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
       .sort tools.sortAlphabeticaly
       .join ', '
 
+    # Prepare filters data
     filteringFields = [
       'f-studies'
       'f-countries'

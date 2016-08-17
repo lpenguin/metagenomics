@@ -94,7 +94,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         permutationsCohorts[0].isPushed = true
         $scope.cohorts = $scope.cohorts.concat permutationsCohorts
       else
-        $scope.cohorts = getPermutationsCohorts $scope.data.samples, ['f-countries']
+        $scope.cohorts = getPermutationsCohorts $scope.data.samples, groupingOrder
       return
 
     $scope.getCellColor = (cohort, resistance, substance) ->
