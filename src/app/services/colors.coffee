@@ -1,13 +1,13 @@
 app.constant 'colors',
   baseColors: [
-    '#40004b'
-    '#762a83'
-    '#9970ab'
-    '#c2a5cf'
-    '#e7d4e8'
-    '#d9f0d3'
-    '#a6dba0'
-    '#5aae61'
-    '#1b7837'
+    '#7f3b08'
+    '#b35806'
+    '#e08214'
+    '#fdb863'
+    '#fee0b6'
+    '#d8daeb'
+    '#b2abd2'
+    '#8073ac'
+    '#542788'
   ]
   neutral: '#fff'
