@@ -24,7 +24,8 @@
 
 .filters__checkboxes {
   position: absolute;
-  top: 390px;
+  top: 420px;
+  left: $common-offset;
 
   font-size: $s-font-size;
 }
