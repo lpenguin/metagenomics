@@ -59,16 +59,17 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
 
     # Events →
     $scope.$watch 'substanceFilterValue', ->
+      eventData =
+        resistance: $scope.substanceFilterValue.parent
+        substance: $scope.substanceFilterValue.value
+        isSubstanceChangedFromOutside: isSubstanceChangedFromOutside
+
+      $rootScope.$broadcast 'filters.substanceChanged', eventData
+
       if isSubstanceChangedFromOutside
         isSubstanceChangedFromOutside = false
       else
         defaultSubstanceFilterValue = $scope.substanceFilterValue
-
-      eventData =
-        resistance: $scope.substanceFilterValue.parent
-        substance: $scope.substanceFilterValue.value
-
-      $rootScope.$broadcast 'filters.substanceChanged', eventData
       return
 
     # → Events

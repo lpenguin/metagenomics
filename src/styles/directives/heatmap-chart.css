@@ -34,6 +34,11 @@
   margin-top: 20px;
 
   font-size: $s-font-size;
+  line-height: 1;
+}
+
+.heatmap-chart__header .substance-caption.highlighted {
+  font-weight: bold;
 }
 
 .heatmap-chart__header .substance-caption:not(.overall) {
@@ -112,9 +117,49 @@
 }
 
 .heatmap-chart__rows .row .substance-cell {
+  position: relative;
+
   height: 18px;
 
   transition: background-color .25s linear;
+}
+
+.heatmap-chart__rows .row .substance-cell.highlighted.top {
+  border-top-color: #333;
+}
+
+.heatmap-chart__rows .row .substance-cell.highlighted.bottom {
+  border-bottom-color: #333;
+}
+
+.heatmap-chart__rows .row .substance-cell.highlighted:before {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+
+  content: '';
+
+  border-left: 1px solid #333;
+}
+
+.heatmap-chart__rows .row.pushed .substance-cell.highlighted:before {
+  top: -11px;
+}
+
+.heatmap-chart__rows .row .substance-cell.highlighted:after {
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  bottom: -1px;
+
+  content: '';
+
+  border-right: 1px solid #333;
+}
+
+.heatmap-chart__rows .row.pushed .substance-cell.highlighted:after {
+  top: -11px;
 }
 
 .heatmap-chart__header .substance-caption.overall,

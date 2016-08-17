@@ -126,6 +126,13 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       return
 
     # → Events
+    $scope.$on 'filters.substanceChanged', (event, eventData) ->
+      return if eventData.isSubstanceChangedFromOutside
+
+      $scope.resistance = if eventData.resistance then eventData.resistance else eventData.substance
+      $scope.substance = if eventData.resistance then eventData.substance else 'overall'
+      return
+
     $scope.$on 'filters.groupingChanged', (event, eventData) ->
       createCohorts eventData.studyCountryFiltersValues, eventData.checkboxesValues
       return
