@@ -1,13 +1,21 @@
 @import '../variables';
 
 .filters {
+  height: 0;
+
   font-family: $helvetica-neue-regular;
 }
 
-.filters__study-country-filters {
-  float: right;
+.filters__substance-filter {
+  position: absolute;
+  top: 30px;
+  left: $common-offset;
+}
 
-  margin-right: 60px;
+.filters__study-country-filters {
+  position: absolute;
+  top: 30px;
+  right: 90px;
 }
 
 .filters__study-country-filters .custom-select ~ .custom-select {

@@ -1,13 +1,5 @@
 @import '../variables';
 
-.filters-container {
-  position: absolute;
-  top: 30px;
-  left: $common-offset;
-
-  width: calc(100% - 2 * $common-offset);
-}
-
 .tip-container {
   position: absolute;
   top: 30px;
