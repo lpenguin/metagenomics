@@ -8,13 +8,7 @@ app.factory 'colorScale', (colors) ->
   scaleDomain = for num in [minPower..maxPower]
     Math.pow 10, num
 
-  chromaScale = chroma
-    .scale chroma.bezier colors.baseColors
-    .mode 'lab'
-    .correctLightness true
-
-  for i in [0..scaleDomain.length - 1]
-    scaleRange.push chromaScale(i / (scaleDomain.length - 1)).hex()
+  scaleRange = _.reverse colors.baseColors
 
   scale = d3.scale.log()
     .domain scaleDomain

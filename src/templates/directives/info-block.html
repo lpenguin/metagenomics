@@ -15,6 +15,7 @@
     <div
       class="abundance-value inline"
       data-ng-show="abundanceValue !== undefined"
+      data-ng-class="{'nil': abundanceValue === 0}"
       data-ng-bind-html="abundanceValue | prepareAbundanceValue | trust"></div>
     <br class="clear-both" />
     <div

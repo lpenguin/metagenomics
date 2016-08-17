@@ -30,6 +30,10 @@
   font-size: $xxl-font-size;
 }
 
+.info-block__legend .abundance-value.nil {
+  margin-top: 40px;
+}
+
 .info-block__legend .pointer {
   position: absolute;
   left: 30px;
