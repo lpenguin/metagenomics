@@ -28,6 +28,8 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
     $scope.data.samples = _.values rawData[2]
 
     $scope.data.samples.forEach (s) ->
+      s['f-genders'] = _.head s['f-genders']
+
       sampleAbundances = rawData[4].filter (d) -> d['sample'] is s.names
 
       _.keys $scope.data.resistances
