@@ -91,7 +91,7 @@
 }
 
 .heatmap-chart__rows .row {
-  height: 20px;
+  height: 22px;
 }
 
 .heatmap-chart__rows .row.pushed {
@@ -99,14 +99,14 @@
 }
 
 .heatmap-chart__rows .row .flag {
-  margin-top: 4px;
+  margin-top: 5px;
 }
 
 .heatmap-chart__rows .row .name {
   overflow: hidden;
 
   width: 110px;
-  margin: 3px 0 3px 0;
+  margin-top: 4px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -141,7 +141,7 @@
 
 .heatmap-chart__rows .row .n-of-samples {
   width: 30px;
-  margin: 3px 10px 3px 5px;
+  margin: 4px 10px 0 5px;
 
   text-align: right;
 }
@@ -178,7 +178,7 @@
 
 .heatmap-chart__rows .row .substance-cell.highlighted:before {
   position: absolute;
-  top: -1px;
+  top: -3px;
   bottom: -1px;
   left: -1px;
 
@@ -188,12 +188,12 @@
 }
 
 .heatmap-chart__rows .row.pushed .substance-cell.highlighted:before {
-  top: -11px;
+  top: -13px;
 }
 
 .heatmap-chart__rows .row .substance-cell.highlighted:after {
   position: absolute;
-  top: -1px;
+  top: -3px;
   right: -1px;
   bottom: -1px;
 
@@ -203,7 +203,7 @@
 }
 
 .heatmap-chart__rows .row.pushed .substance-cell.highlighted:after {
-  top: -11px;
+  top: -13px;
 }
 
 .heatmap-chart__header .substance-caption.overall,
