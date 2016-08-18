@@ -9,5 +9,5 @@ app.directive 'overflow', ->
       else
         $element.removeClass 'overflow'
       return
-      
+
     return

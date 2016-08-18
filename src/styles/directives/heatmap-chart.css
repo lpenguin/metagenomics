@@ -5,7 +5,7 @@
 }
 
 .heatmap-chart__header {
-  margin-left: 156px;
+  margin-left: 155px;
 }
 
 .heatmap-chart__header .resistance-group {
@@ -82,7 +82,7 @@
 .heatmap-chart__rows .row .name {
   overflow: hidden;
 
-  width: 111px;
+  width: 110px;
   margin: 3px 0 3px 0;
 
   white-space: nowrap;
@@ -90,7 +90,7 @@
 }
 
 .heatmap-chart__rows .row.with-flag .name {
-  width: 90px;
+  width: 89px;
   margin-left: 5px;
 }
 
