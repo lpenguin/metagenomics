@@ -109,6 +109,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
           s[resistance][substance]
 
       eventData =
+        countryName: cohort.flag
         abundanceValue: cohort.abundances[resistance][substance]
         nOfSamples: substanceSamples.length
 
@@ -118,6 +119,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
     $scope.substanceCellMouseout = ->
       eventData =
+        countryName: undefined
         abundanceValue: undefined
         nOfSamples: undefined
 
