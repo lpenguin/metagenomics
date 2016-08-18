@@ -1,8 +1,8 @@
 <div class="substance-filter">
   <div
     class="substance-filter__toggle"
-    data-ng-class="{'activated': isListShown}"
-    data-ng-click="toggleList()">{{'Resistomap for ' + substanceFilterValue.title}}</div>
+    data-ng-class="{'activated': isListShown, 'highlighted': !substanceFilterValue.parent}"
+    data-ng-click="toggleList()">{{substanceFilterValue.title}}</div>
   <div
     class="substance-filter__dropdown"
     data-ng-style="{'visibility': isListShown ? 'visible' : 'hidden'}">

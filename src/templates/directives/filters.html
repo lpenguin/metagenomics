@@ -1,9 +1,8 @@
 <div class="filters">
-  <div class="filters__substance-filter">
-    <substance-filter
-      data-data="data"></substance-filter>
-  </div>
   <div class="filters__study-country-filters">
+    <substance-filter
+      class="inline"
+      data-data="data"></substance-filter>
     <custom-select
       class="inline"
       data-ng-repeat="filter in studyCountryFilters track by $index"

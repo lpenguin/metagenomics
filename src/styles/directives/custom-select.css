@@ -13,6 +13,9 @@
 }
 
 .custom-select__toggle {
+  position: relative;
+  z-index: 100;
+
   overflow: hidden;
 
   box-sizing: border-box;
