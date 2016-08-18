@@ -4,15 +4,18 @@
   font-family: $helvetica-neue-regular;
 }
 
-.heatmap-chart__header {
+.heatmap-chart__header,
+.heatmap-chart__footer {
   margin-left: 155px;
 }
 
-.heatmap-chart__header .resistance-group {
+.heatmap-chart__header .resistance-group,
+.heatmap-chart__footer .resistance-group {
   position: relative;
 }
 
-.heatmap-chart__header .resistance-caption {
+.heatmap-chart__header .resistance-caption,
+.heatmap-chart__footer .resistance-caption {
   position: absolute;
   top: 0;
   left: 1px;
@@ -23,17 +26,17 @@
   font-weight: bold;
 }
 
-.heatmap-chart__header .resistance-caption .tail {
+.heatmap-chart__header .resistance-caption .tail,
+.heatmap-chart__footer .resistance-caption .tail {
   color: #ccc;
 
   font-size: $s-font-size;
   font-weight: normal;
 }
 
-.heatmap-chart__header .substance-caption {
+.heatmap-chart__header .substance-caption,
+.heatmap-chart__footer .substance-caption {
   position: relative;
-
-  margin-top: 20px;
 
   background-color: #fff;
 
@@ -41,21 +44,29 @@
   line-height: 1;
 }
 
-.heatmap-chart__header .substance-caption.highlighted {
+.heatmap-chart__header .substance-caption {
+  margin-top: 20px;
+}
+
+.heatmap-chart__header .substance-caption.highlighted,
+.heatmap-chart__footer .substance-caption.highlighted {
   z-index: 1;
 
   font-weight: bold;
 }
 
-.heatmap-chart__header .substance-caption.full {
+.heatmap-chart__header .substance-caption.full,
+.heatmap-chart__footer .substance-caption.full {
   z-index: 2;
 }
 
-.heatmap-chart__header .substance-caption:not(.overall) {
+.heatmap-chart__header .substance-caption:not(.overall),
+.heatmap-chart__footer .substance-caption:not(.overall) {
   text-align: center;
 }
 
-.heatmap-chart__header .substance-caption::after {
+.heatmap-chart__header .substance-caption::after,
+.heatmap-chart__footer .substance-caption::after {
   position: absolute;
 
   visibility: hidden;
@@ -69,7 +80,9 @@
 }
 
 .heatmap-chart__header .substance-caption.highlighted::after,
-.heatmap-chart__header .substance-caption.full::after {
+.heatmap-chart__header .substance-caption.full::after,
+.heatmap-chart__footer .substance-caption.highlighted::after,
+.heatmap-chart__footer .substance-caption.full::after {
   visibility: visible;
 }
 
@@ -134,12 +147,14 @@
 }
 
 .heatmap-chart__header .resistance-group ~ .resistance-group,
-.heatmap-chart__rows .row .resistance-group ~ .resistance-group {
+.heatmap-chart__rows .row .resistance-group ~ .resistance-group,
+.heatmap-chart__footer .resistance-group ~ .resistance-group {
   margin-left: 20px;
 }
 
 .heatmap-chart__header .substance-caption,
-.heatmap-chart__rows .row .substance-cell {
+.heatmap-chart__rows .row .substance-cell,
+.heatmap-chart__footer .substance-caption {
   width: 15px;
 
   border: 1px solid #fff;
@@ -192,7 +207,8 @@
 }
 
 .heatmap-chart__header .substance-caption.overall,
-.heatmap-chart__rows .row .substance-cell.overall {
+.heatmap-chart__rows .row .substance-cell.overall,
+.heatmap-chart__footer .substance-caption.overall {
   width: 50px;
 }
 

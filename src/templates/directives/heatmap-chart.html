@@ -52,4 +52,19 @@
       <br class="clear-both" />
     </div>
   </div>
+  <div class="heatmap-chart__footer">
+    <div
+      class="resistance-group inline"
+      data-ng-repeat="(r, substances) in data.resistances track by $index">
+      <div
+        class="substance-caption inline"
+        data-ng-repeat="s in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
+        data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'full': r === tempResistance && s === tempSubstance}"
+        once-class="{'overall': s === 'overall'}"
+        once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"
+        once once-attr-data-after-content="s === 'overall' ? '' : s.substring(1)"></div>
+      <br class="clear-both" />
+    </div>
+    <br class="clear-both" />
+  </div>
 </div>
