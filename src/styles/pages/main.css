@@ -1,5 +1,24 @@
 @import '../variables';
 
+.header {
+  position: absolute;
+  top: 30px;
+  left: $common-offset;
+
+  font-family: $helvetica-neue-regular;
+}
+
+.header__main-caption {
+  letter-spacing: 5px;
+
+  font-size: $h-font-size;
+  font-weight: bold;
+}
+
+.header__sub-caption {
+  font-size: $l-font-size;
+}
+
 .tip-container {
   position: absolute;
   top: 30px;

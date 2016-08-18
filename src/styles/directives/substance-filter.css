@@ -19,7 +19,7 @@
   overflow: hidden;
 
   box-sizing: border-box;
-  width: 220px;
+  width: 230px;
   padding: 5px 24px 5px 10px;
 
   white-space: nowrap;
@@ -29,7 +29,7 @@
   border-radius: 8px;
   background-color: #fff;
 
-  line-height: 1;
+  line-height: 18px;
 }
 
 .substance-filter__toggle.activated {
