@@ -1,7 +1,7 @@
 @import '../variables';
 
 .info-block {
-  height: 172px;
+  height: 186px;
 
   font-family: $helvetica-neue-regular;
 }

@@ -102,16 +102,11 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
     # Events →
     $scope.substanceCellMouseover = (cohort, resistance, substance) ->
-      substanceSamples = cohort.samples.filter (s) ->
-        if substance is 'overall'
-          _.some s[resistance], (s) -> s
-        else
-          s[resistance][substance]
-
       eventData =
         countryName: cohort.flag
         abundanceValue: cohort.abundances[resistance][substance]
-        nOfSamples: substanceSamples.length
+        abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
+        nOfSamples: cohort.samples.length
 
       $rootScope.$broadcast 'heatmap.cellChanged', eventData
       $rootScope.$broadcast 'heatmap.substanceChanged', if substance is 'overall' then resistance else substance
@@ -121,6 +116,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       eventData =
         countryName: undefined
         abundanceValue: undefined
+        abundanceValueType: undefined
         nOfSamples: undefined
 
       $rootScope.$broadcast 'heatmap.cellChanged', eventData

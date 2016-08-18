@@ -23,6 +23,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     $scope.$on 'heatmap.cellChanged', (event, eventData) ->
       $scope.countryName = eventData.countryName
       $scope.abundanceValue = eventData.abundanceValue
+      $scope.abundanceValueType = eventData.abundanceValueType
       $scope.nOfSamples = eventData.nOfSamples
 
       $scope.legendPointerY = getLegendPointerY eventData.abundanceValue

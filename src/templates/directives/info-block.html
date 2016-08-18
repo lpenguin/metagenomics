@@ -33,5 +33,8 @@
         data-ng-bind-html="tickValue | prepareAbundanceValue | trust"></div>
     </div>
   </div>
-  <div class="info-block__n-of-samples">{{nOfSamples === undefined ? '' : ((nOfSamples ? nOfSamples : 'No') + (nOfSamples === 1 ? ' sample' : ' samples'))}}</div>
+  <div class="info-block__n-of-samples">
+    <div>{{nOfSamples === undefined ? '' : abundanceValueType + ' among'}}</div>
+    <div>{{nOfSamples === undefined ? '' : nOfSamples + (nOfSamples === 1 ? ' sample' : ' samples')}}</div>
+  </div>
 </div>
