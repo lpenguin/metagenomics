@@ -15,7 +15,7 @@
 
 .substance-filter__toggle {
   position: absolute;
-  z-index: 999;
+  z-index: 99;
 
   overflow: hidden;
 
@@ -64,7 +64,7 @@
 
 .substance-filter__dropdown {
   position: absolute;
-  z-index: 99;
+  z-index: 98;
   top: 35px;
 
   width: 630px;
