@@ -106,10 +106,12 @@
   overflow: hidden;
 
   width: 110px;
-  margin: 3px 0 3px 0;
+  margin-top: 4px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
+
+  line-height: $s-font-size;
 }
 
 .heatmap-chart__rows .row.with-flag .name {
@@ -141,9 +143,11 @@
 
 .heatmap-chart__rows .row .n-of-samples {
   width: 30px;
-  margin: 3px 10px 3px 5px;
+  margin: 4px 10px 0 5px;
 
   text-align: right;
+
+  line-height: $s-font-size;
 }
 
 .heatmap-chart__header .resistance-group ~ .resistance-group,
