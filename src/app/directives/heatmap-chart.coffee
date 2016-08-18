@@ -125,10 +125,13 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
     # → Events
     $scope.$on 'filters.substanceChanged', (event, eventData) ->
+      $scope.tempResistance = if eventData.resistance then eventData.resistance else eventData.substance
+      $scope.tempSubstance = if eventData.resistance then eventData.substance else 'overall'
+
       return if eventData.isSubstanceChangedFromOutside
 
-      $scope.resistance = if eventData.resistance then eventData.resistance else eventData.substance
-      $scope.substance = if eventData.resistance then eventData.substance else 'overall'
+      $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
+      $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
       return
 
     $scope.$on 'filters.groupingChanged', (event, eventData) ->
