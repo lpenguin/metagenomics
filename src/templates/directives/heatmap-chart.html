@@ -15,7 +15,7 @@
         data-ng-class="{'highlighted': r === resistance && s === substance}"
         once-class="{'overall': s === 'overall'}"
         once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"
-        once-title="s === 'overall' ? '' : s"></div>
+        once once-attr-data-after-content="s === 'overall' ? '' : s.substring(1)"></div>
       <br class="clear-both" />
     </div>
     <br class="clear-both" />
@@ -29,7 +29,9 @@
         class="flag inline"
         data-ng-if="cohort.flag"
         data-ng-src="img/flags/{{cohort.flag}}.png" />
-      <div class="name inline" overflow>
+      <div
+        class="name inline"
+        overflow>
         <span class="short">{{cohort.name}}</span>
         <span class="full">{{cohort.name}}</span>
       </div>

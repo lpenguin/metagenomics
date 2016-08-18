@@ -45,6 +45,24 @@
   text-align: center;
 }
 
+.heatmap-chart__header .substance-caption::after {
+  position: absolute;
+  z-index: 1;
+
+  visibility: hidden;
+
+  padding-right: 2px;
+
+  content: attr(data-after-content);
+  white-space: nowrap;
+
+  background-color: #fff;
+}
+
+.heatmap-chart__header .substance-caption.highlighted::after {
+  visibility: visible;
+}
+
 .heatmap-chart__rows {
   font-size: $s-font-size;
 }
