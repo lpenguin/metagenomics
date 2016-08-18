@@ -78,6 +78,7 @@
 
 .heatmap-chart__rows .row .name .full {
   position: absolute;
+  z-index: 1;
 
   display: none;
 
