@@ -43,7 +43,7 @@
   box-sizing: border-box;
   width: 600px;
   height: 500px;
-  padding: 30px 20px 20px 20px;
+  padding: 30px 40px 20px 20px;
 
   transform: translate(-50%, -50%);
 
@@ -76,4 +76,8 @@
 
   font-size: $xxl-font-size;
   line-height: 20px;
+}
+
+.tip__info h3 {
+  margin: 0 0 15px 0;
 }
