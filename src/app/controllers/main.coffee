@@ -11,15 +11,19 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
       continent: d.continent
       name: d.name
 
-    substances = _.values rawData[3].categories
+    $scope.data.substances = _.values rawData[3].categories
+      .map (substance) ->
+        name: substance['category_name']
+        resistance: substance['group']
+        link: substance['info_link']
 
     $scope.data.resistances = {}
 
-    _.uniq _.map substances, 'group'
+    _.uniq _.map $scope.data.substances, 'resistance'
       .sort tools.sortAlphabeticaly
       .forEach (resistance) ->
-        resistanceSubstances = substances.filter (s) -> s.group is resistance
-        $scope.data.resistances[resistance] = _.uniq _.map resistanceSubstances, 'category_name'
+        resistanceSubstances = $scope.data.substances.filter (s) -> s.resistance is resistance
+        $scope.data.resistances[resistance] = _.uniq _.map resistanceSubstances, 'name'
           .sort tools.sortAlphabeticaly
         return
 
