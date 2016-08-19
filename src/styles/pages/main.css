@@ -38,18 +38,24 @@
   margin: 18px 0 0 40px;
 }
 
-.datalab-footer {
+.footer {
   margin: 50px $common-offset 30px $common-offset;
 
   font-family: $helvetica-neue-regular;
+}
+
+.footer__info {
+  width: 880px;
+  line-height: 1.5;
   font-size: $s-font-size;
 }
 
-.datalab-footer__dl-caption {
-  font-family: $garamond-original-italic;
-  font-size: $dl-font-size;
+.footer .likely {
+  float: right;
+  margin-top: 12px;
 }
 
-.datalab-footer__additional-info {
-  margin: 5px 0 0 0;
+.footer__dl-caption {
+  font-family: $garamond-original-italic;
+  font-size: $dl-font-size;
 }

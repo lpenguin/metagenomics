@@ -23,17 +23,26 @@
     </div>
     <br class="clear-both" />
   </div>
-  <div class="datalab-footer">
-    <div class="datalab-footer__typical-info">Visualization by <a class="common-link" href="http://www.datalaboratory.pro/" target="_blank"><span class="datalab-footer__dl-caption">Data Laboratory</span></a>. This work was financially supported by Russian Scientific Foundation (grant #15-14-00066).</div>
-    <div class="datalab-footer__additional-info">Metagenomic data from
-      <span data-ng-repeat="s in studies track by $index">
-        <a
-          class="common-link"
-          target="_blank"
-          once-href="s.link"
-          once-text="s.name"></a>{{$index === studies.length - 1 ? '.' : ','}}
-      </span>
+  <div class="footer">
+    <div class="footer__info inline">
+      <p>Visualization by <a class="common-link" href="http://www.datalaboratory.pro/" target="_blank"><span class="footer__dl-caption">Data Laboratory</span></a>. This work was financially supported by Russian Scientific Foundation (grant #15-14-00066).</p>
+      <p>Metagenomic data from
+        <span data-ng-repeat="s in studies track by $index">
+          <a
+            class="common-link"
+            target="_blank"
+            once-href="s.link"
+            once-text="s.name"></a>{{$index === studies.length - 1 ? '.' : ','}}
+        </span>
+      </p>
+      <p>Antibiotic and drug data from <a class="common-link" href="https://card.mcmaster.ca/" target="_blank">CARD database</a>, <a class="common-link" href="http://bacmet.biomedicine.gu.se/" target="_blank">BacMet database</a>.</p>
     </div>
-    <div class="datalab-footer__additional-info">Antibiotic and drug data from <a class="common-link" href="https://card.mcmaster.ca/" target="_blank">CARD database</a>, <a class="common-link" href="http://bacmet.biomedicine.gu.se/" target="_blank">BacMet database</a>.</div>
+    <div class="likely inline">
+      <div class="twitter" data-via="datalaboratory" data-title="Resistomap:">Tweet</div>
+      <div class="facebook">Share</div>
+      <div class="vkontakte" data-title="Resistomap: http://resistomap.datalaboratory.ru/">Share</div>
+      <div class="pinterest" data-media="http://resistomap.datalaboratory.ru/img/social/i.png" data-title="Resistomap: http://resistomap.datalaboratory.ru/">Pin</div>
+    </div>
+    <br class="clear-both" />
   </div>
 </div>
