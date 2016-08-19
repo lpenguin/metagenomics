@@ -25,6 +25,15 @@
   </div>
   <div class="datalab-footer">
     <div class="datalab-footer__typical-info">Visualization by <a class="common-link" href="http://www.datalaboratory.pro/" target="_blank"><span class="datalab-footer__dl-caption">Data Laboratory</span></a>. This work was financially supported by Russian Scientific Foundation (grant #15-14-00066).</div>
-    <div class="datalab-footer__additional-info">{{studies ? ('Data from ' + studies + '.') : ''}}</div>
+    <div class="datalab-footer__additional-info">Metagenomic data from
+      <span data-ng-repeat="s in studies track by $index">
+        <a
+          class="common-link"
+          target="_blank"
+          once-href="s.link"
+          once-text="s.name"></a>{{$index === studies.length - 1 ? '.' : ','}}
+      </span>
+    </div>
+    <div class="datalab-footer__additional-info">Antibiotic and drug data from <a class="common-link" href="https://card.mcmaster.ca/" target="_blank">CARD database</a>, <a class="common-link" href="http://bacmet.biomedicine.gu.se/" target="_blank">BacMet database</a>.</div>
   </div>
 </div>
