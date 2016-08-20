@@ -33,8 +33,18 @@
         data-ng-bind-html="tickValue | prepareAbundanceValue | trust"></div>
     </div>
   </div>
-  <div class="info-block__n-of-samples">
-    <div>{{nOfSamples === undefined ? '' : abundanceValueType + ' among'}}</div>
-    <div>{{nOfSamples === undefined ? '' : nOfSamples + (nOfSamples === 1 ? ' sample' : ' samples')}}</div>
+  <div
+    class="info-block__n-of-samples"
+    data-ng-show="nOfSamples">
+    <div>{{abundanceValueType + ' among'}}</div>
+    <div>{{nOfSamples + (nOfSamples === 1 ? ' sample' : ' samples')}}</div>
+  </div>
+  <div
+    class="info-block__info-link"
+    data-ng-show="infoLink">
+    <a
+      class="common-link"
+      target="_blank"
+      data-ng-href="{{infoLink}}">{{substance}}</a> on CARD database
   </div>
 </div>

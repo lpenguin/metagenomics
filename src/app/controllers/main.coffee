@@ -15,7 +15,7 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
       .map (substance) ->
         name: substance['category_name']
         resistance: substance['group']
-        link: substance['info_link']
+        infoLink: substance['info_link']
 
     $scope.data.resistances = {}
 

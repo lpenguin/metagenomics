@@ -59,10 +59,16 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
 
     # Events →
     $scope.$watch 'substanceFilterValue', ->
+      infoLink = undefined
+      
+      if $scope.substanceFilterValue.parent
+        infoLink = _.find($scope.data.substances, 'name': $scope.substanceFilterValue.value)['infoLink']
+
       eventData =
         resistance: $scope.substanceFilterValue.parent
         substance: $scope.substanceFilterValue.value
         isSubstanceChangedFromOutside: isSubstanceChangedFromOutside
+        infoLink: infoLink
 
       $rootScope.$broadcast 'filters.substanceChanged', eventData
 

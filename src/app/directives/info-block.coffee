@@ -18,6 +18,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     # → Events
     $scope.$on 'filters.substanceChanged', (event, eventData) ->
       $scope.substance = eventData.substance
+      $scope.infoLink = eventData.infoLink
       return
 
     $scope.$on 'heatmap.cellChanged', (event, eventData) ->

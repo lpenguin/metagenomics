@@ -1,7 +1,9 @@
 @import '../variables';
 
 .info-block {
-  height: 186px;
+  position: relative;
+
+  height: 235px;
 
   font-family: $helvetica-neue-regular;
 }
@@ -74,6 +76,15 @@
 
 .info-block__n-of-samples {
   margin-top: 10px;
+
+  font-size: $s-font-size;
+}
+
+.info-block__info-link {
+  position: absolute;
+  top: 220px;
+
+  white-space: nowrap;
 
   font-size: $s-font-size;
 }
