@@ -20,13 +20,19 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     pathGenerator = d3.geo.path()
       .projection projection
 
-    redrawMap = (mapTranslate, mapScale) ->
+    redrawMap = (mapTranslate, mapScale, immediately) ->
       projection
         .translate mapTranslate
         .scale mapScale
 
-      d3element.selectAll 'path'
-        .attr 'd', pathGenerator
+      if immediately
+        d3element.selectAll '.country'
+          .attr 'd', pathGenerator
+      else
+        d3element.selectAll '.country'
+          .transition()
+          .duration 500
+          .attr 'd', pathGenerator
       return
 
     zoom = d3.behavior.zoom()
@@ -35,7 +41,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           $('body').css 'cursor': 'all-scroll'
         return
       .on 'zoom', ->
-        redrawMap zoom.translate(), zoom.scale()
+        redrawMap zoom.translate(), zoom.scale(), true
         return
       .on 'zoomend', ->
         if d3.event.sourceEvent?.type is 'mouseup'
@@ -70,7 +76,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
 
     # Prepare countries and assign Events →
     countriesG.selectAll 'path'
-      .data topojson.feature($scope.mapData, $scope.mapData.objects.countries).features
+      .data topojson.feature($scope.mapData, $scope.mapData.objects['ru_world']).features
       .enter()
       .append 'path'
       .classed 'country', true
@@ -166,13 +172,13 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         .translate [width / 2, height /2]
         .scale minZoom
 
-      redrawMap zoom.translate(), zoom.scale()
+      redrawMap zoom.translate(), zoom.scale(), false
       return
 
     # Resize
     $(window).on 'resize', ->
       width = $element.width()
-      minZoom = width / 5
+      minZoom = width / 6
       maxZoom = minZoom * 5
 
       underlay.attr 'width', width

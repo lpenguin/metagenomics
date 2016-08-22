@@ -7,9 +7,8 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
     $scope.data = {}
 
     $scope.data.countries = rawData[1].map (d) ->
-      code: parseInt d['iso_3166_code']
-      continent: d.continent
       name: d.name
+      code: d.code
 
     $scope.data.substances = _.values rawData[3].categories
       .map (substance) ->
