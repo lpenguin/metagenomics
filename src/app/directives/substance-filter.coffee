@@ -60,15 +60,19 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
     # Events →
     $scope.$watch 'substanceFilterValue', ->
       infoLink = undefined
-      
-      if $scope.substanceFilterValue.parent
-        infoLink = _.find($scope.data.substances, 'name': $scope.substanceFilterValue.value)['infoLink']
+      database = undefined
+
+      if $scope.substanceFilterValue.value.indexOf('ABX') is -1
+        substance = _.find $scope.data.substances, 'name': $scope.substanceFilterValue.value
+        infoLink = substance['infoLink']
+        database = if substance['resistance'].indexOf('ABX') is -1 then 'BacMet' else 'CARD'
 
       eventData =
         resistance: $scope.substanceFilterValue.parent
         substance: $scope.substanceFilterValue.value
         isSubstanceChangedFromOutside: isSubstanceChangedFromOutside
         infoLink: infoLink
+        database: database
 
       $rootScope.$broadcast 'filters.substanceChanged', eventData
 
