@@ -87,7 +87,9 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
 
     $scope.initializing = false
     $scope.$apply()
-    $timeout -> $('.loading-cover').fadeOut()
+    $timeout ->
+      $('.loading-cover').fadeOut()
+    , 500
     return
 
   dataLoader
