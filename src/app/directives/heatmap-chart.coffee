@@ -101,7 +101,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       colorScale.getColorByValue cohort.abundances[resistance][substance]
 
     # Events →
-    $scope.substanceCellMouseover = (cohort, resistance, substance) ->
+    $scope.substanceCellMouseOver = (cohort, resistance, substance) ->
       eventData =
         countryName: _.find($scope.data.countries, 'code': cohort.flag)['name']
         flag: cohort.flag
@@ -113,9 +113,13 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       $rootScope.$broadcast 'heatmap.substanceChanged', if substance is 'overall' then resistance else substance
       return
 
-    $scope.substanceCellMouseout = ->
+    $scope.substanceCellMouseOut = ->
       $rootScope.$broadcast 'heatmap.cellChanged', {}
       $rootScope.$broadcast 'heatmap.substanceChanged', undefined
+      return
+
+    $scope.substanceCellMouseClick = ->
+      $rootScope.$broadcast 'heatmap.defaultSubstanceChanged'
       return
 
     # → Events

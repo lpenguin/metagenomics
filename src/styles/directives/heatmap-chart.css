@@ -56,7 +56,9 @@
 }
 
 .heatmap-chart__header .substance-caption.full,
-.heatmap-chart__footer .substance-caption.full {
+.heatmap-chart__header .substance-caption:hover,
+.heatmap-chart__footer .substance-caption.full,
+.heatmap-chart__footer .substance-caption:hover {
   z-index: 2;
 }
 
@@ -81,8 +83,10 @@
 
 .heatmap-chart__header .substance-caption.highlighted::after,
 .heatmap-chart__header .substance-caption.full::after,
+.heatmap-chart__header .substance-caption:hover::after,
 .heatmap-chart__footer .substance-caption.highlighted::after,
-.heatmap-chart__footer .substance-caption.full::after {
+.heatmap-chart__footer .substance-caption.full::after,
+.heatmap-chart__footer .substance-caption:hover::after {
   visibility: visible;
 }
 
@@ -165,6 +169,7 @@
 
   height: 18px;
 
+  cursor: pointer;
   transition: background-color .25s linear;
 }
 

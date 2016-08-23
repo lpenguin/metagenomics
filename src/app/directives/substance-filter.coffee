@@ -57,8 +57,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
       $scope.isListShown = false
       return
 
-    # Events →
-    $scope.$watch 'substanceFilterValue', ->
+    prepareInfoBlockData = ->
       infoLink = undefined
       database = undefined
 
@@ -74,7 +73,11 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
         infoLink: infoLink
         database: database
 
-      $rootScope.$broadcast 'filters.substanceChanged', eventData
+      eventData
+
+    # Events →
+    $scope.$watch 'substanceFilterValue', ->
+      $rootScope.$broadcast 'filters.substanceChanged', prepareInfoBlockData()
 
       if isSubstanceChangedFromOutside
         isSubstanceChangedFromOutside = false
@@ -90,6 +93,12 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
         $scope.substanceFilterValue = _.find $scope.dataset, 'value': eventData
       else
         $scope.substanceFilterValue = defaultSubstanceFilterValue
+      return
+
+    $scope.$on 'heatmap.defaultSubstanceChanged', (event) ->
+      $rootScope.$broadcast 'filters.substanceChanged', prepareInfoBlockData()
+
+      defaultSubstanceFilterValue = $scope.substanceFilterValue
       return
 
     return

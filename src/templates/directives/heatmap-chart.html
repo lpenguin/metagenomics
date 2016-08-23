@@ -43,8 +43,9 @@
           data-ng-repeat="s in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
           data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'top': !$parent.$parent.$index, 'bottom': $parent.$parent.$index === cohorts.length - 1}"
           data-ng-style="{'background-color': getCellColor(cohort, r, s)}"
-          data-ng-mouseover="substanceCellMouseover(cohort, r, s)"
-          data-ng-mouseout="substanceCellMouseout()"
+          data-ng-mouseover="substanceCellMouseOver(cohort, r, s)"
+          data-ng-mouseout="substanceCellMouseOut()"
+          data-ng-click="substanceCellMouseClick()"
           once-class="{'overall': s === 'overall'}"></div>
         <br class="clear-both" />
       </div>
