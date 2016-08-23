@@ -25,10 +25,9 @@
       class="row"
       data-ng-repeat="cohort in cohorts track by $index"
       data-ng-class="{'pushed': cohort.isPushed, 'with-flag': cohort.flag}">
-      <img
-        class="flag inline"
-        data-ng-if="cohort.flag"
-        data-ng-src="img/flags/{{cohort.flag}}.png" />
+      <i
+        class="flag {{'twemoji-' + cohort.flag.toLowerCase()}} inline"
+        data-ng-if="cohort.flag"></i>
       <div
         class="name inline"
         overflow>

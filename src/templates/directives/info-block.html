@@ -2,10 +2,9 @@
   <div class="info-block__header">
     <div>{{substance}}</div>
     <div class="inline">{{countryName ? 'in ' + countryName : 'resistance level'}}</div>
-    <img
-      class="flag inline"
-      data-ng-if="countryName"
-      data-ng-src="img/flags/{{countryName}}.png" />
+    <i
+      class="flag {{'twemoji-' + flag.toLowerCase()}} inline"
+      data-ng-if="countryName"></i>
     <br class="clear-both" />
   </div>
   <div class="info-block__legend">

@@ -15,9 +15,7 @@ app.directive 'filters', ($rootScope) ->
     $scope.studyCountryFiltersValues = {}
 
     filteringFields.forEach (ff) ->
-      plural =
-        title: undefined
-        value: undefined
+      plural = {}
 
       if ff is 'f-studies'
         plural.title = 'all studies'

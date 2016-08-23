@@ -98,10 +98,6 @@
   margin-top: 10px;
 }
 
-.heatmap-chart__rows .row .flag {
-  margin-top: 4px;
-}
-
 .heatmap-chart__rows .row .name {
   overflow: hidden;
 
@@ -115,7 +111,7 @@
 }
 
 .heatmap-chart__rows .row.with-flag .name {
-  width: 89px;
+  width: 87px;
   margin-left: 5px;
 }
 

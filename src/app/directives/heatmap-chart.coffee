@@ -38,7 +38,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         return unless cohortSamples.length
         return if cohortSamples.length is samples.length
 
-        flag = if order[0] is 'f-countries' then p[0] else undefined
+        flag = if order[0] is 'f-countries' then _.find($scope.data.countries, 'name': p[0])['code'] else undefined
         name = (if order[0] is 'f-countries' and p.length > 1 then _.tail(p) else p).join ', '
 
         previousCohort = _.last permutationsCohorts
@@ -77,7 +77,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
         return unless rootSamples.length
 
-        flag = if countries and not studies then countries else undefined
+        flag = if countries and not studies then _.find($scope.data.countries, 'name': countries)['code'] else undefined
         name = if studies and countries then [studies, countries].join(', ') else studies or countries
 
         $scope.cohorts.push
@@ -103,7 +103,8 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
     # Events →
     $scope.substanceCellMouseover = (cohort, resistance, substance) ->
       eventData =
-        countryName: cohort.flag
+        countryName: _.find($scope.data.countries, 'code': cohort.flag)['name']
+        flag: cohort.flag
         abundanceValue: cohort.abundances[resistance][substance]
         abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
         nOfSamples: cohort.samples.length
@@ -113,13 +114,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       return
 
     $scope.substanceCellMouseout = ->
-      eventData =
-        countryName: undefined
-        abundanceValue: undefined
-        abundanceValueType: undefined
-        nOfSamples: undefined
-
-      $rootScope.$broadcast 'heatmap.cellChanged', eventData
+      $rootScope.$broadcast 'heatmap.cellChanged', {}
       $rootScope.$broadcast 'heatmap.substanceChanged', undefined
       return
 
