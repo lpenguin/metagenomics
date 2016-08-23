@@ -83,6 +83,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       .enter()
       .append 'path'
       .classed 'country', true
+      .attr 'id', (d) -> d.id
       .on 'mouseover', (d) ->
         reattach @
 
@@ -174,27 +175,17 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           .map (name) ->
             country = _.find $scope.data.countries, 'name': name
             country.code
-        xMin = Infinity
-        xMax = -Infinity
-        yMin = Infinity
-        yMax = -Infinity
-
-        d3element.selectAll '.country'
-          .filter (d) -> countryCodes.indexOf(d.id) isnt -1
-          .each (d) ->
-            bounds = pathGenerator.bounds d
-            xMin = Math.min xMin, bounds[0][0]
-            xMax = Math.max xMax, bounds[1][0]
-            yMin = Math.min yMin, bounds[0][1]
-            yMax = Math.max yMax, bounds[1][1]
-            return
-
-        dx = xMax - xMin
-        dy = yMax - yMin
-        x = (xMin + xMax) / 2
-        y = (yMin + yMax) / 2
+          .sort()
+        countryCode = countryCodes[0]
+        scaleCoeff = if countryCodes.length > 1 then .5 else .9
+        countryPath = d3element.select '#' + countryCode
+        bounds = pathGenerator.bounds countryPath.datum()
+        dx = bounds[1][0] - bounds[0][0]
+        dy = bounds[1][1] - bounds[0][1]
+        x = (bounds[0][0] + bounds[1][0]) / 2
+        y = (bounds[0][1] + bounds[1][1]) / 2
         oldScale = zoom.scale()
-        newScale = Math.max minZoom, Math.min(maxZoom, .9 / Math.max(dx / width / oldScale, dy / height / oldScale))
+        newScale = Math.max minZoom, Math.min(maxZoom, scaleCoeff / Math.max(dx / width / oldScale, dy / height / oldScale))
         oldTranslate = zoom.translate()
         newTranslate = [
           (oldTranslate[0] - x) * newScale / oldScale + width / 2
