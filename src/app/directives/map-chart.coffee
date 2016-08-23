@@ -12,6 +12,8 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     height = $element.height()
     width = undefined
     minZoom = undefined
+    goodZoom = undefined
+    maxZoom = undefined
 
     projection = d3.geo.mercator()
       .center [0, 44]
@@ -20,18 +22,19 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     pathGenerator = d3.geo.path()
       .projection projection
 
-    redrawMap = (mapTranslate, mapScale, immediately) ->
+    redrawMap = (mapTranslate, mapScale, withAnimation, delay, duration) ->
       projection
         .translate mapTranslate
         .scale mapScale
 
-      if immediately
+      unless withAnimation
         d3element.selectAll '.country'
           .attr 'd', pathGenerator
       else
         d3element.selectAll '.country'
           .transition()
-          .duration 500
+          .delay delay
+          .duration duration
           .attr 'd', pathGenerator
       return
 
@@ -41,7 +44,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           $('body').css 'cursor': 'all-scroll'
         return
       .on 'zoom', ->
-        redrawMap zoom.translate(), zoom.scale(), true
+        redrawMap zoom.translate(), zoom.scale(), false
         return
       .on 'zoomend', ->
         if d3.event.sourceEvent?.type is 'mouseup'
@@ -137,10 +140,11 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         return
       return
 
-    paintMap = ->
+    paintMap = (delay, duration) ->
       d3element.selectAll '.country'
         .transition()
-        .duration 250
+        .delay delay
+        .duration duration
         .style 'fill', (d) ->
           value = undefined
 
@@ -152,16 +156,70 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           colorScale.getColorByValue value
       return
 
+    # Zoom in countries
+    zoomInCountries = (filteredSamples, delay, duration) ->
+      returnToDefault = filteredSamples.length is $scope.data.samples.length or
+      not filteredSamples.length
+      newScale = undefined
+      newTranslate = []
+
+      if returnToDefault
+        newScale = goodZoom
+        newTranslate = [
+          width / 2
+          height / 2
+        ]
+      else
+        countryCodes = _.uniq _.map filteredSamples, 'f-countries'
+          .map (name) ->
+            country = _.find $scope.data.countries, 'name': name
+            country.code
+        xMin = Infinity
+        xMax = -Infinity
+        yMin = Infinity
+        yMax = -Infinity
+
+        d3element.selectAll '.country'
+          .filter (d) -> countryCodes.indexOf(d.id) isnt -1
+          .each (d) ->
+            bounds = pathGenerator.bounds d
+            xMin = Math.min xMin, bounds[0][0]
+            xMax = Math.max xMax, bounds[1][0]
+            yMin = Math.min yMin, bounds[0][1]
+            yMax = Math.max yMax, bounds[1][1]
+            return
+
+        dx = xMax - xMin
+        dy = yMax - yMin
+        x = (xMin + xMax) / 2
+        y = (yMin + yMax) / 2
+        oldScale = zoom.scale()
+        newScale = Math.max minZoom, Math.min(maxZoom, .9 / Math.max(dx / width / oldScale, dy / height / oldScale))
+        oldTranslate = zoom.translate()
+        newTranslate = [
+          (oldTranslate[0] - x) * newScale / oldScale + width / 2
+          (oldTranslate[1] - y) * newScale / oldScale + height / 2
+        ]
+
+      zoom
+        .translate newTranslate
+        .scale newScale
+
+      redrawMap zoom.translate(), zoom.scale(), true, delay, duration
+      return
+
     # → Events
     $scope.$on 'filters.substanceChanged', (event, eventData) ->
       resistance = if eventData.resistance then eventData.resistance else eventData.substance
       substance = if eventData.resistance then eventData.substance else 'overall'
-      paintMap()
+      paintMap 0, 250
       return
 
     $scope.$on 'filters.filtersChanged', (event, eventData) ->
-      recalcCountryAbundances samplesFilter.getFilteredSamples $scope.data.samples, eventData
-      paintMap()
+      filteredSamples = samplesFilter.getFilteredSamples $scope.data.samples, eventData
+      recalcCountryAbundances filteredSamples
+      paintMap 0, 250
+      zoomInCountries filteredSamples, 300, 500
       return
 
     # Keyboard events
@@ -170,22 +228,23 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
 
       zoom
         .translate [width / 2, height /2]
-        .scale minZoom
+        .scale goodZoom
 
-      redrawMap zoom.translate(), zoom.scale(), false
+      redrawMap zoom.translate(), zoom.scale(), true, 0, 500
       return
 
     # Resize
     $(window).on 'resize', ->
       width = $element.width()
-      minZoom = width / 6
-      maxZoom = minZoom * 5
+      minZoom = width / 12
+      goodZoom = width / 6
+      maxZoom = width
 
       underlay.attr 'width', width
 
       zoom
         .translate [width / 2, height /2]
-        .scale minZoom
+        .scale goodZoom
         .scaleExtent [minZoom, maxZoom]
 
       svg
