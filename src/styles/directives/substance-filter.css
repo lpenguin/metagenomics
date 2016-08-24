@@ -110,7 +110,7 @@
 }
 
 .substance-filter__dropdown .item.selected {
-  background-color: #d8daeb;
+  background-color: rgba(0, 170, 152, .35);
 }
 
 .substance-filter__dropdown .item.pushed {
