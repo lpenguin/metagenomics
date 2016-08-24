@@ -4,13 +4,13 @@
   font-family: $helvetica-neue-regular;
 }
 
-.filters__study-country-filters {
+.filters__filters {
   position: absolute;
   top: 30px;
-  right: 90px;
+  left: 320px;
 }
 
-.filters__study-country-filters .custom-select {
+.filters__filters .custom-select {
   margin-left: 10px;
 }
 

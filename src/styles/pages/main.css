@@ -2,21 +2,27 @@
 
 .header {
   position: absolute;
-  top: 30px;
+  top: 28px;
   left: $common-offset;
 
-  font-family: $helvetica-neue-regular;
+  height: 390px;
+
+  text-transform: uppercase;
+
+  font-family: $syncopate;
+  font-size: $h-font-size;
 }
 
 .header__main-caption {
-  letter-spacing: 5px;
-
-  font-size: $h-font-size;
-  font-weight: bold;
+  font-weight: 700;
 }
 
 .header__sub-caption {
-  font-size: $l-font-size;
+  position: absolute;
+  bottom: 0;
+  font-weight: 400;
+
+  color: rgba(0, 0, 0, .5);
 }
 
 .tip-container {
