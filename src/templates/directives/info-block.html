@@ -24,7 +24,9 @@
       class="tick"
       data-ng-repeat="tickValue in legendScale.domain() track by $index"
       data-ng-style="{'bottom': legendScale(tickValue)}">
-      <div class="dash"></div>
+      <div
+        class="dash"
+        data-ng-if="$index"></div>
       <div
         class="caption"
         data-ng-if="$index && !($index % ((legendScale.domain().length - 1) / 2))"

@@ -103,7 +103,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
     # Events →
     $scope.substanceCellMouseOver = (cohort, resistance, substance) ->
       eventData =
-        countryName: _.find($scope.data.countries, 'code': cohort.flag)['name']
+        countryName: _.find($scope.data.countries, 'code': cohort.flag)?['name']
         flag: cohort.flag
         abundanceValue: cohort.abundances[resistance][substance]
         abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'

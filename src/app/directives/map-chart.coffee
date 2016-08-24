@@ -90,7 +90,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         return unless countryAbundances[d.id]
 
         eventData =
-          countryName: _.find($scope.data.countries, 'code': d.id).name
+          countryName: _.find($scope.data.countries, 'code': d.id)['name']
           flag: d.id
           abundanceValue: countryAbundances[d.id][resistance][substance]
           nOfSamples: nOfcountrySamples[d.id]
