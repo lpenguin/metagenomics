@@ -3,11 +3,9 @@
     <div
       class="resistance-group inline"
       data-ng-repeat="(r, substances) in data.resistances track by $index">
-      <div class="resistance-caption">
-        <span once-text="r.indexOf('ABX') !== -1 ? r.split(' ')[0] : r"></span>
-        <span
-          class="tail"
-          once-text="r.indexOf('ABX') !== -1 ? r.split(' ')[1] : ''"></span>
+      <div
+        class="resistance-caption"
+        once-text="r !== 'ABX determinants' ? r : 'Antibiotics (ABX) determinants'">
       </div>
       <div
         class="substance-caption inline"

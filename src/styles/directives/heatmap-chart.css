@@ -25,21 +25,13 @@
   font-weight: bold;
 }
 
-.heatmap-chart__header .resistance-caption .tail,
-.heatmap-chart__footer .resistance-caption .tail {
-  color: #ccc;
-
-  font-size: $s-font-size;
-  font-weight: normal;
-}
-
 .heatmap-chart__header .substance-caption,
 .heatmap-chart__footer .substance-caption {
   position: relative;
 
   background-color: #fff;
 
-  font-size: $s-font-size;
+  font-size: $m-font-size;
   line-height: 1;
 }
 
@@ -72,12 +64,12 @@
 
   visibility: hidden;
 
-  padding: 0 2px 2px 0;
+  padding: 0 7px 4px 0;
 
   content: attr(data-after-content);
   white-space: nowrap;
 
-  background-color: #fff;
+  background: linear-gradient(to right, #fff 90%, transparent);
 }
 
 .heatmap-chart__header .substance-caption.highlighted::after,
@@ -92,11 +84,11 @@
 .heatmap-chart__rows {
   margin: 5px 0 5px 0;
 
-  font-size: $s-font-size;
+  font-size: $m-font-size;
 }
 
 .heatmap-chart__rows .row {
-  height: 22px;
+  height: 24px;
 }
 
 .heatmap-chart__rows .row.pushed {
@@ -111,12 +103,12 @@
   overflow: hidden;
 
   width: 110px;
-  margin-top: 5px;
+  margin-top: 3px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  line-height: 13px;
+  line-height: 16px;
 }
 
 .heatmap-chart__rows .row.with-flag .name {
@@ -148,35 +140,35 @@
 
 .heatmap-chart__rows .row .n-of-samples {
   width: 30px;
-  margin: 5px 5px 0 5px;
+  margin: 3px 5px 0 5px;
 
   text-align: right;
 
-  line-height: 13px;
+  line-height: 16px;
 }
 
 .heatmap-chart__header .resistance-group ~ .resistance-group,
 .heatmap-chart__rows .row .resistance-group ~ .resistance-group,
 .heatmap-chart__footer .resistance-group ~ .resistance-group {
-  margin-left: 30px;
+  margin-left: 26px;
 }
 
 .heatmap-chart__header .substance-caption,
 .heatmap-chart__rows .row .substance-cell,
 .heatmap-chart__footer .substance-caption {
-  width: 18px;
+  width: 17px;
 }
 
 .heatmap-chart__header .substance-caption.overall,
 .heatmap-chart__rows .row .substance-cell.overall,
 .heatmap-chart__footer .substance-caption.overall {
-  width: 50px;
+  width: 46px;
 }
 
 .heatmap-chart__rows .row .substance-cell {
   position: relative;
 
-  height: 22px;
+  height: 24px;
 
   cursor: pointer;
   transition: background-color .25s linear;

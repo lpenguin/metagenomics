@@ -9,7 +9,7 @@
   color: #333;
 
   font-family: $helvetica-neue-regular;
-  font-size: $l-font-size;
+  font-size: $m-font-size;
 }
 
 .substance-filter__toggle {
@@ -25,8 +25,8 @@
   white-space: nowrap;
   text-overflow: ellipsis;
 
-  border: 1px solid #aaa;
-  border-radius: 8px;
+  border: 1px solid #0a9;
+  border-radius: 4px;
   background-color: #fff;
 
   line-height: 18px;
@@ -36,7 +36,7 @@
   height: 35px;
 
   border-bottom: none;
-  border-radius: 8px 8px 0 0;
+  border-radius: 4px 4px 0 0;
 }
 
 .substance-filter__toggle.highlighted {
@@ -74,8 +74,8 @@
   width: 630px;
   padding: 10px 0;
 
-  border: 1px solid #aaa;
-  border-radius: 0 8px 8px 8px;
+  border: 1px solid #0a9;
+  border-radius: 0 4px 4px 4px;
   background-color: #fff;
 }
 
@@ -94,7 +94,7 @@
 
   border-radius: 2px;
 
-  font-size: $l-font-size;
+  font-size: $m-font-size;
   line-height: 24px;
 }
 

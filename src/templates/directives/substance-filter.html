@@ -2,7 +2,7 @@
   <div
     class="substance-filter__toggle"
     data-ng-class="{'activated': isListShown, 'highlighted': !substanceFilterValue.parent}"
-    data-ng-click="toggleList()">{{substanceFilterValue.title}}</div>
+    data-ng-click="toggleList()">{{'for ' + substanceFilterValue.title}}</div>
   <div
     class="substance-filter__dropdown"
     data-ng-style="{'visibility': isListShown ? 'visible' : 'hidden'}">
