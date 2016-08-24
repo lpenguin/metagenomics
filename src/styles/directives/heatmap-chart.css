@@ -37,6 +37,11 @@
 
 .heatmap-chart__header .substance-caption {
   margin-top: 20px;
+  padding-bottom: 5px;
+}
+
+.heatmap-chart__footer .substance-caption {
+  padding-top: 5px;
 }
 
 .heatmap-chart__header .substance-caption.highlighted,
@@ -64,7 +69,7 @@
 
   visibility: hidden;
 
-  padding: 0 12px 4px 0;
+  padding: 0 12px 5px 0;
 
   content: attr(data-after-content);
   white-space: nowrap;
@@ -82,8 +87,6 @@
 }
 
 .heatmap-chart__rows {
-  margin: 5px 0 5px 0;
-
   font-size: $m-font-size;
 }
 
