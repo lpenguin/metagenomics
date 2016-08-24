@@ -5,34 +5,20 @@
 }
 
 .tip__question-button {
-  position: relative;
+  position: absolute;
+  top: 30px;
+  right: $common-offset;
 
-  box-sizing: border-box;
-  width: 30px;
-  height: 30px;
+  width: 24px;
+  height: 24px;
 
   cursor: pointer;
 
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  background-color: #fff;
+  background-image: url('../img/accessories/question-mark.png');
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 24px 24px;
 }
-
-.tip__question-button:after {
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-
-  content: '?';
-  text-align: center;
-
-  font-size: $l-font-size;
-  font-weight: bold;
-  line-height: 30px;
-}
-
 
 .tip__info {
   position: fixed;

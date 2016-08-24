@@ -105,12 +105,12 @@
   width: 380px;
 }
 
-.substance-filter__dropdown .item:hover {
-  background-color: #f2f4f6;
-}
-
 .substance-filter__dropdown .item.selected {
   background-color: rgba(0, 170, 152, .35);
+}
+
+.substance-filter__dropdown .item:not(.selected):hover {
+  background-color: #f2f4f6;
 }
 
 .substance-filter__dropdown .item.pushed {

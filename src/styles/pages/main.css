@@ -20,15 +20,10 @@
 .header__sub-caption {
   position: absolute;
   bottom: 0;
-  font-weight: 400;
 
   color: rgba(0, 0, 0, .5);
-}
 
-.tip-container {
-  position: absolute;
-  top: 30px;
-  right: $common-offset;
+  font-weight: 400;
 }
 
 .content__map-chart {
