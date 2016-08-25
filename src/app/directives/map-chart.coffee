@@ -15,9 +15,15 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     goodZoom = undefined
     maxZoom = undefined
 
+    strokeWidth = .5
+
+    countriesWithoutBorders = [
+      'RU'
+    ]
+
     projection = d3.geo.mercator()
       .center [0, 44]
-      .rotate [0, 0]
+      .rotate [-11, 0]
 
     pathGenerator = d3.geo.path()
       .projection projection
@@ -83,8 +89,12 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       .append 'path'
       .classed 'country', true
       .attr 'id', (d) -> d.id
+      .style 'stroke-width', (d) -> if countriesWithoutBorders.indexOf(d.id) isnt -1 then strokeWidth * 2 else strokeWidth
       .on 'mouseover', (d) ->
         reattach @
+
+        if countriesWithoutBorders.indexOf(d.id) isnt -1
+          reattach d3element.select('.country.without-borders#' + d.id).node()
 
         return unless countryAbundances[d.id]
 
@@ -101,6 +111,14 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         $rootScope.$broadcast 'map.countryInOut', {}
         $scope.$apply()
         return
+
+    countriesWithoutBorders.forEach (code) ->
+      countriesG.append 'path'
+        .datum _.find topojson.feature($scope.mapData, $scope.mapData.objects['ru_world']).features, 'id': code
+        .classed 'country without-borders', true
+        .attr 'id', code
+        .style 'stroke-width', strokeWidth * 2
+      return
 
     # Paint map
     samplesCountries = _.uniq _.map $scope.data.samples, 'f-countries'
@@ -157,7 +175,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     # Zoom in countries
     zoomInCountries = (filteredSamples) ->
       return unless width
-      
+
       returnToDefault = filteredSamples.length is $scope.data.samples.length or
       not filteredSamples.length
       newScale = undefined

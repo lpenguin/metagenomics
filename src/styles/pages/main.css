@@ -8,6 +8,7 @@
   height: 410px;
 
   text-transform: uppercase;
+  pointer-events: none;
 
   font-family: $syncopate;
   font-size: 26px;

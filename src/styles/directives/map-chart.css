@@ -18,8 +18,13 @@
 }
 
 .map-chart__svg .country {
-  stroke-width: .5;
   stroke: #ccc;
+}
+
+.map-chart__svg .country.without-borders {
+  pointer-events: none;
+
+  stroke-opacity: 0;
 }
 
 .map-chart__svg .country:hover {
