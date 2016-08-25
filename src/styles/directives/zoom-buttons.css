@@ -1,0 +1,20 @@
+.zoom-buttons__button {
+  width: 24px;
+  height: 24px;
+
+  cursor: pointer;
+
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 24px 24px;
+}
+
+.zoom-buttons__button.zoom-in {
+  background-image: url('../img/accessories/zoom-in.png');
+}
+
+.zoom-buttons__button.zoom-out {
+  margin-top: -1px;
+
+  background-image: url('../img/accessories/zoom-out.png');
+}

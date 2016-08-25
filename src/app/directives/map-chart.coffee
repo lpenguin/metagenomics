@@ -17,10 +17,6 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
 
     strokeWidth = .5
 
-    countriesWithoutBorders = [
-      'RU'
-    ]
-
     projection = d3.geo.mercator()
       .center [0, 44]
       .rotate [-11, 0]
@@ -89,12 +85,12 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       .append 'path'
       .classed 'country', true
       .attr 'id', (d) -> d.id
-      .style 'stroke-width', (d) -> if countriesWithoutBorders.indexOf(d.id) isnt -1 then strokeWidth * 2 else strokeWidth
+      .style 'stroke-width', (d) -> if d.id is 'RU' then strokeWidth * 2 else strokeWidth
       .on 'mouseover', (d) ->
         reattach @
 
-        if countriesWithoutBorders.indexOf(d.id) isnt -1
-          reattach d3element.select('.country.without-borders#' + d.id).node()
+        if d.id is 'RU'
+          reattach d3element.select('.country.without-borders#RU').node()
 
         return unless countryAbundances[d.id]
 
@@ -112,13 +108,12 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         $scope.$apply()
         return
 
-    countriesWithoutBorders.forEach (code) ->
-      countriesG.append 'path'
-        .datum _.find topojson.feature($scope.mapData, $scope.mapData.objects['ru_world']).features, 'id': code
-        .classed 'country without-borders', true
-        .attr 'id', code
-        .style 'stroke-width', strokeWidth * 2
-      return
+    # Draw Russia again (180 meridian problem)
+    countriesG.append 'path'
+      .datum _.find topojson.feature($scope.mapData, $scope.mapData.objects['ru_world']).features, 'id': 'RU'
+      .classed 'country without-borders', true
+      .attr 'id', 'RU'
+      .style 'stroke-width', strokeWidth * 2
 
     # Paint map
     samplesCountries = _.uniq _.map $scope.data.samples, 'f-countries'
@@ -238,6 +233,14 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       recalcCountryAbundances filteredSamples
       paintMap()
       zoomInCountries filteredSamples
+      return
+
+    $scope.$on 'zoomButtons.zoomIn', (event, eventData) ->
+      console.log 'zoom in'
+      return
+
+    $scope.$on 'zoomButtons.zoomOut', (event, eventData) ->
+      console.log 'zoom out'
       return
 
     # Keyboard events
