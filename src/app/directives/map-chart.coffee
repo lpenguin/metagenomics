@@ -22,7 +22,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     pathGenerator = d3.geo.path()
       .projection projection
 
-    redrawMap = (mapTranslate, mapScale, withAnimation, delay, duration) ->
+    redrawMap = (mapTranslate, mapScale, withAnimation) ->
       projection
         .translate mapTranslate
         .scale mapScale
@@ -33,8 +33,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       else
         d3element.selectAll '.country'
           .transition()
-          .delay delay
-          .duration duration
+          .duration 500
           .attr 'd', pathGenerator
       return
 
@@ -142,11 +141,8 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         return
       return
 
-    paintMap = (delay, duration) ->
+    paintMap = ->
       d3element.selectAll '.country'
-        .transition()
-        .delay delay
-        .duration duration
         .style 'fill', (d) ->
           value = undefined
 
@@ -159,7 +155,9 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       return
 
     # Zoom in countries
-    zoomInCountries = (filteredSamples, delay, duration) ->
+    zoomInCountries = (filteredSamples) ->
+      return unless width
+      
       returnToDefault = filteredSamples.length is $scope.data.samples.length or
       not filteredSamples.length
       newScale = undefined
@@ -207,21 +205,21 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         .translate newTranslate
         .scale newScale
 
-      redrawMap zoom.translate(), zoom.scale(), true, delay, duration
+      redrawMap zoom.translate(), zoom.scale(), true
       return
 
     # → Events
     $scope.$on 'filters.substanceChanged', (event, eventData) ->
       resistance = if eventData.resistance then eventData.resistance else eventData.substance
       substance = if eventData.resistance then eventData.substance else 'overall'
-      paintMap 0, 250
+      paintMap()
       return
 
     $scope.$on 'filters.filtersChanged', (event, eventData) ->
       filteredSamples = samplesFilter.getFilteredSamples $scope.data.samples, eventData
       recalcCountryAbundances filteredSamples
-      paintMap 0, 250
-      zoomInCountries filteredSamples, 300, 500
+      paintMap()
+      zoomInCountries filteredSamples
       return
 
     # Keyboard events
@@ -232,7 +230,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         .translate [width / 2, height /2]
         .scale goodZoom
 
-      redrawMap zoom.translate(), zoom.scale(), true, 0, 500
+      redrawMap zoom.translate(), zoom.scale(), true
       return
 
     # Resize

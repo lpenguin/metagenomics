@@ -25,11 +25,11 @@
       data-ng-style="{'left': legendScale(tickValue)}">
       <div
         class="dash"
-        data-ng-show="$index"></div>
+        data-ng-if="$index"></div>
       <div
         class="caption"
         data-ng-show="$index && !($index % ((legendScale.domain().length - 1) / 2))"
-        data-ng-show="abundanceValue === undefined"
+        data-ng-if="abundanceValue === undefined"
         data-ng-bind-html="tickValue | prepareAbundanceValue | trust"></div>
     </div>
   </div>
