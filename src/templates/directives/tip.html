@@ -3,23 +3,23 @@
     class="tip__question-button"
     data-ng-click="isInfoShown = true"></div>
   <div
+    class="tip__info-background"
+    data-ng-show="isInfoShown"
+    data-ng-click="isInfoShown = false"></div>
+  <div
     class="tip__info"
     data-ng-show="isInfoShown">
-    <div
-      class="close-button"
-      data-ng-click="isInfoShown = false"></div>
     <h3>About Resistomap</h3>
     <p>Resistomap is an interactive visualization of the presence of genetic determinants conferring resistance to antibiotics, biocides and heavy metals in human gut microbiota. Resistomap displays the data about more than 1600 published gut metagenomes of the world populations including both healthy subjects and patients.</p>
     <p>Resistomap contains two main interactive work fields&nbsp;&mdash; a geographic map and a heatmap.</p>
     <p>The heatmap displays the median relative levels of the determinants conferring resistance to each of the antibiotic groups (columns) in each of the selected cohort of subjects (rows). The values were precomputed by classifying the gut metagenomic reads from 12 publicly available studies (see Methods). The number of the metagenomes included in the cohort is displayed on the left from the heatmap below the color key.</p>
-    <p>The heatmap contains four vertical sections corresponding to different types of resistome quantification:
-      <ol type="1">
-        <li>Levels of the AR-conferring genes;</li>
-        <li>Levels of the mutations in the target genes;</li>
-        <li>Levels of the genes conferring resistance to biocides (total);</li>
-        <li>Levels of the genes conferring resistance to heavy metal (total).</li>
-      </ol>
-    </p>
+    <p>The heatmap contains four vertical sections corresponding to different types of resistome quantification:</p>
+    <ol type="1">
+      <li>Levels of the AR-conferring genes;</li>
+      <li>Levels of the mutations in the target genes;</li>
+      <li>Levels of the genes conferring resistance to biocides (total);</li>
+      <li>Levels of the genes conferring resistance to heavy metal (total).</li>
+    </ol>
     <p>Using the drop-down lists at the top of the screen, a user can choose the antibiotic group of interest, the study(-ies) and/or the country(-ies) to be displayed at the heatmap. For filtering the cohort, the user can use “Pool by” checkboxes that allow to stratify the  cohorts by the country of origin, gender, age and diagnosis (where applicable).</p>
   </div>
 </div>
