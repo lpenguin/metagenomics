@@ -2,6 +2,7 @@
 
 .heatmap-chart {
   font-family: $helvetica-neue-regular;
+  min-height: 420px;
 }
 
 .heatmap-chart__header,
