@@ -1,8 +1,10 @@
 <div class="zoom-buttons">
   <div
     class="zoom-buttons__button zoom-in"
+    data-ng-class="{'disabled': !canZoomIn}"
     data-ng-click="zoomIn()"></div>
   <div
     class="zoom-buttons__button zoom-out"
+    data-ng-class="{'disabled': !canZoomOut}"
     data-ng-click="zoomOut()"></div>
 </div>

@@ -17,6 +17,13 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
 
     strokeWidth = .5
 
+    reattach = (element) ->
+      parent = element.parentNode
+
+      parent.removeChild element
+      parent.appendChild element
+      return
+
     projection = d3.geo.mercator()
       .center [0, 44]
       .rotate [-11, 0]
@@ -24,10 +31,18 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     pathGenerator = d3.geo.path()
       .projection projection
 
-    redrawMap = (mapTranslate, mapScale, withAnimation) ->
+    zoom = d3.behavior.zoom()
+      .on 'zoom', ->
+        redrawMap false
+        return
+
+    redrawMap = (withAnimation) ->
+      $rootScope.$broadcast 'mapChart.canZoomIn', zoom.scale() isnt maxZoom
+      $rootScope.$broadcast 'mapChart.canZoomOut', zoom.scale() isnt minZoom
+
       projection
-        .translate mapTranslate
-        .scale mapScale
+        .translate zoom.translate()
+        .scale zoom.scale()
 
       unless withAnimation
         d3element.selectAll '.country'
@@ -39,24 +54,75 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           .attr 'd', pathGenerator
       return
 
-    zoom = d3.behavior.zoom()
-      .on 'zoomstart', ->
-        if d3.event.sourceEvent?.type is 'mousedown'
-          $('body').css 'cursor': 'all-scroll'
-        return
-      .on 'zoom', ->
-        redrawMap zoom.translate(), zoom.scale(), false
-        return
-      .on 'zoomend', ->
-        if d3.event.sourceEvent?.type is 'mouseup'
-          $('body').css 'cursor': 'default'
-        return
+    zoomInCountries = (filteredSamples) ->
+      return unless width
 
-    reattach = (element) ->
-      parent = element.parentNode
+      returnToDefault = filteredSamples.length is $scope.data.samples.length or
+      not filteredSamples.length
+      newScale = goodZoom
+      newTranslate = [
+        width / 2
+        height / 2
+      ]
 
-      parent.removeChild element
-      parent.appendChild element
+      unless returnToDefault
+        countryCodes = _.uniq _.map filteredSamples, 'f-countries'
+          .map (name) ->
+            country = _.find $scope.data.countries, 'name': name
+            country.code
+        xMin = Infinity
+        xMax = -Infinity
+        yMin = Infinity
+        yMax = -Infinity
+
+        d3element.selectAll '.country'
+          .filter (d) -> countryCodes.indexOf(d.id) isnt -1
+          .each (d) ->
+            bounds = pathGenerator.bounds d
+            xMin = Math.min xMin, bounds[0][0]
+            xMax = Math.max xMax, bounds[1][0]
+            yMin = Math.min yMin, bounds[0][1]
+            yMax = Math.max yMax, bounds[1][1]
+            return
+
+        dx = xMax - xMin
+        dy = yMax - yMin
+        x = (xMin + xMax) / 2
+        y = (yMin + yMax) / 2
+        scale0 = zoom.scale()
+        newScale = Math.max minZoom, Math.min(maxZoom, .9 / Math.max(dx / width / scale0, dy / height / scale0))
+        translate0 = zoom.translate()
+        newTranslate = [
+          (translate0[0] - x) * newScale / scale0 + width / 2
+          (translate0[1] - y) * newScale / scale0 + height / 2
+        ]
+
+      zoom
+        .translate newTranslate
+        .scale newScale
+
+      redrawMap true
+      return
+
+    coordinates = (point) ->
+      scale = zoom.scale()
+      translate = zoom.translate()
+      [(point[0] - translate[0]) / scale, (point[1] - translate[1]) / scale]
+
+    point = (coordinates) ->
+      scale = zoom.scale()
+      translate = zoom.translate()
+      [coordinates[0] * scale + translate[0], coordinates[1] * scale + translate[1]]
+
+    zoomFromOutside = (direction) ->
+      center0 = [width / 2, height / 2]
+      translate0 = zoom.translate()
+      coordinates0 = coordinates center0
+      zoom.scale zoom.scale() * 2 ** (if direction is 'in' then 1 else -1)
+      center1 = point coordinates0
+      zoom.translate [translate0[0] + center0[0] - center1[0], translate0[1] + center0[1] - center1[1]]
+
+      redrawMap true
       return
 
     svg = d3element.append 'svg'
@@ -78,7 +144,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     countriesG = g.append 'g'
       .classed 'countries', true
 
-    # Prepare countries and assign Events →
+    # Prepare countries
     countriesG.selectAll 'path'
       .data topojson.feature($scope.mapData, $scope.mapData.objects['ru_world']).features
       .enter()
@@ -167,60 +233,6 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           colorScale.getColorByValue value
       return
 
-    # Zoom in countries
-    zoomInCountries = (filteredSamples) ->
-      return unless width
-
-      returnToDefault = filteredSamples.length is $scope.data.samples.length or
-      not filteredSamples.length
-      newScale = undefined
-      newTranslate = []
-
-      if returnToDefault
-        newScale = goodZoom
-        newTranslate = [
-          width / 2
-          height / 2
-        ]
-      else
-        countryCodes = _.uniq _.map filteredSamples, 'f-countries'
-          .map (name) ->
-            country = _.find $scope.data.countries, 'name': name
-            country.code
-        xMin = Infinity
-        xMax = -Infinity
-        yMin = Infinity
-        yMax = -Infinity
-
-        d3element.selectAll '.country'
-          .filter (d) -> countryCodes.indexOf(d.id) isnt -1
-          .each (d) ->
-            bounds = pathGenerator.bounds d
-            xMin = Math.min xMin, bounds[0][0]
-            xMax = Math.max xMax, bounds[1][0]
-            yMin = Math.min yMin, bounds[0][1]
-            yMax = Math.max yMax, bounds[1][1]
-            return
-
-        dx = xMax - xMin
-        dy = yMax - yMin
-        x = (xMin + xMax) / 2
-        y = (yMin + yMax) / 2
-        oldScale = zoom.scale()
-        newScale = Math.max minZoom, Math.min(maxZoom, .9 / Math.max(dx / width / oldScale, dy / height / oldScale))
-        oldTranslate = zoom.translate()
-        newTranslate = [
-          (oldTranslate[0] - x) * newScale / oldScale + width / 2
-          (oldTranslate[1] - y) * newScale / oldScale + height / 2
-        ]
-
-      zoom
-        .translate newTranslate
-        .scale newScale
-
-      redrawMap zoom.translate(), zoom.scale(), true
-      return
-
     # → Events
     $scope.$on 'substanceFilter.substanceChanged', (event, eventData) ->
       resistance = if eventData.resistance then eventData.resistance else eventData.substance
@@ -236,9 +248,11 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       return
 
     $scope.$on 'zoomButtons.zoomIn', (event, eventData) ->
+      zoomFromOutside 'in'
       return
 
     $scope.$on 'zoomButtons.zoomOut', (event, eventData) ->
+      zoomFromOutside 'out'
       return
 
     # Keyboard events
@@ -249,10 +263,11 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         .translate [width / 2, height /2]
         .scale goodZoom
 
-      redrawMap zoom.translate(), zoom.scale(), true
+      redrawMap true
+      $scope.$apply()
       return
 
-    # Resize
+    # Window resize
     $(window).on 'resize', ->
       width = $element.width()
       minZoom = width / 12
@@ -263,6 +278,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
 
       zoom
         .translate [width / 2, height /2]
+        .center [width / 2, height / 2]
         .scale goodZoom
         .scaleExtent [minZoom, maxZoom]
 
