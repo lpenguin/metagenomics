@@ -39,8 +39,8 @@
   font-size: 36px;
 }
 
-.info-block__legend .abundance-value.nil {
-  margin-top: 14px;
+.info-block__legend .abundance-value sup {
+  font-size: 20px;
 }
 
 .info-block__legend .pointer {
@@ -78,6 +78,10 @@
 
   font-family: $helvetica-neue-regular;
   font-size: $m-font-size;
+}
+
+.info-block__legend .tick .caption sup {
+  font-size: 10px;
 }
 
 .info-block__n-of-samples {
