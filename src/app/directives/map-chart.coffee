@@ -100,11 +100,11 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           abundanceValue: countryAbundances[d.id][resistance][substance]
           nOfSamples: nOfcountrySamples[d.id]
 
-        $rootScope.$broadcast 'map.countryInOut', eventData
+        $rootScope.$broadcast 'mapChart.countryInOut', eventData
         $scope.$apply()
         return
       .on 'mouseout', ->
-        $rootScope.$broadcast 'map.countryInOut', {}
+        $rootScope.$broadcast 'mapChart.countryInOut', {}
         $scope.$apply()
         return
 
@@ -222,7 +222,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       return
 
     # → Events
-    $scope.$on 'filters.substanceChanged', (event, eventData) ->
+    $scope.$on 'substanceFilter.substanceChanged', (event, eventData) ->
       resistance = if eventData.resistance then eventData.resistance else eventData.substance
       substance = if eventData.resistance then eventData.substance else 'overall'
       paintMap()
@@ -236,11 +236,9 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       return
 
     $scope.$on 'zoomButtons.zoomIn', (event, eventData) ->
-      console.log 'zoom in'
       return
 
     $scope.$on 'zoomButtons.zoomOut', (event, eventData) ->
-      console.log 'zoom out'
       return
 
     # Keyboard events

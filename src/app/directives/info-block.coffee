@@ -16,13 +16,13 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     getLegendPointerX = (value) -> unless value then 0 else $scope.legendScale value
 
     # → Events
-    $scope.$on 'filters.substanceChanged', (event, eventData) ->
+    $scope.$on 'substanceFilter.substanceChanged', (event, eventData) ->
       $scope.substance = eventData.substance
       $scope.infoLink = eventData.infoLink
       $scope.database = eventData.database
       return
 
-    $scope.$on 'heatmap.cellChanged', (event, eventData) ->
+    $scope.$on 'heatmapChart.cellChanged', (event, eventData) ->
       $scope.countryName = eventData.countryName
       $scope.flag = eventData.flag
       $scope.abundanceValue = eventData.abundanceValue
@@ -32,7 +32,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       $scope.legendPointerX = getLegendPointerX eventData.abundanceValue
       return
 
-    $scope.$on 'map.countryInOut', (event, eventData) ->
+    $scope.$on 'mapChart.countryInOut', (event, eventData) ->
       $scope.countryName = eventData.countryName
       $scope.flag = eventData.flag
       $scope.abundanceValue = eventData.abundanceValue

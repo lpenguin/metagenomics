@@ -77,7 +77,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
 
     # Events →
     $scope.$watch 'substanceFilterValue', ->
-      $rootScope.$broadcast 'filters.substanceChanged', prepareInfoBlockData()
+      $rootScope.$broadcast 'substanceFilter.substanceChanged', prepareInfoBlockData()
 
       if isSubstanceChangedFromOutside
         isSubstanceChangedFromOutside = false
@@ -86,7 +86,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
       return
 
     # → Events
-    $scope.$on 'heatmap.substanceChanged', (event, eventData) ->
+    $scope.$on 'heatmapChart.substanceChanged', (event, eventData) ->
       isSubstanceChangedFromOutside = true unless isSubstanceChangedFromOutside
 
       if eventData
@@ -95,8 +95,8 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
         $scope.substanceFilterValue = defaultSubstanceFilterValue
       return
 
-    $scope.$on 'heatmap.defaultSubstanceChanged', (event) ->
-      $rootScope.$broadcast 'filters.substanceChanged', prepareInfoBlockData()
+    $scope.$on 'heatmapChart.defaultSubstanceChanged', (event) ->
+      $rootScope.$broadcast 'substanceFilter.substanceChanged', prepareInfoBlockData()
 
       defaultSubstanceFilterValue = $scope.substanceFilterValue
       return

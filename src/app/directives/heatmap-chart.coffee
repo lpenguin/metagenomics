@@ -110,22 +110,22 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
           abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
           nOfSamples: cohort.samples.length
 
-        $rootScope.$broadcast 'heatmap.cellChanged', eventData
+        $rootScope.$broadcast 'heatmapChart.cellChanged', eventData
 
-      $rootScope.$broadcast 'heatmap.substanceChanged', if substance is 'overall' then resistance else substance
+      $rootScope.$broadcast 'heatmapChart.substanceChanged', if substance is 'overall' then resistance else substance
       return
 
     $scope.substanceMouseOut = ->
-      $rootScope.$broadcast 'heatmap.cellChanged', {}
-      $rootScope.$broadcast 'heatmap.substanceChanged', undefined
+      $rootScope.$broadcast 'heatmapChart.cellChanged', {}
+      $rootScope.$broadcast 'heatmapChart.substanceChanged', undefined
       return
 
     $scope.substanceMouseClick = ->
-      $rootScope.$broadcast 'heatmap.defaultSubstanceChanged'
+      $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
       return
 
     # → Events
-    $scope.$on 'filters.substanceChanged', (event, eventData) ->
+    $scope.$on 'substanceFilter.substanceChanged', (event, eventData) ->
       $scope.tempResistance = if eventData.resistance then eventData.resistance else eventData.substance
       $scope.tempSubstance = if eventData.resistance then eventData.substance else 'overall'
 
