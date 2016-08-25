@@ -3,17 +3,17 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
   replace: true
   templateUrl: 'directives/info-block.html'
   link: ($scope, $element, $attrs) ->
-    legendHeight = $element.find('.gradient').height()
-    legendScaleRange = d3.range 0, legendHeight, legendHeight / (colorScale.getRange().length - 1)
-    legendScaleRange.push legendHeight
+    legendWidth = $element.find('.gradient').width()
+    legendScaleRange = d3.range 0, legendWidth, legendWidth / (colorScale.getRange().length - 1)
+    legendScaleRange.push legendWidth
 
     $scope.legendGradient = colorScale.getRange()
-    $scope.legendPointerY = 0
+    $scope.legendPointerX = 0
     $scope.legendScale = d3.scale.log()
       .domain colorScale.getDomain()
       .range legendScaleRange
 
-    getLegendPointerY = (value) -> unless value then 0 else $scope.legendScale value
+    getLegendPointerX = (value) -> unless value then 0 else $scope.legendScale value
 
     # → Events
     $scope.$on 'filters.substanceChanged', (event, eventData) ->
@@ -29,7 +29,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       $scope.abundanceValueType = eventData.abundanceValueType
       $scope.nOfSamples = eventData.nOfSamples
 
-      $scope.legendPointerY = getLegendPointerY eventData.abundanceValue
+      $scope.legendPointerX = getLegendPointerX eventData.abundanceValue
       return
 
     $scope.$on 'map.countryInOut', (event, eventData) ->
@@ -39,7 +39,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       $scope.abundanceValueType = eventData.abundanceValueType
       $scope.nOfSamples = eventData.nOfSamples
 
-      $scope.legendPointerY = getLegendPointerY eventData.abundanceValue
+      $scope.legendPointerX = getLegendPointerX eventData.abundanceValue
       return
 
     return

@@ -3,18 +3,22 @@
 .info-block {
   position: relative;
 
-  height: 235px;
+  width: 220px;
+  height: 200px;
+  padding: 5px 0 0 10px;
 
-  font-family: $helvetica-neue-regular;
+  border-radius: 3px;
+  background-color: #f5f7f9;
 }
 
 .info-block__header {
+  font-family: $helvetica-neue-regular;
   font-size: $xl-font-size;
   font-weight: bold;
 }
 
 .info-block__header .flag {
-  margin: 1px 0 0 3px;
+  margin: 2px 0 0 3px;
 }
 
 .info-block__legend {
@@ -24,67 +28,67 @@
 }
 
 .info-block__legend .gradient {
-  width: 30px;
-  height: 100px;
+  width: 136px;
+  height: 24px;
 }
 
 .info-block__legend .abundance-value {
-  margin: 36px 0 0 15px;
+  margin-top: 5px;
 
-  font-size: $xxl-font-size;
+  font-family: $syncopate;
+  font-size: 36px;
 }
 
 .info-block__legend .abundance-value.nil {
-  margin-top: 40px;
+  margin-top: 14px;
 }
 
 .info-block__legend .pointer {
   position: absolute;
-  left: 30px;
+  z-index: 1;
+  top: 19px;
 
   width: 0;
   height: 0;
 
-  transition: bottom .25s linear;
-  transform: translateY(50%);
+  transition: left .25s linear;
+  transform: translateX(-50%);
 
-  border-top: 5px solid transparent;
-  border-right: 5px solid #000;
-  border-bottom: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-bottom: 5px solid #000;
+  border-left: 5px solid transparent;
 }
 
 .info-block__legend .tick {
   position: absolute;
+  top: 0;
 }
 
 .info-block__legend .tick .dash {
-  width: 30px;
-  height: 1px;
+  width: 1px;
+  height: 24px;
 
   background-color: rgba(255, 255, 255, .5);
 }
 
 .info-block__legend .tick .caption {
   position: absolute;
-  top: 0;
-  left: 35px;
+  top: 25px;
+  left: -7px;
 
-  transform: translateY(-50%);
-
-  font-size: $xs-font-size;
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
 }
 
 .info-block__n-of-samples {
-  margin-top: 10px;
-
+  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }
 
 .info-block__info-link {
   position: absolute;
-  top: 220px;
+  bottom: 20px;
 
-  white-space: nowrap;
-
+  font-family: $helvetica-neue-regular;
   font-size: $s-font-size;
 }

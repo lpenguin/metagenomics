@@ -10,7 +10,7 @@
   text-transform: uppercase;
 
   font-family: $syncopate;
-  font-size: $h-font-size;
+  font-size: 26px;
 }
 
 .header__main-caption {
@@ -36,7 +36,7 @@
 }
 
 .content__info-block {
-  margin: 18px 0 0 40px;
+  margin: 15px 0 0 40px;
 }
 
 .footer {

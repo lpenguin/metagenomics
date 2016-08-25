@@ -9,21 +9,20 @@
   </div>
   <div class="info-block__legend">
     <div
-      class="gradient inline"
-      data-ng-style="{'background': 'linear-gradient(to top, ' + legendGradient.join(', ') + ')'}"></div>
+      class="gradient"
+      data-ng-style="{'background': 'linear-gradient(to right, ' + legendGradient.join(', ') + ')'}"></div>
     <div
-      class="abundance-value inline"
+      class="abundance-value"
       data-ng-show="abundanceValue !== undefined"
       data-ng-class="{'nil': abundanceValue === 0}"
       data-ng-bind-html="abundanceValue | prepareAbundanceValue | trust"></div>
-    <br class="clear-both" />
     <div
       class="pointer"
-      data-ng-style="{'bottom': legendPointerY + 'px'}"></div>
+      data-ng-style="{'left': legendPointerX + 'px'}"></div>
     <div
       class="tick"
       data-ng-repeat="tickValue in legendScale.domain() track by $index"
-      data-ng-style="{'bottom': legendScale(tickValue)}">
+      data-ng-style="{'left': legendScale(tickValue)}">
       <div
         class="dash"
         data-ng-if="$index"></div>
@@ -36,16 +35,13 @@
   </div>
   <div
     class="info-block__n-of-samples"
-    data-ng-show="nOfSamples">
-    <div>{{abundanceValueType + ' among'}}</div>
-    <div>{{nOfSamples + (nOfSamples === 1 ? ' sample' : ' samples')}}</div>
-  </div>
+    data-ng-show="nOfSamples">{{abundanceValueType + ' among ' + nOfSamples + (nOfSamples === 1 ? ' sample' : ' samples')}}</div>
   <div
     class="info-block__info-link"
     data-ng-show="infoLink">
     <a
       class="common-link"
       target="_blank"
-      data-ng-href="{{infoLink}}">{{substance}}</a> on {{database}} database
+      data-ng-href="{{infoLink}}">{{substance}}</a> on {{database}}
   </div>
 </div>
