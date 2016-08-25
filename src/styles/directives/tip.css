@@ -1,9 +1,5 @@
 @import '../variables';
 
-.tip {
-  font-family: $helvetica-neue-regular;
-}
-
 .tip__question-button {
   width: 24px;
   height: 24px;
@@ -41,6 +37,10 @@
   transform: translate(-50%, -50%);
 
   background-color: #fff;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+  line-height: 20px;
 }
 
 .tip__info h3 {
