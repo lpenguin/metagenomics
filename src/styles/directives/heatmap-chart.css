@@ -1,8 +1,9 @@
 @import '../variables';
 
 .heatmap-chart {
-  font-family: $helvetica-neue-regular;
   min-height: 420px;
+
+  font-family: $helvetica-neue-regular;
 }
 
 .heatmap-chart__header,
