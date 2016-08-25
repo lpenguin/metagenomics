@@ -4,7 +4,7 @@
   position: relative;
 
   width: 220px;
-  height: 200px;
+  height: 190px;
   padding: 5px 0 0 10px;
 
   border-radius: 3px;
@@ -82,13 +82,13 @@
 
 .info-block__n-of-samples {
   font-family: $helvetica-neue-regular;
-  font-size: $s-font-size;
+  font-size: $m-font-size;
 }
 
 .info-block__info-link {
   position: absolute;
-  bottom: 20px;
+  bottom: 10px;
 
   font-family: $helvetica-neue-regular;
-  font-size: $s-font-size;
+  font-size: $m-font-size;
 }
