@@ -130,6 +130,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       .attr 'height', height
       .call zoom
       .on 'wheel.zoom', null
+      .on 'dblclick.zoom', null
 
     underlay = svg.append 'rect'
       .attr 'height', height
