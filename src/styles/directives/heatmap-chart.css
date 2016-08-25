@@ -153,7 +153,7 @@
 .heatmap-chart__header .resistance-group ~ .resistance-group,
 .heatmap-chart__rows .row .resistance-group ~ .resistance-group,
 .heatmap-chart__footer .resistance-group ~ .resistance-group {
-  margin-left: 26px;
+  margin-left: 24px;
 }
 
 .heatmap-chart__header .substance-caption,

@@ -87,6 +87,7 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
 
     $scope.initializing = false
     $scope.$apply()
+    likely.initiate()
     $timeout ->
       $('.loading-cover').fadeOut()
     , 500

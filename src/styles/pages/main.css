@@ -2,10 +2,10 @@
 
 .header {
   position: absolute;
-  top: 30px;
+  top: 18px;
   left: $common-offset;
 
-  height: 390px;
+  height: 410px;
 
   text-transform: uppercase;
 
@@ -32,7 +32,7 @@
 }
 
 .content__heatmap-chart {
-  margin: 20px 0 0 $common-offset;
+  margin: 18px 0 0 $common-offset;
 }
 
 .content__info-block {
@@ -40,7 +40,7 @@
 }
 
 .footer {
-  margin: 50px $common-offset 30px $common-offset;
+  margin: 30px $common-offset 30px $common-offset;
 
   font-family: $helvetica-neue-regular;
 }

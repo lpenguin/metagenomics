@@ -96,9 +96,8 @@
 }
 
 .custom-select__dropdown .item.selected {
-  background-color: #d8daeb;
+  background-color: #dadee1;
 }
-
 
 .custom-select__dropdown .item:not(.selected):hover {
   background-color: #f2f4f6;

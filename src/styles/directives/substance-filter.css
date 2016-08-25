@@ -106,11 +106,11 @@
 }
 
 .substance-filter__dropdown .item.selected {
-  background-color: rgba(0, 170, 152, .35);
+  background-color: rgba(0, 170, 152, .25);
 }
 
 .substance-filter__dropdown .item:not(.selected):hover {
-  background-color: #f2f4f6;
+  background-color: rgba(0, 170, 152, .07);
 }
 
 .substance-filter__dropdown .item.pushed {
