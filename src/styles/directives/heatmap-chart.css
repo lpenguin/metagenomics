@@ -29,6 +29,8 @@
 .heatmap-chart__footer .substance-caption {
   position: relative;
 
+  cursor: pointer;
+
   background-color: #fff;
 
   font-size: $m-font-size;

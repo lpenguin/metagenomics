@@ -11,6 +11,9 @@
         class="substance-caption inline"
         data-ng-repeat="s in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
         data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'full': r === tempResistance && s === tempSubstance}"
+        data-ng-mouseover="substanceMouseOver(undefined, r, s)"
+        data-ng-mouseout="substanceMouseOut()"
+        data-ng-click="substanceMouseClick()"
         once-class="{'overall': s === 'overall'}"
         once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"
         once once-attr-data-after-content="s === 'overall' ? '' : s.substring(1)"></div>
@@ -41,9 +44,9 @@
           data-ng-repeat="s in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
           data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'top': !$parent.$parent.$index, 'bottom': $parent.$parent.$index === cohorts.length - 1}"
           data-ng-style="{'background-color': getCellColor(cohort, r, s)}"
-          data-ng-mouseover="substanceCellMouseOver(cohort, r, s)"
-          data-ng-mouseout="substanceCellMouseOut()"
-          data-ng-click="substanceCellMouseClick()"
+          data-ng-mouseover="substanceMouseOver(cohort, r, s)"
+          data-ng-mouseout="substanceMouseOut()"
+          data-ng-click="substanceMouseClick()"
           once-class="{'overall': s === 'overall'}"></div>
         <br class="clear-both" />
       </div>
@@ -58,6 +61,9 @@
         class="substance-caption inline"
         data-ng-repeat="s in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
         data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'full': r === tempResistance && s === tempSubstance}"
+        data-ng-mouseover="substanceMouseOver(undefined, r, s)"
+        data-ng-mouseout="substanceMouseOut()"
+        data-ng-click="substanceMouseClick()"
         once-class="{'overall': s === 'overall'}"
         once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"
         once once-attr-data-after-content="s === 'overall' ? '' : s.substring(1)"></div>
