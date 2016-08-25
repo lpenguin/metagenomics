@@ -16,16 +16,19 @@
     <br class="clear-both" />
   </div>
   <div class="filters__checkboxes">
-    <div class="caption">Pool by</div>
+    <div class="caption">Pool heatmap by</div>
     <div
       class="checkbox"
       data-ng-repeat="checkbox in checkboxes track by $index"
-      data-ng-class="{'disabled': studyCountryFiltersValues[checkbox].value}">
-      <label>
-        <input
-          type="checkbox"
-          ng-model="checkboxesValues[checkbox]">{{checkbox.replace('f-', '') + ($index < checkboxes.length - 1 ? ',' : '')}}
-      </label>
+      data-ng-class="{'disabled': studyCountryFiltersValues[checkbox].value, 'active': hovered}"
+      data-ng-mouseover="hovered = true"
+      data-ng-mouseout="hovered = false"
+      data-ng-click="checkboxesValues[checkbox] = !checkboxesValues[checkbox]">
+      <img
+        class="inline"
+        data-ng-src="../img/accessories/checkbox{{hovered ? (checkboxesValues[checkbox] ? '-checked-hover' : '-empty-hover') : (checkboxesValues[checkbox] ? '-checked' : '-empty')}}.png" />
+      <span class="caption inline">{{checkbox.replace('f-', '')}}</span>
+      <br class="clear-both" />
     </div>
     <br class="clear-both" />
   </div>

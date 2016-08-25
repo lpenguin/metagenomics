@@ -16,32 +16,25 @@
 
 .filters__checkboxes {
   position: absolute;
-  top: 420px;
-  left: $common-offset;
+  top: 680px;
+  left: 916px;
 
-  font-size: $s-font-size;
-}
-
-.filters__checkboxes > div {
-  display: inline-block;
-
-  vertical-align: bottom;
-}
-
-.filters__checkboxes .caption {
-  font-weight: bold;
+  font-size: $m-font-size;
 }
 
 .filters__checkboxes .checkbox {
+  margin-top: 5px;
+
+  cursor: pointer;
   user-select: none;
 }
 
-.filters__checkboxes .checkbox label {
-  cursor: pointer;
+.filters__checkboxes .checkbox img {
+  width: 13px;
+  height: 14px;
+  margin-right: 5px;
 }
 
-.filters__checkboxes .checkbox input {
-  margin: 0 3px 0 3px;
-
-  cursor: pointer;
+.filters__checkboxes .checkbox.active .caption {
+  color: #005599;
 }
