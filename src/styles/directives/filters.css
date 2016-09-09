@@ -19,6 +19,8 @@
   top: 680px;
   left: 916px;
 
+  white-space: nowrap;
+
   font-size: $m-font-size;
 }
 
