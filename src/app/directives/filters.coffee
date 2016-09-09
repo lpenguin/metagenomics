@@ -26,6 +26,7 @@ app.directive 'filters', ($rootScope) ->
         .map (u) ->
           title: u
           value: u
+          flags: $scope.data.flags[u]
 
       dataset = [plural].concat dataset
 

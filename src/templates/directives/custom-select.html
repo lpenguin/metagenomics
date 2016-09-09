@@ -5,7 +5,16 @@
   <div
     class="custom-select__toggle"
     data-ng-class="{'activated': isListShown}"
-    data-ng-click="toggleList()">{{toggleFormat()}}</div>
+    data-ng-click="toggleList()">
+    <div class="inline">{{toggleFormat()}}</div>
+    <div
+      class="inline"
+      data-ng-if="selected.flags">
+      <i
+        data-ng-repeat="flag in selected.flags track by $index"
+        class="flag {{'twemoji-' + flag.toLowerCase()}} inline"></i>
+    </div>
+  </div>
   <div
     class="custom-select__dropdown"
     data-ng-style="{'visibility': isListShown ? 'visible' : 'hidden'}">
@@ -13,6 +22,15 @@
       class="item"
       data-ng-repeat="item in dataset track by $index"
       data-ng-class="{'selected': isItemSelected(item), 'highlighted': item.isHighlighted}"
-      data-ng-click="selectItem(item)">{{item.title}}</div>
+      data-ng-click="selectItem(item)">
+      <div class="inline">{{item.title}}</div>
+      <div
+        class="inline"
+        data-ng-if="item.flags">
+        <i
+          data-ng-repeat="flag in item.flags track by $index"
+          class="flag {{'twemoji-' + flag.toLowerCase()}} inline"></i>
+      </div>
+    </div>
   </div>
 </div>

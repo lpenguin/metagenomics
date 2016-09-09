@@ -103,6 +103,14 @@
   background-color: #f2f4f6;
 }
 
+.custom-select__dropdown .item .flag {
+  margin: 3px 0 0 3px;
+}
+
+.custom-select__toggle .flag {
+  margin: 0 0 0 3px;
+}
+
 .custom-select__dropdown::-webkit-scrollbar {
   width: 6px;
 }

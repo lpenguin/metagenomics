@@ -76,6 +76,7 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
     ]
 
     $scope.data.filteringFieldsValues = {}
+    $scope.data.flags = {}
 
     filteringFields.forEach (ff) ->
       if ff is 'f-ages'
@@ -83,6 +84,17 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
       else
         $scope.data.filteringFieldsValues[ff] = _.uniq _.map $scope.data.samples, ff
           .sort tools.sortAlphabeticaly
+
+      if ff is 'f-studies' or ff is 'f-countries'
+        $scope.data.filteringFieldsValues[ff].forEach (v) ->
+          ffCountries = $scope.data.samples.filter (s) ->
+            s[ff] is v
+          .map (s) ->
+            s['f-countries']
+          $scope.data.flags[v] = _.uniq ffCountries
+          .map (c) ->
+            _.find($scope.data.countries, 'name': c)['code']
+          return
       return
 
     $scope.initializing = false

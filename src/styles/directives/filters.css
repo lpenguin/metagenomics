@@ -14,6 +14,14 @@
   margin-left: 10px;
 }
 
+.filters__filters .custom-select.f-studies {
+  width: 240px;
+}
+
+.filters__filters .custom-select.f-countries {
+  width: 130px;
+}
+
 .filters__checkboxes {
   position: absolute;
   top: 680px;
