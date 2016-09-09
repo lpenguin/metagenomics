@@ -28,12 +28,15 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
       permutations.forEach (p, i) ->
         cohortProperties = {}
+        groupProperties = {}
 
         order.forEach (o, j) ->
           cohortProperties[o] = p[j]
+          groupProperties[o] = p[j] if not j
           return
 
         cohortSamples = samplesFilter.getFilteredSamples samples, cohortProperties
+        groupSamples = samplesFilter.getFilteredSamples samples, groupProperties
 
         return unless cohortSamples.length
         return if cohortSamples.length is samples.length
@@ -41,19 +44,30 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         flag = if order[0] is 'f-countries' then _.find($scope.data.countries, 'name': p[0])['code'] else undefined
         name = (if order[0] is 'f-countries' and p.length > 1 then _.tail(p) else p).join ', '
 
-        previousCohort = _.last permutationsCohorts
-        isPushed = false
-
-        if previousCohort
-          isPushed = _.some _.dropRight(order, 1), (o, j) -> p[j] isnt previousCohort.permutation[j]
-
         permutationsCohorts.push
           permutation: p
           name: name
           flag: flag
-          isPushed: isPushed
           samples: cohortSamples
           abundances: getCohortAbundances cohortSamples
+          nOfSamplesInGroup: groupSamples.length
+        return
+
+      permutationsCohorts.sort (a, b) ->
+        return 1 if a.nOfSamplesInGroup < b.nOfSamplesInGroup
+        return -1 if a.nOfSamplesInGroup > b.nOfSamplesInGroup
+        return 1 if a.name > b.name
+        return -1 if a.name < b.name
+        0
+
+      permutationsCohorts.forEach (p, i) ->
+        previousCohort = permutationsCohorts[i - 1]
+        isPushed = false
+
+        if previousCohort
+          isPushed = _.some _.dropRight(order, 1), (o, j) -> p.permutation[j] isnt previousCohort.permutation[j]
+
+        p.isPushed = isPushed
         return
 
       permutationsCohorts
