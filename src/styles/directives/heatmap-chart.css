@@ -106,6 +106,24 @@
   margin-top: 2px;
 }
 
+.heatmap-chart__rows .row .gender {
+  width: 6px;
+  height: 18px;
+  margin-top: 2px;
+
+  background-repeat: no-repeat;
+  background-position: center center;
+  background-size: 6px 18px;
+}
+
+.heatmap-chart__rows .row .gender.f {
+  background-image: url("../img/accessories/female.png");
+}
+
+.heatmap-chart__rows .row .gender.m {
+  background-image: url("../img/accessories/male.png");
+}
+
 .heatmap-chart__rows .row .name {
   overflow: hidden;
 
@@ -120,6 +138,20 @@
 
 .heatmap-chart__rows .row.with-flag .name {
   width: 87px;
+  margin-left: 5px;
+}
+
+.heatmap-chart__rows .row.with-gender .name {
+  width: 99px;
+  margin-left: 5px;
+}
+
+.heatmap-chart__rows .row.with-flag.with-gender .gender {
+  margin-left: 5px;
+}
+
+.heatmap-chart__rows .row.with-flag.with-gender .name {
+  width: 76px;
   margin-left: 5px;
 }
 

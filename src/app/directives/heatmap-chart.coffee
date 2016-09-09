@@ -42,12 +42,18 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         return if cohortSamples.length is samples.length
 
         flag = if order[0] is 'f-countries' then _.find($scope.data.countries, 'name': p[0])['code'] else undefined
-        name = (if order[0] is 'f-countries' and p.length > 1 then _.tail(p) else p).join ', '
+        gender = cohortProperties['f-genders']
+        gender = undefined if gender is 'NA'
+        name = p
+        name = _.tail(p) if order[0] is 'f-countries' and p.length > 1
+        name = name.filter((prop) -> prop isnt gender) if gender
+        name = name.join ', '
 
         permutationsCohorts.push
           permutation: p
           name: name
           flag: flag
+          gender: gender
           samples: cohortSamples
           abundances: getCohortAbundances cohortSamples
           nOfSamplesInGroup: groupSamples.length

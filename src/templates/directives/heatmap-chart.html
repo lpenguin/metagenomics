@@ -25,10 +25,13 @@
     <div
       class="row"
       data-ng-repeat="cohort in cohorts track by $index"
-      data-ng-class="{'pushed': cohort.isPushed, 'with-flag': cohort.flag}">
+      data-ng-class="{'pushed': cohort.isPushed, 'with-flag': cohort.flag, 'with-gender': cohort.gender}">
       <i
         class="flag {{'twemoji-' + cohort.flag.toLowerCase()}} inline"
         data-ng-if="cohort.flag"></i>
+      <i
+        class="gender {{cohort.gender.toLowerCase()}} inline"
+        data-ng-if="cohort.gender"></i>
       <div
         class="name inline"
         overflow>
