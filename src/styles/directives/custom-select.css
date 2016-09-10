@@ -103,12 +103,20 @@
   background-color: #f2f4f6;
 }
 
-.custom-select__dropdown .item .flag {
+.custom-select__dropdown .item .flag.before-option {
+  margin: 3px 3px 0 0;
+}
+
+.custom-select__dropdown .item .flag.after-option {
   margin: 3px 0 0 3px;
 }
 
-.custom-select__toggle .flag {
-  margin: 0 0 0 3px;
+.custom-select__toggle .flag.before-option {
+  margin-right: 3px;
+}
+
+.custom-select__toggle .flag.after-option {
+  margin-left: 3px;
 }
 
 .custom-select__dropdown::-webkit-scrollbar {

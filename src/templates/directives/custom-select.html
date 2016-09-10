@@ -6,14 +6,19 @@
     class="custom-select__toggle"
     data-ng-class="{'activated': isListShown}"
     data-ng-click="toggleList()">
-    <div class="inline">{{toggleFormat()}}</div>
+    <div
+      class="inline"
+      data-ng-if="!flagsBefore">{{toggleFormat()}}</div>
     <div
       class="inline"
       data-ng-if="selected.flags">
       <i
         data-ng-repeat="flag in selected.flags track by $index"
-        class="flag {{'twemoji-' + flag.toLowerCase()}} inline"></i>
+        class="flag {{'twemoji-' + flag.toLowerCase() + ' ' + (flagsBefore ? 'before-option' : 'after-option')}} inline"></i>
     </div>
+    <div
+      class="inline"
+      data-ng-if="flagsBefore">{{toggleFormat()}}</div>
   </div>
   <div
     class="custom-select__dropdown"
@@ -23,14 +28,19 @@
       data-ng-repeat="item in dataset track by $index"
       data-ng-class="{'selected': isItemSelected(item), 'highlighted': item.isHighlighted}"
       data-ng-click="selectItem(item)">
-      <div class="inline">{{item.title}}</div>
+      <div
+        class="inline"
+        data-ng-if="!flagsBefore">{{item.title}}</div>
       <div
         class="inline"
         data-ng-if="item.flags">
         <i
           data-ng-repeat="flag in item.flags track by $index"
-          class="flag {{'twemoji-' + flag.toLowerCase()}} inline"></i>
+          class="flag {{'twemoji-' + flag.toLowerCase() + ' ' + (flagsBefore ? 'before-option' : 'after-option')}} inline"></i>
       </div>
+      <div
+        class="inline"
+        data-ng-if="flagsBefore">{{item.title}}</div>
     </div>
   </div>
 </div>

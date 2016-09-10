@@ -10,6 +10,7 @@ app.directive 'customSelect', ($document, $timeout) ->
     disabled: '='
     selected: '='
     adjustWidth: '='
+    flagsBefore: '='
   link: ($scope, $element, $attrs) ->
     $scope.isSelectPrepared = not $scope.adjustWidth
     $scope.isListShown = false

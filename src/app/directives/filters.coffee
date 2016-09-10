@@ -36,6 +36,7 @@ app.directive 'filters', ($rootScope) ->
         multi: false
         toggleFormat: -> $scope.studyCountryFiltersValues[ff].title
         disabled: false
+        flagsBefore: ff is 'f-countries'
 
       $scope.studyCountryFilters.push filter
 
