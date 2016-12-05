@@ -6,7 +6,15 @@
   font-family: $helvetica-neue-regular;
 }
 
-.heatmap-chart__header,
+.heatmap-chart__header .samples-caption {
+  width: 145px;
+  margin: 19px 5px 0 0;
+
+  text-align: right;
+
+  font-size: $m-font-size;
+}
+
 .heatmap-chart__footer {
   margin-left: 150px;
 }
@@ -60,6 +68,11 @@
 .heatmap-chart__footer .substance-caption.full,
 .heatmap-chart__footer .substance-caption:hover {
   z-index: 2;
+}
+
+.heatmap-chart__header .substance-caption:not(.highlighted).full,
+.heatmap-chart__footer .substance-caption:not(.highlighted).full {
+  font-weight: bold;
 }
 
 .heatmap-chart__header .substance-caption:not(.overall),

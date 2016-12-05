@@ -1,7 +1,8 @@
 <div class="info-block">
   <div class="info-block__header">
     <div>{{substance}}</div>
-    <div class="inline">{{countryName ? 'in ' + countryName : 'resistance level'}}</div>
+    <div>resistance level</div>
+    <div class="inline">{{countryName ? 'in ' + countryName : ''}}</div>
     <i
       class="flag {{'twemoji-' + flag.toLowerCase()}} inline"
       data-ng-if="countryName"></i>
