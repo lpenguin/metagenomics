@@ -9,4 +9,4 @@ app.factory 'dataLoader', ->
         .defer tsv, '../data/map/countries.tsv'
         .defer json, '../data/samples-groups/sample_description.json'
         .defer json, '../data/samples-groups/group_description.json'
-        .defer tsv, '../data/samples-groups/per_sample_groups_stat.tsv'
+        .defer tsv, '../data/samples-groups/ab_table_total.tsv'
