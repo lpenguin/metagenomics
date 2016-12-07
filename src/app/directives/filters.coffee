@@ -5,7 +5,7 @@ app.directive 'filters', ($rootScope) ->
   scope:
     data: '='
   link: ($scope, $element, $attrs) ->
-    # Study & country filters
+    # Study & country multi filters
     filteringFields = [
       'f-studies'
       'f-countries'
@@ -15,32 +15,21 @@ app.directive 'filters', ($rootScope) ->
     $scope.studyCountryFiltersValues = {}
 
     filteringFields.forEach (ff) ->
-      plural = {}
-
-      if ff is 'f-studies'
-        plural.title = 'all studies'
-      else if ff is 'f-countries'
-        plural.title = 'in all countries'
-
       dataset = $scope.data.filteringFieldsValues[ff]
         .map (u) ->
           title: u
           value: u
           flags: $scope.data.flags[u]
 
-      dataset = [plural].concat dataset
-
       filter =
         key: ff
         dataset: dataset
-        multi: false
-        toggleFormat: -> $scope.studyCountryFiltersValues[ff].title
-        disabled: false
+        plural: ff.split('-')[1]
         flagsBefore: ff is 'f-countries'
 
       $scope.studyCountryFilters.push filter
 
-      $scope.studyCountryFiltersValues[ff] = dataset[0]
+      $scope.studyCountryFiltersValues[ff] = []
       return
 
     # Checkboxes
@@ -66,8 +55,7 @@ app.directive 'filters', ($rootScope) ->
 
       _.keys $scope.studyCountryFiltersValues
         .forEach (key) ->
-          if $scope.studyCountryFiltersValues[key].value
-            eventData[key] = $scope.studyCountryFiltersValues[key].value
+          eventData[key] = $scope.studyCountryFiltersValues[key]
           return
 
       $rootScope.$broadcast 'filters.filtersChanged', eventData

@@ -5,16 +5,10 @@ app.directive 'customSelect', ($document, $timeout) ->
   scope:
     key: '='
     dataset: '='
-    multi: '='
-    toggleFormat: '='
-    disabled: '='
+    plural: '='
     selected: '='
-    adjustWidth: '='
     flagsBefore: '='
   link: ($scope, $element, $attrs) ->
-    $scope.isSelectPrepared = not $scope.adjustWidth
-    $scope.isListShown = false
-
     clickHandler = (event) ->
       return if $element.find(event.target).length
 
@@ -24,8 +18,6 @@ app.directive 'customSelect', ($document, $timeout) ->
       return
 
     $scope.toggleList = ->
-      return if $scope.disabled
-
       $scope.isListShown = not $scope.isListShown
 
       if $scope.isListShown
@@ -35,43 +27,30 @@ app.directive 'customSelect', ($document, $timeout) ->
       return
 
     $scope.isItemSelected = (item) ->
-      if $scope.multi
-        index = _.indexOf _.map($scope.selected, 'title'), item.title
-        index isnt -1
-      else
-        $scope.selected.title is item.title
+      index = _.indexOf _.map($scope.selected, 'title'), item.title
+      index isnt -1
 
     $scope.selectItem = (item) ->
-      if $scope.multi
-        index = _.indexOf _.map($scope.selected, 'title'), item.title
+      index = _.indexOf _.map($scope.selected, 'title'), item.title
 
-        if index isnt -1
-          $scope.selected.splice index, 1
-        else
-          $scope.selected.push item
+      if index isnt -1
+        $scope.selected.splice index, 1
       else
-        $scope.selected = item
-        $scope.isListShown = false
+        $scope.selected.push item
       return
 
-    if $scope.adjustWidth
-      $timeout ->
-        $toggle = $element.find '.custom-select__toggle'
-        $dropdown = $element.find '.custom-select__dropdown'
-        toggleWidth = $toggle[0].getBoundingClientRect().width
-        dropdownWidth = $dropdown[0].getBoundingClientRect().width
-        dropdownHasScroll = $dropdown[0].scrollHeight > $dropdown[0].offsetHeight
+    $timeout ->
+      $toggle = $element.find '.custom-select__toggle'
+      $dropdown = $element.find '.custom-select__dropdown'
+      toggleWidth = $toggle[0].getBoundingClientRect().width
+      dropdownWidth = $dropdown[0].getBoundingClientRect().width
+      dropdownHasScroll = $dropdown[0].scrollHeight > $dropdown[0].offsetHeight
 
-        dropdownWidth += 16 if dropdownHasScroll
+      dropdownWidth += 16 if dropdownHasScroll
 
-        $toggle.innerWidth Math.max toggleWidth, dropdownWidth
-        $dropdown.width Math.max toggleWidth, dropdownWidth
-        $scope.isSelectPrepared = true
-        return
-
-    $scope.$watch 'disabled', ->
-      if $scope.disabled
-        $scope.selected = if $scope.multi then [] else $scope.dataset[0]
+      $toggle.innerWidth Math.max toggleWidth, dropdownWidth
+      $dropdown.width Math.max toggleWidth, dropdownWidth
+      $scope.isSelectPrepared = true
       return
 
     return

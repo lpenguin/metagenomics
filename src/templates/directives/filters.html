@@ -8,11 +8,8 @@
       data-ng-repeat="filter in studyCountryFilters track by $index"
       data-key="filter.key"
       data-dataset="filter.dataset"
-      data-multi="filter.multi"
-      data-toggle-format="filter.toggleFormat"
-      data-disabled="filter.disabled"
+      data-plural="filter.plural"
       data-selected="studyCountryFiltersValues[filter.key]"
-      data-adjust-width="true"
       data-flags-before="filter.flagsBefore"></custom-select>
     <br class="clear-both" />
   </div>
@@ -21,7 +18,7 @@
     <div
       class="checkbox"
       data-ng-repeat="checkbox in checkboxes track by $index"
-      data-ng-class="{'disabled': studyCountryFiltersValues[checkbox].value, 'active': hovered}"
+      data-ng-class="{'disabled': studyCountryFiltersValues[checkbox].length, 'active': hovered}"
       data-ng-mouseover="hovered = true"
       data-ng-mouseout="hovered = false"
       data-ng-click="checkboxesValues[checkbox] = !checkboxesValues[checkbox]">

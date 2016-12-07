@@ -1,24 +1,29 @@
 <div
   class="custom-select"
-  data-ng-class="[key, {'disabled': disabled}]"
+  data-ng-class="key"
   data-ng-style="{'visibility': isSelectPrepared ? 'visible' : 'hidden'}">
   <div
     class="custom-select__toggle"
     data-ng-class="{'activated': isListShown}"
     data-ng-click="toggleList()">
-    <div
-      class="inline"
-      data-ng-if="!flagsBefore">{{toggleFormat()}}</div>
-    <div
-      class="inline"
-      data-ng-if="selected.flags">
-      <i
-        data-ng-repeat="flag in selected.flags track by $index"
-        class="flag {{'twemoji-' + flag.toLowerCase() + ' ' + (flagsBefore ? 'before-option' : 'after-option')}} inline"></i>
+    <div data-ng-if="!selected.length">{{'all ' + plural}}</div>
+    <div data-ng-if="selected.length === 1">
+      <div
+        class="inline"
+        data-ng-if="!flagsBefore">{{selected[0].title}}</div>
+      <div
+        class="inline"
+        data-ng-if="selected[0].flags">
+        <i
+          data-ng-repeat="flag in selected[0].flags track by $index"
+          class="flag {{'twemoji-' + flag.toLowerCase() + ' ' + (flagsBefore ? 'before-option' : 'after-option')}} inline"></i>
+      </div>
+      <div
+        class="inline"
+        data-ng-if="flagsBefore">{{selected[0].title}}</div>
+      <br class="clear-both" />
     </div>
-    <div
-      class="inline"
-      data-ng-if="flagsBefore">{{toggleFormat()}}</div>
+    <div data-ng-if="selected.length > 1">{{'several ' + plural}}</div>
   </div>
   <div
     class="custom-select__dropdown"
@@ -26,7 +31,7 @@
     <div
       class="item"
       data-ng-repeat="item in dataset track by $index"
-      data-ng-class="{'selected': isItemSelected(item), 'highlighted': item.isHighlighted}"
+      data-ng-class="{'selected': isItemSelected(item)}"
       data-ng-click="selectItem(item)">
       <div
         class="inline"
@@ -37,10 +42,12 @@
         <i
           data-ng-repeat="flag in item.flags track by $index"
           class="flag {{'twemoji-' + flag.toLowerCase() + ' ' + (flagsBefore ? 'before-option' : 'after-option')}} inline"></i>
+        <br class="clear-both" />
       </div>
       <div
         class="inline"
         data-ng-if="flagsBefore">{{item.title}}</div>
+      <br class="clear-both" />
     </div>
   </div>
 </div>
