@@ -87,13 +87,11 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
 
       if ff is 'f-studies' or ff is 'f-countries'
         $scope.data.filteringFieldsValues[ff].forEach (v) ->
-          ffCountries = $scope.data.samples.filter (s) ->
-            s[ff] is v
-          .map (s) ->
-            s['f-countries']
+          ffCountries = $scope.data.samples
+            .filter (s) -> s[ff] is v
+            .map (s) -> s['f-countries']
           $scope.data.flags[v] = _.uniq ffCountries
-          .map (c) ->
-            _.find($scope.data.countries, 'name': c)['code']
+            .map (c) -> _.find($scope.data.countries, 'name': c)['code']
           return
       return
 

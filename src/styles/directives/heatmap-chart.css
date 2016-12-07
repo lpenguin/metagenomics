@@ -252,7 +252,8 @@
   top: -10px;
 }
 
-.heatmap-chart__rows .row .substance-cell:hover:after {
+.heatmap-chart__rows .row .substance-cell.frozen:after,
+.heatmap-chart__rows .row .substance-cell:not(.frozen):hover:after {
   position: absolute;
   z-index: 1;
   top: 0;

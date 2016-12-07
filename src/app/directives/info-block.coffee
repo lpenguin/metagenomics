@@ -6,6 +6,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     legendWidth = $element.find('.gradient').width()
     legendScaleRange = d3.range 0, legendWidth, legendWidth / (colorScale.getRange().length - 1)
     legendScaleRange.push legendWidth
+    frozenData = undefined
 
     $scope.legendGradient = colorScale.getRange()
     $scope.legendPointerX = 0
@@ -22,7 +23,9 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       $scope.database = eventData.database
       return
 
-    $scope.$on 'heatmapChart.cellChanged', (event, eventData) ->
+    $scope.$on 'heatmapChart.cellChanged', (event, eventData, frozenCell) ->
+      frozenData = frozenCell.eventData if frozenCell
+
       $scope.countryName = eventData.countryName
       $scope.flag = eventData.flag
       $scope.abundanceValue = eventData.abundanceValue
@@ -33,6 +36,8 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       return
 
     $scope.$on 'mapChart.countryInOut', (event, eventData) ->
+      eventData = frozenData if _.isEmpty(eventData) and frozenData
+
       $scope.countryName = eventData.countryName
       $scope.flag = eventData.flag
       $scope.abundanceValue = eventData.abundanceValue

@@ -135,12 +135,29 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       return
 
     $scope.substanceMouseOut = ->
-      $rootScope.$broadcast 'heatmapChart.cellChanged', {}
+      $rootScope.$broadcast 'heatmapChart.cellChanged', $scope.frozenCell.eventData or {}
       $rootScope.$broadcast 'heatmapChart.substanceChanged', undefined
       return
 
-    $scope.substanceMouseClick = ->
+    $scope.substanceMouseClick = (cohort, resistance, substance) ->
       $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
+
+      if cohort
+        eventData =
+          countryName: _.find($scope.data.countries, 'code': cohort.flag)?['name']
+          flag: cohort.flag
+          abundanceValue: cohort.abundances[resistance][substance]
+          abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
+          nOfSamples: cohort.samples.length
+
+        if cohort.name is $scope.frozenCell.name and
+        resistance is $scope.frozenCell.resistance and
+        substance is $scope.frozenCell.substance
+          $scope.frozenCell = {}
+        else
+          $scope.frozenCell = {name: cohort.name, resistance, substance, eventData}
+
+        $rootScope.$broadcast 'heatmapChart.cellChanged', eventData, $scope.frozenCell
       return
 
     # → Events
@@ -150,6 +167,8 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
       return if eventData.isSubstanceChangedFromOutside
 
+      $scope.frozenCell = {}
+      $rootScope.$broadcast 'heatmapChart.cellChanged', {}, {}
       $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
       $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
       return
