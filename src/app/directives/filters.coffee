@@ -55,7 +55,7 @@ app.directive 'filters', ($rootScope) ->
 
       _.keys $scope.studyCountryFiltersValues
         .forEach (key) ->
-          eventData[key] = $scope.studyCountryFiltersValues[key]
+          eventData[key] = $scope.studyCountryFiltersValues[key].map (fv) -> fv.value
           return
 
       $rootScope.$broadcast 'filters.filtersChanged', eventData

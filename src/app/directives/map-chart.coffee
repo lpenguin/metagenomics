@@ -208,7 +208,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     recalcCountryAbundances = (filteredSamples) ->
       samplesCountries.forEach (countryName) ->
         country = _.find $scope.data.countries, 'name': countryName
-        countrySamples = samplesFilter.getFilteredSamples filteredSamples, 'f-countries': countryName
+        countrySamples = samplesFilter.getFilteredSamples filteredSamples, 'f-countries': [countryName]
         nOfcountrySamples[country.code] = countrySamples.length
 
         _.keys $scope.data.resistances
