@@ -135,7 +135,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       return
 
     $scope.substanceMouseOut = ->
-      $rootScope.$broadcast 'heatmapChart.cellChanged', $scope.frozenCell.eventData or {}
+      $rootScope.$broadcast 'heatmapChart.cellChanged', {}
       $rootScope.$broadcast 'heatmapChart.substanceChanged', undefined
       return
 
@@ -167,10 +167,11 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
       return if eventData.isSubstanceChangedFromOutside
 
-      $scope.frozenCell = {}
-      $rootScope.$broadcast 'heatmapChart.cellChanged', {}, {}
       $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
       $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
+
+      $scope.frozenCell = {}
+      $rootScope.$broadcast 'heatmapChart.cellChanged', {}, $scope.frozenCell
       return
 
     $scope.$on 'filters.groupingChanged', (event, eventData) ->

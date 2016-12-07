@@ -25,6 +25,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
 
     $scope.$on 'heatmapChart.cellChanged', (event, eventData, frozenCell) ->
       frozenData = frozenCell.eventData if frozenCell
+      eventData = frozenData if _.isEmpty(eventData) and frozenData
 
       $scope.countryName = eventData.countryName
       $scope.flag = eventData.flag
