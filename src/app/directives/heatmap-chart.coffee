@@ -120,16 +120,16 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       colorScale.getColorByValue cohort.abundances[resistance][substance]
 
     # Events →
+    prepareInfoBlockData = (cohort, resistance, substance) ->
+      countryName: _.find($scope.data.countries, 'code': cohort.flag)?['name']
+      flag: cohort.flag
+      abundanceValue: cohort.abundances[resistance][substance]
+      abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
+      nOfSamples: cohort.samples.length
+
     $scope.substanceMouseOver = (cohort, resistance, substance) ->
       if cohort
-        eventData =
-          countryName: _.find($scope.data.countries, 'code': cohort.flag)?['name']
-          flag: cohort.flag
-          abundanceValue: cohort.abundances[resistance][substance]
-          abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
-          nOfSamples: cohort.samples.length
-
-        $rootScope.$broadcast 'heatmapChart.cellChanged', eventData
+        $rootScope.$broadcast 'heatmapChart.cellChanged', prepareInfoBlockData cohort, resistance, substance
 
       $rootScope.$broadcast 'heatmapChart.substanceChanged', if substance is 'overall' then resistance else substance
       return
@@ -143,12 +143,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
 
       if cohort
-        eventData =
-          countryName: _.find($scope.data.countries, 'code': cohort.flag)?['name']
-          flag: cohort.flag
-          abundanceValue: cohort.abundances[resistance][substance]
-          abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
-          nOfSamples: cohort.samples.length
+        eventData = prepareInfoBlockData cohort, resistance, substance
 
         if cohort.name is $scope.frozenCell.name and
         resistance is $scope.frozenCell.resistance and
@@ -161,17 +156,25 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       return
 
     # → Events
+    changeDefaults = (eventData) ->
+      $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
+      $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
+
+      $scope.frozenCell = {}
+      $rootScope.$broadcast 'heatmapChart.cellChanged', {}, $scope.frozenCell
+      return
+
     $scope.$on 'substanceFilter.substanceChanged', (event, eventData) ->
       $scope.tempResistance = if eventData.resistance then eventData.resistance else eventData.substance
       $scope.tempSubstance = if eventData.resistance then eventData.substance else 'overall'
 
       return if eventData.isSubstanceChangedFromOutside
 
-      $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
-      $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
+      changeDefaults eventData
+      return
 
-      $scope.frozenCell = {}
-      $rootScope.$broadcast 'heatmapChart.cellChanged', {}, $scope.frozenCell
+    $scope.$on 'substanceFilter.defaultSubstanceChanged', (event, eventData) ->
+      changeDefaults eventData
       return
 
     $scope.$on 'filters.groupingChanged', (event, eventData) ->

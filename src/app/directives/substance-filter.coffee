@@ -94,8 +94,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
 
     $scope.$on 'heatmapChart.defaultSubstanceChanged', (event) ->
       defaultSubstanceFilterValue = $scope.substanceFilterValue
-      isSubstanceChangedFromOutside = false
-      $rootScope.$broadcast 'substanceFilter.substanceChanged', prepareInfoBlockData()
+      $rootScope.$broadcast 'substanceFilter.defaultSubstanceChanged', prepareInfoBlockData()
       return
 
     return
