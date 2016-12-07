@@ -157,12 +157,11 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       return
 
     $scope.substanceMouseClick = (cohort, resistance, substance) ->
-      $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
-
       if cohort
         eventData = prepareInfoBlockData cohort, resistance, substance
 
-        if cohort is $scope.frozenCell and
+        if $scope.frozenCell and
+        cohort is $scope.frozenCell.cohort and
         resistance is $scope.frozenCell.resistance and
         substance is $scope.frozenCell.substance
           $scope.frozenCell = {}
@@ -170,14 +169,15 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
           $scope.frozenCell = {cohort, resistance, substance, eventData}
 
         $rootScope.$broadcast 'heatmapChart.cellChanged', eventData, $scope.frozenCell
+
+      $scope.frozenCell = {} unless cohort
+      $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
       return
 
     # → Events
     changeDefaults = (eventData) ->
       $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
       $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
-
-      $scope.frozenCell = {}
       $rootScope.$broadcast 'heatmapChart.cellChanged', {}, $scope.frozenCell
       return
 
@@ -187,6 +187,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
       return if eventData.isSubstanceChangedFromOutside
 
+      $scope.frozenCell = {}
       changeDefaults eventData
       return
 
