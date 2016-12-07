@@ -5,7 +5,7 @@ app.factory 'samplesFilter', ->
         _.every _.forIn(filterValues), (value, key) ->
           sampleValue = s[key]
 
-          if key is 'f-studies' or key is 'f-countries'
+          if (key is 'f-studies' or key is 'f-countries') and _.isArray value
             if value.length
               _.some value, (v) -> sampleValue is v
             else

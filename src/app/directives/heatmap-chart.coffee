@@ -41,10 +41,10 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         return unless cohortSamples.length
         return if cohortSamples.length is samples.length
 
-        flag = if order[0] is 'f-countries' then _.find($scope.data.countries, 'name': p[0])['code'] else undefined
+        flag = if cohortProperties['f-countries'] then _.find($scope.data.countries, 'name': cohortProperties['f-countries'])['code'] else undefined
         gender = cohortProperties['f-genders']
         name = p
-        name = _.tail(p) if order[0] is 'f-countries' and p.length > 1
+        name = name.filter((prop) -> prop isnt cohortProperties['f-countries']) if flag and p.length > 1
         name = name.filter((prop) -> prop isnt gender) if gender
         name = name.join ', '
 
@@ -80,38 +80,55 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
     createCohorts = (filtersValues, checkboxesValues) ->
       $scope.cohorts = []
 
-      studies = filtersValues['f-studies'].value
-      countries = filtersValues['f-countries'].value
+      studies = filtersValues['f-studies'].map (fv) -> fv.value
+      countries = filtersValues['f-countries'].map (fv) -> fv.value
+
       groupingOrder = _.keys checkboxesValues
         .filter (key) ->
           checkboxesValues[key] and
-          (if studies then key isnt 'f-studies' else true) and
-          (if countries then key isnt 'f-countries' else true)
+          (if studies.length then key isnt 'f-studies' else true) and
+          (if countries.length then key isnt 'f-countries' else true)
 
-      if studies or countries
-        rootProperties = {}
-        rootProperties['f-studies'] = studies if studies
-        rootProperties['f-countries'] = countries if countries
-        rootSamples = samplesFilter.getFilteredSamples $scope.data.samples, rootProperties
+      if studies.length or countries.length
+        roots = []
 
-        return unless rootSamples.length
+        if studies.length and countries.length
+          roots = tools.getPermutations [studies, countries]
+        else if studies.length
+          roots = studies
+        else
+          roots = countries
 
-        flag = if countries and not studies then _.find($scope.data.countries, 'name': countries)['code'] else undefined
-        name = if studies and countries then [studies, countries].join(', ') else studies or countries
+        roots.forEach (root, i) ->
+          rootProperties = {}
 
-        $scope.cohorts.push
-          name: name
-          flag: flag
-          isPushed: false
-          samples: rootSamples
-          abundances: getCohortAbundances rootSamples
+          if _.isArray(root)
+            rootProperties['f-studies'] = root[0]
+            rootProperties['f-countries'] = root[1]
+          else
+            rootProperties[if studies.length then 'f-studies' else 'f-countries'] = root
 
-        permutationsCohorts = getPermutationsCohorts rootSamples, groupingOrder
+          rootSamples = samplesFilter.getFilteredSamples $scope.data.samples, rootProperties
 
-        return unless permutationsCohorts.length
+          return unless rootSamples.length
 
-        permutationsCohorts[0].isPushed = true
-        $scope.cohorts = $scope.cohorts.concat permutationsCohorts
+          flag = if countries.length then _.find($scope.data.countries, 'name': rootProperties['f-countries'])['code'] else undefined
+          name = if _.isArray(root) then root[0] else root
+
+          $scope.cohorts.push
+            name: name
+            flag: flag
+            isPushed: i
+            samples: rootSamples
+            abundances: getCohortAbundances rootSamples
+
+          permutationsCohorts = getPermutationsCohorts rootSamples, groupingOrder
+
+          return unless permutationsCohorts.length
+
+          permutationsCohorts[0].isPushed = true
+          $scope.cohorts = $scope.cohorts.concat permutationsCohorts
+          return
       else
         $scope.cohorts = getPermutationsCohorts $scope.data.samples, groupingOrder
       return
@@ -145,12 +162,12 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       if cohort
         eventData = prepareInfoBlockData cohort, resistance, substance
 
-        if cohort.name is $scope.frozenCell.name and
+        if cohort is $scope.frozenCell and
         resistance is $scope.frozenCell.resistance and
         substance is $scope.frozenCell.substance
           $scope.frozenCell = {}
         else
-          $scope.frozenCell = {name: cohort.name, resistance, substance, eventData}
+          $scope.frozenCell = {cohort, resistance, substance, eventData}
 
         $rootScope.$broadcast 'heatmapChart.cellChanged', eventData, $scope.frozenCell
       return

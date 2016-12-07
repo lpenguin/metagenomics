@@ -46,7 +46,7 @@
         <div
           class="substance-cell inline"
           data-ng-repeat="s in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
-          data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'frozen': cohort.name === frozenCell.name && r === frozenCell.resistance && s === frozenCell.substance, 'top': !$parent.$parent.$index, 'bottom': $parent.$parent.$index === cohorts.length - 1}"
+          data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'frozen': cohort === frozenCell.cohort && r === frozenCell.resistance && s === frozenCell.substance, 'top': !$parent.$parent.$index, 'bottom': $parent.$parent.$index === cohorts.length - 1}"
           data-ng-style="{'background-color': getCellColor(cohort, r, s)}"
           data-ng-mouseover="substanceMouseOver(cohort, r, s)"
           data-ng-mouseout="substanceMouseOut()"
