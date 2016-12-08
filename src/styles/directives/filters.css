@@ -22,6 +22,19 @@
   width: 145px;
 }
 
+.filters__filters .filters-reset {
+  margin-left: 15px;
+  padding: 4px 6px;
+
+  cursor: pointer;
+  user-select: none;
+
+  color: #dc322f;
+
+  font-size: 16px;
+  line-height: 1;
+}
+
 .filters__checkboxes {
   position: absolute;
   top: 700px;

@@ -32,6 +32,13 @@ app.directive 'filters', ($rootScope) ->
       $scope.studyCountryFiltersValues[ff] = []
       return
 
+    $scope.resetFilters = ->
+      _.keys $scope.studyCountryFiltersValues
+        .forEach (key) ->
+          $scope.studyCountryFiltersValues[key] = []
+          return
+      return
+
     # Checkboxes
     $scope.checkboxes = _.keys $scope.data.filteringFieldsValues
 
@@ -58,8 +65,8 @@ app.directive 'filters', ($rootScope) ->
           eventData[key] = $scope.studyCountryFiltersValues[key].map (fv) -> fv.value
           return
 
+      $scope.isResetShown = _.some _.keys(eventData), (key) -> eventData[key].length
       $rootScope.$broadcast 'filters.filtersChanged', eventData
-
       onGroupingChanged()
       return
     , true

@@ -11,6 +11,10 @@
       data-plural="filter.plural"
       data-selected="studyCountryFiltersValues[filter.key]"
       data-flags-before="filter.flagsBefore"></custom-select>
+    <div
+      class="filters-reset inline"
+      data-ng-show="isResetShown"
+      data-ng-click="resetFilters()">&#10005;</div>
     <br class="clear-both" />
   </div>
   <div class="filters__checkboxes">
