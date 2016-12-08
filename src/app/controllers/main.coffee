@@ -6,14 +6,13 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
 
     $scope.data = {}
 
-    $scope.data.countries = rawData[1].map (d) ->
-      name: d.name
-      code: d.code
+    $scope.data.countries = rawData[1]
 
     $scope.data.substances = _.values rawData[3].categories
       .map (substance) ->
         name: substance['category_name']
         resistance: substance['group']
+        genes: substance['genes'].map (g) -> g['gene_name']
         infoLink: substance['info_link']
 
     $scope.data.resistances = {}
@@ -31,22 +30,43 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
     # Prepare samples
     $scope.data.samples = _.values rawData[2]
 
-    $scope.data.samples.forEach (s) ->
+    samplesSubstanceAbundances = _.groupBy rawData[4], 'sample'
+    samplesGeneAbundances = _.groupBy rawData[5], 'sample'
+
+    $scope.data.samples.forEach (sample) ->
+      sample.genes = []
+
       # Prepare gender
-      unless s['f-genders'] is 'NA'
-        s['f-genders'] = _.capitalize _.head s['f-genders']
+      unless sample['f-genders'] is 'NA'
+        sample['f-genders'] = _.capitalize _.head sample['f-genders']
 
-      # Prepare sample abundances
-      sampleAbundances = rawData[4].filter (d) -> d['sample'] is s.names
+      # Prepare abundances
+      sName = sample['names']
+      sampleSubstanceAbundances = _.groupBy samplesSubstanceAbundances[sName], 'category'
+      sampleGeneAbundances = _.groupBy samplesGeneAbundances[sName], 'category'
+      _.forIn sampleGeneAbundances, (value, key) ->
+        sampleGeneAbundances[key] = _.groupBy value, 'gene id'
+        return
 
-      _.keys $scope.data.resistances
-        .forEach (key) ->
-          s[key] = {}
+      resistances = _.keys $scope.data.resistances
 
-          $scope.data.resistances[key].forEach (substance) ->
-            s[key][substance] = parseFloat _.find(sampleAbundances, 'groups': key, 'category': substance)['sum_abund']
+      resistances.forEach (r) ->
+        resistanceSubstances = $scope.data.resistances[r]
+        sample[r] = {}
+
+        resistanceSubstances.forEach (s) ->
+          rec = sampleSubstanceAbundances[s]?[0]
+          sample[r][s] = unless rec then 0 else parseFloat rec['sum_abund']
+
+          substanceGenes = _.find($scope.data.substances, 'name': s)['genes']
+          sample.genes[s] = {}
+
+          substanceGenes.forEach (g) ->
+            rec = sampleGeneAbundances[s]?[g]?[0]
+            sample.genes[s][g] = unless rec then 0 else parseFloat rec['abund']
             return
           return
+        return
       return
 
     # Studies for footer
@@ -87,11 +107,12 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
 
       if ff is 'f-studies' or ff is 'f-countries'
         $scope.data.filteringFieldsValues[ff].forEach (v) ->
-          ffCountries = $scope.data.samples
-            .filter (s) -> s[ff] is v
-            .map (s) -> s['f-countries']
-          $scope.data.flags[v] = _.uniq ffCountries
-            .map (c) -> _.find($scope.data.countries, 'name': c)['code']
+          if ff is 'f-countries'
+            $scope.data.flags[v] = [_.find($scope.data.countries, 'name': v)['code']]
+          else
+            ffCountries = _.groupBy($scope.data.samples, ff)[v].map (s) -> s['f-countries']
+            $scope.data.flags[v] = _.uniq ffCountries
+              .map (c) -> _.find($scope.data.countries, 'name': c)['code']
           return
       return
 

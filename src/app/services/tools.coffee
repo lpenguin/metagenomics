@@ -4,7 +4,7 @@ app.factory 'tools', ->
       return -1 if a.toLowerCase() < b.toLowerCase()
       return 1 if a.toLowerCase() > b.toLowerCase()
       0
-      
+
     getPermutations: (array) ->
       unless array.length
         []
