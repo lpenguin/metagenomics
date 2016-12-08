@@ -237,7 +237,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
       return
 
     # → Events
-    $scope.$on 'substanceFilter.substanceChanged', (event, eventData) ->
+    $scope.$on 'substanceFilter.defaultSubstanceChanged', (event, eventData) ->
       resistance = if eventData.resistance then eventData.resistance else eventData.substance
       substance = if eventData.resistance then eventData.substance else 'overall'
       paintMap()

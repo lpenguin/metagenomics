@@ -147,54 +147,30 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       genes: []
 
     $scope.substanceMouseOver = (cohort, resistance, substance) ->
+      $scope.tempResistance = resistance
+      $scope.tempSubstance = substance
       if cohort
         $rootScope.$broadcast 'heatmapChart.cellChanged', prepareInfoBlockData cohort, resistance, substance
-
-      $rootScope.$broadcast 'heatmapChart.substanceChanged', if substance is 'overall' then resistance else substance
+      $rootScope.$broadcast 'heatmapChart.tempSubstanceChanged', if substance is 'overall' then resistance else substance
       return
 
     $scope.substanceMouseOut = ->
+      $scope.tempResistance = undefined
+      $scope.tempSubstance = undefined
       $rootScope.$broadcast 'heatmapChart.cellChanged', {}
-      $rootScope.$broadcast 'heatmapChart.substanceChanged', undefined
+      $rootScope.$broadcast 'heatmapChart.tempSubstanceChanged', undefined
       return
 
     $scope.substanceMouseClick = (cohort, resistance, substance) ->
-      if cohort
-        eventData = prepareInfoBlockData cohort, resistance, substance
-
-        if $scope.frozenCell and
-        cohort is $scope.frozenCell.cohort and
-        resistance is $scope.frozenCell.resistance and
-        substance is $scope.frozenCell.substance
-          $scope.frozenCell = {}
-        else
-          $scope.frozenCell = {cohort, resistance, substance, eventData}
-
-        $rootScope.$broadcast 'heatmapChart.cellChanged', eventData, $scope.frozenCell
-
-      $scope.frozenCell = {} unless cohort
+      $scope.defaultResistance = resistance
+      $scope.defaultSubstance = substance
       $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
       return
 
     # → Events
-    changeDefaults = (eventData) ->
+    $scope.$on 'substanceFilter.defaultSubstanceChanged', (event, eventData) ->
       $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
       $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
-      $rootScope.$broadcast 'heatmapChart.cellChanged', {}, $scope.frozenCell
-      return
-
-    $scope.$on 'substanceFilter.substanceChanged', (event, eventData) ->
-      $scope.tempResistance = if eventData.resistance then eventData.resistance else eventData.substance
-      $scope.tempSubstance = if eventData.resistance then eventData.substance else 'overall'
-
-      return if eventData.isSubstanceChangedFromOutside
-
-      $scope.frozenCell = {}
-      changeDefaults eventData
-      return
-
-    $scope.$on 'substanceFilter.defaultSubstanceChanged', (event, eventData) ->
-      changeDefaults eventData
       return
 
     $scope.$on 'filters.groupingChanged', (event, eventData) ->
