@@ -34,7 +34,7 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
     samplesGeneAbundances = _.groupBy rawData[5], 'sample'
 
     $scope.data.samples.forEach (sample) ->
-      sample.genes = []
+      sample.genes = {}
 
       # Prepare gender
       unless sample['f-genders'] is 'NA'
@@ -68,6 +68,8 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
           return
         return
       return
+
+    console.log $scope.data
 
     # Studies for footer
     $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'

@@ -32,6 +32,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       $scope.abundanceValue = eventData.abundanceValue
       $scope.abundanceValueType = eventData.abundanceValueType
       $scope.nOfSamples = eventData.nOfSamples
+      $scope.genes = eventData.genes
 
       $scope.legendPointerX = getLegendPointerX eventData.abundanceValue
       return
@@ -44,6 +45,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
       $scope.abundanceValue = eventData.abundanceValue
       $scope.abundanceValueType = eventData.abundanceValueType
       $scope.nOfSamples = eventData.nOfSamples
+      $scope.genes = eventData.genes
 
       $scope.legendPointerX = getLegendPointerX eventData.abundanceValue
       return

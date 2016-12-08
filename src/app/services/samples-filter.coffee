@@ -1,7 +1,7 @@
 app.factory 'samplesFilter', ->
   samplesFilter =
     getFilteredSamples: (samples, filterValues) ->
-      samples.filter (s) ->
+      _.filter samples, (s) ->
         _.every _.forIn(filterValues), (value, key) ->
           sampleValue = s[key]
 

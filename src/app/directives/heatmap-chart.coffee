@@ -10,10 +10,11 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
 
       _.keys $scope.data.resistances
         .forEach (key) ->
-          cohortAbundances[key] = 'overall': abundanceCalculator.getAbundanceValue samples, key, 'overall'
+          cohortAbundances[key] =
+            overall: abundanceCalculator.getAbundanceValue samples, key, 'overall'
           resistanceSubstances = $scope.data.resistances[key]
 
-          return if resistanceSubstances.length < 2
+          return unless resistanceSubstances.length > 1
 
           resistanceSubstances.forEach (s) ->
             cohortAbundances[key][s] = abundanceCalculator.getAbundanceValue samples, key, s
@@ -143,6 +144,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       abundanceValue: cohort.abundances[resistance][substance]
       abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
       nOfSamples: cohort.samples.length
+      genes: []
 
     $scope.substanceMouseOver = (cohort, resistance, substance) ->
       if cohort

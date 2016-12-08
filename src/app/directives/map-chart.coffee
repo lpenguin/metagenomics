@@ -167,6 +167,7 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           flag: d.id
           abundanceValue: countryAbundances[d.id][resistance][substance]
           nOfSamples: nOfcountrySamples[d.id]
+          genes: []
 
         $rootScope.$broadcast 'mapChart.countryInOut', eventData
         $scope.$apply()

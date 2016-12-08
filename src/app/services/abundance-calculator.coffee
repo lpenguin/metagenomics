@@ -8,8 +8,6 @@ app.factory 'abundanceCalculator', ->
 
     getAbundanceValue: (samples, resistance, substance) ->
       unless substance is 'overall'
-        values = samples.map (s) -> s[resistance][substance]
-        d3.median values
+        d3.median _.map samples, (s) -> s[resistance][substance]
       else
-        values = resistances[resistance].map (s) -> abundanceCalculator.getAbundanceValue samples, resistance, s
-        d3.mean values
+        d3.mean _.map resistances[resistance], (s) -> abundanceCalculator.getAbundanceValue samples, resistance, s
