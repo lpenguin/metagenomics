@@ -4,7 +4,7 @@ app.constant 'colors',
     '#b35806'
     '#e08214'
     '#fdb863'
-    '#fee0b6'
+    '#efe3e7'
     '#d8daeb'
     '#b2abd2'
     '#8073ac'
