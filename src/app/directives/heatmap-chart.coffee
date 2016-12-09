@@ -138,7 +138,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       colorScale.getColorByValue cohort.abundances[resistance][substance]
 
     # Events →
-    prepareInfoBlockData = (cohort, resistance, substance) ->
+    prepareCellData = (cohort, resistance, substance) ->
       countryName: _.find($scope.data.countries, 'code': cohort.flag)?['name']
       flag: cohort.flag
       abundanceValue: cohort.abundances[resistance][substance]
@@ -150,7 +150,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       $scope.tempResistance = resistance
       $scope.tempSubstance = substance
       if cohort
-        $rootScope.$broadcast 'heatmapChart.cellChanged', prepareInfoBlockData cohort, resistance, substance
+        $rootScope.$broadcast 'heatmapChart.cellChanged', prepareCellData cohort, resistance, substance
       $rootScope.$broadcast 'heatmapChart.tempSubstanceChanged', if substance is 'overall' then resistance else substance
       return
 
@@ -164,11 +164,27 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
     $scope.substanceMouseClick = (cohort, resistance, substance) ->
       $scope.defaultResistance = resistance
       $scope.defaultSubstance = substance
+
+      if $scope.frozenCell and
+      $scope.frozenCell.cohort is cohort and
+      $scope.frozenCell.resistance is resistance and
+      $scope.frozenCell.substance is substance
+        $scope.frozenCell = undefined
+        $rootScope.$broadcast 'heatmapChart.cellIsUnfrozen'
+      else
+        $scope.frozenCell =
+          cohort: cohort
+          resistance: resistance
+          substance: substance
+        $rootScope.$broadcast 'heatmapChart.cellIsFrozen'
+        $rootScope.$broadcast 'heatmapChart.cellChanged', prepareCellData(cohort, resistance, substance), true
+
       $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
       return
 
     # → Events
     $scope.$on 'substanceFilter.defaultSubstanceChanged', (event, eventData) ->
+      $scope.frozenCell = undefined
       $scope.defaultResistance = if eventData.resistance then eventData.resistance else eventData.substance
       $scope.defaultSubstance = if eventData.resistance then eventData.substance else 'overall'
       return

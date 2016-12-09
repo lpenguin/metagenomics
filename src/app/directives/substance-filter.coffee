@@ -59,7 +59,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
       return
 
     # Events →
-    prepareInfoBlockData = ->
+    prepareSubstanceData = ->
       infoLink = undefined
       database = undefined
 
@@ -78,7 +78,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
       eventData
 
     $scope.$watch 'substanceFilterValue', ->
-      infoBlockData = prepareInfoBlockData()
+      infoBlockData = prepareSubstanceData()
       $rootScope.$broadcast 'substanceFilter.substanceChanged', infoBlockData
 
       unless isSubstanceChangedFromOutside
@@ -98,6 +98,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
 
     $scope.$on 'heatmapChart.defaultSubstanceChanged', (event) ->
       defaultSubstanceFilterValue = $scope.substanceFilterValue
+      $rootScope.$broadcast 'substanceFilter.substanceChanged', prepareSubstanceData(), true
       return
 
     return
