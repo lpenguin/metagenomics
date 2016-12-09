@@ -165,19 +165,24 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       $scope.defaultResistance = resistance
       $scope.defaultSubstance = substance
 
-      if $scope.frozenCell and
-      $scope.frozenCell.cohort is cohort and
-      $scope.frozenCell.resistance is resistance and
-      $scope.frozenCell.substance is substance
+      if cohort
+        if $scope.frozenCell and
+        $scope.frozenCell.cohort is cohort and
+        $scope.frozenCell.resistance is resistance and
+        $scope.frozenCell.substance is substance
+          $scope.frozenCell = undefined
+          $rootScope.$broadcast 'heatmapChart.cellIsUnfrozen'
+        else
+          $scope.frozenCell =
+            cohort: cohort
+            resistance: resistance
+            substance: substance
+          $rootScope.$broadcast 'heatmapChart.cellIsFrozen'
+          $rootScope.$broadcast 'heatmapChart.cellChanged', prepareCellData(cohort, resistance, substance), true
+      else
         $scope.frozenCell = undefined
         $rootScope.$broadcast 'heatmapChart.cellIsUnfrozen'
-      else
-        $scope.frozenCell =
-          cohort: cohort
-          resistance: resistance
-          substance: substance
-        $rootScope.$broadcast 'heatmapChart.cellIsFrozen'
-        $rootScope.$broadcast 'heatmapChart.cellChanged', prepareCellData(cohort, resistance, substance), true
+        $rootScope.$broadcast 'heatmapChart.cellChanged', {}
 
       $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
       return

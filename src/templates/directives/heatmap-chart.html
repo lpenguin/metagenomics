@@ -14,7 +14,7 @@
         data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'full': r === tempResistance && s === tempSubstance}"
         data-ng-mouseover="substanceMouseOver(undefined, r, s)"
         data-ng-mouseout="substanceMouseOut()"
-        data-ng-click="substanceMouseClick()"
+        data-ng-click="substanceMouseClick(undefined, r, s)"
         once-class="{'overall': s === 'overall'}"
         once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"
         once once-attr-data-after-content="s === 'overall' ? '' : s.substring(1)"></div>
@@ -67,7 +67,7 @@
         data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'full': r === tempResistance && s === tempSubstance}"
         data-ng-mouseover="substanceMouseOver(undefined, r, s)"
         data-ng-mouseout="substanceMouseOut()"
-        data-ng-click="substanceMouseClick()"
+        data-ng-click="substanceMouseClick(undefined, r, s)"
         once-class="{'overall': s === 'overall'}"
         once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"
         once once-attr-data-after-content="s === 'overall' ? '' : s.substring(1)"></div>
