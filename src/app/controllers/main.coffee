@@ -69,8 +69,6 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
         return
       return
 
-    console.log $scope.data
-
     # Studies for footer
     $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
       .sort tools.sortAlphabeticaly
@@ -121,6 +119,7 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
     $scope.initializing = false
     $scope.$apply()
     likely.initiate()
+
     $timeout ->
       $('.loading-cover').fadeOut()
     , 500

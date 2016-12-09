@@ -4,5 +4,5 @@ app.directive 'tip', ->
   templateUrl: 'directives/tip.html'
   link: ($scope, $element, $attrs) ->
     $scope.isInfoShown = false
-    
+
     return

@@ -58,6 +58,7 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
       $scope.isListShown = false
       return
 
+    # Events →
     prepareInfoBlockData = ->
       infoLink = undefined
       database = undefined
@@ -76,7 +77,6 @@ app.directive 'substanceFilter', ($document, $rootScope) ->
 
       eventData
 
-    # Events →
     $scope.$watch 'substanceFilterValue', ->
       infoBlockData = prepareInfoBlockData()
       $rootScope.$broadcast 'substanceFilter.substanceChanged', infoBlockData

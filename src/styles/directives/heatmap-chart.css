@@ -130,11 +130,11 @@
 }
 
 .heatmap-chart__rows .row .gender.f {
-  background-image: url("../img/accessories/female.png");
+  background-image: url('../img/accessories/female.png');
 }
 
 .heatmap-chart__rows .row .gender.m {
-  background-image: url("../img/accessories/male.png");
+  background-image: url('../img/accessories/male.png');
 }
 
 .heatmap-chart__rows .row .name {
