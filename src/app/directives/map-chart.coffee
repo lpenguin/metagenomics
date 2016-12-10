@@ -1,4 +1,4 @@
-app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator, colorScale, samplesFilter) ->
+app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator, topFiveGenerator, colorScale, samplesFilter) ->
   restrict: 'E'
   replace: true
   template: '<div class="map-chart"></div>'
@@ -166,8 +166,8 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
           countryName: _.find($scope.data.countries, 'code': d.id)['name']
           flag: d.id
           abundanceValue: countryAbundances[d.id][resistance][substance]
-          nOfSamples: nOfcountrySamples[d.id]
-          genes: []
+          nOfSamples: countrySamples[d.id].length
+          topFiveList: topFiveGenerator.get countrySamples[d.id], countryAbundances[d.id], resistance, substance
 
         $rootScope.$broadcast 'mapChart.countryInOut', eventData
         $scope.$apply()
@@ -189,12 +189,12 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     resistance = undefined
     substance = undefined
     countryAbundances = {}
-    nOfcountrySamples = {}
+    countrySamples = {}
 
     samplesCountries.forEach (countryName) ->
       country = _.find $scope.data.countries, 'name': countryName
       countryAbundances[country.code] = {}
-      nOfcountrySamples[country.code] = undefined
+      countrySamples[country.code] = []
 
       _.keys $scope.data.resistances
         .forEach (key) ->
@@ -209,15 +209,15 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
     recalcCountryAbundances = (filteredSamples) ->
       samplesCountries.forEach (countryName) ->
         country = _.find $scope.data.countries, 'name': countryName
-        countrySamples = samplesFilter.getFilteredSamples filteredSamples, 'f-countries': countryName
-        nOfcountrySamples[country.code] = countrySamples.length
+        cSamples = samplesFilter.getFilteredSamples filteredSamples, 'f-countries': countryName
+        countrySamples[country.code] = cSamples
 
         _.keys $scope.data.resistances
           .forEach (key) ->
-            countryAbundances[country.code][key].overall = abundanceCalculator.getAbundanceValue countrySamples, key, 'overall'
+            countryAbundances[country.code][key].overall = abundanceCalculator.getAbundanceValue cSamples, key, 'overall'
 
             $scope.data.resistances[key].forEach (substance) ->
-              countryAbundances[country.code][key][substance] = abundanceCalculator.getAbundanceValue countrySamples, key, substance
+              countryAbundances[country.code][key][substance] = abundanceCalculator.getAbundanceValue cSamples, key, substance
               return
             return
         return

@@ -1,4 +1,4 @@
-app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoader, tools) ->
+app.controller 'MainController', ($scope, $timeout, abundanceCalculator, topFiveGenerator, dataLoader, tools) ->
   $scope.initializing = true
 
   parseData = (error, rawData) ->
@@ -26,6 +26,7 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, dataLoa
         return
 
     abundanceCalculator.init $scope.data.resistances
+    topFiveGenerator.init $scope.data.substances
 
     # Prepare samples
     $scope.data.samples = _.values rawData[2]

@@ -1,4 +1,4 @@
-app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samplesFilter, tools) ->
+app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator, colorScale, samplesFilter, tools) ->
   restrict: 'E'
   replace: true
   templateUrl: 'directives/heatmap-chart.html'
@@ -156,7 +156,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       abundanceValue: cohort.abundances[resistance][substance]
       abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
       nOfSamples: cohort.samples.length
-      genes: []
+      topFiveList: topFiveGenerator.get cohort.samples, cohort.abundances, resistance, substance
 
     $scope.substanceMouseOver = (cohort, resistance, substance) ->
       $scope.tempResistance = resistance
