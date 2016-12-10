@@ -27,17 +27,23 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
       permutationsCohorts = []
       permutations = tools.getPermutations order.map (o) -> $scope.data.filteringFieldsValues[o]
 
+      nOfGroupSamples = {}
+
+      _.uniq permutations.map (p) -> p[0]
+        .forEach (u) ->
+          groupProperties = {}
+          groupProperties[order[0]] = u
+          nOfGroupSamples[u] = samplesFilter.getFilteredSamples(samples, groupProperties).length
+          return
+
       permutations.forEach (p, i) ->
         cohortProperties = {}
-        groupProperties = {}
 
         order.forEach (o, j) ->
           cohortProperties[o] = p[j]
-          groupProperties[o] = p[j] if not j
           return
 
         cohortSamples = samplesFilter.getFilteredSamples samples, cohortProperties
-        groupSamples = samplesFilter.getFilteredSamples samples, groupProperties
 
         return unless cohortSamples.length
         return if cohortSamples.length is samples.length
@@ -45,18 +51,20 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         flag = if cohortProperties['f-countries'] then _.find($scope.data.countries, 'name': cohortProperties['f-countries'])['code'] else undefined
         gender = cohortProperties['f-genders']
         name = p
-        name = name.filter((prop) -> prop isnt cohortProperties['f-countries']) if flag and p.length > 1
-        name = name.filter((prop) -> prop isnt gender) if gender
-        name = name.join ', '
+        displayName = p
+        displayName = displayName.filter((prop) -> prop isnt cohortProperties['f-countries']) if flag and p.length > 1
+        displayName = displayName.filter((prop) -> prop isnt gender) if gender
+        displayName = displayName.join ', '
 
         permutationsCohorts.push
           permutation: p
           name: name
+          displayName: displayName
           flag: flag
           gender: gender
           samples: cohortSamples
           abundances: getCohortAbundances cohortSamples
-          nOfSamplesInGroup: groupSamples.length
+          nOfSamplesInGroup: nOfGroupSamples[p[0]]
         return
 
       permutationsCohorts.sort (a, b) ->
@@ -100,36 +108,40 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, colorScale, samp
         else
           roots = countries
 
-        roots.forEach (root, i) ->
-          rootProperties = {}
+        roots
+          .sort tools.sortAlphabetically
+          .forEach (root, i) ->
+            rootProperties = {}
 
-          if _.isArray(root)
-            rootProperties['f-studies'] = root[0]
-            rootProperties['f-countries'] = root[1]
-          else
-            rootProperties[if studies.length then 'f-studies' else 'f-countries'] = root
+            if _.isArray(root)
+              rootProperties['f-studies'] = root[0]
+              rootProperties['f-countries'] = root[1]
+            else
+              rootProperties[if studies.length then 'f-studies' else 'f-countries'] = root
 
-          rootSamples = samplesFilter.getFilteredSamples $scope.data.samples, rootProperties
+            rootSamples = samplesFilter.getFilteredSamples $scope.data.samples, rootProperties
 
-          return unless rootSamples.length
+            return unless rootSamples.length
 
-          flag = if countries.length then _.find($scope.data.countries, 'name': rootProperties['f-countries'])['code'] else undefined
-          name = if _.isArray(root) then root[0] else root
+            flag = if countries.length then _.find($scope.data.countries, 'name': rootProperties['f-countries'])['code'] else undefined
+            name = root
+            displayName = if _.isArray(root) then root[0] else root
 
-          $scope.cohorts.push
-            name: name
-            flag: flag
-            isPushed: i
-            samples: rootSamples
-            abundances: getCohortAbundances rootSamples
+            $scope.cohorts.push
+              name: name
+              displayName: displayName
+              flag: flag
+              isPushed: i
+              samples: rootSamples
+              abundances: getCohortAbundances rootSamples
 
-          permutationsCohorts = getPermutationsCohorts rootSamples, groupingOrder
+            permutationsCohorts = getPermutationsCohorts rootSamples, groupingOrder
 
-          return unless permutationsCohorts.length
+            return unless permutationsCohorts.length
 
-          permutationsCohorts[0].isPushed = true
-          $scope.cohorts = $scope.cohorts.concat permutationsCohorts
-          return
+            permutationsCohorts[0].isPushed = true
+            $scope.cohorts = $scope.cohorts.concat permutationsCohorts
+            return
       else
         $scope.cohorts = getPermutationsCohorts $scope.data.samples, groupingOrder
       return
