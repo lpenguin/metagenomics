@@ -37,6 +37,28 @@
     class="info-block__n-of-samples"
     data-ng-show="nOfSamples">{{abundanceValueType + ' among ' + nOfSamples + (nOfSamples === 1 ? ' sample' : ' samples')}}</div>
   <div
+    class="info-block__top-five-list"
+    data-ng-show="topFiveList && topFiveList.length">
+    <div class="caption">Gene resistance</div>
+    <div
+      class="row"
+      data-ng-repeat="item in topFiveList track by $index">
+      <div
+        class="name inline"
+        overflow>
+        <span class="short">{{item.name}}</span>
+        <span class="full">{{item.name}}</span>
+      </div>
+      <div
+        class="bar inline"
+        data-ng-style="{'width': maxBarWidth * item.value / topFiveList[0].value + 'px', 'background-color': getBarColor(item.value)}"></div>
+      <div
+        class="value inline"
+        data-ng-bind-html="item.value | prepareAbundanceValue | trust"></div>
+      <br class="clear-both" />
+    </div>
+  </div>
+  <div
     class="info-block__info-link"
     data-ng-show="infoLink">
     <a

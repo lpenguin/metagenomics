@@ -14,6 +14,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     $scope.legendScale = d3.scale.log()
       .domain colorScale.getDomain()
       .range legendScaleRange
+    $scope.maxBarWidth = 80
 
     getLegendPointerX = (value) -> unless value then 0 else $scope.legendScale value
 
@@ -65,5 +66,8 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     $scope.$on 'heatmapChart.cellIsUnfrozen', ->
       isFrozen = false
       return
+
+    $scope.getBarColor = (value) ->
+      colorScale.getColorByValue value
 
     return
