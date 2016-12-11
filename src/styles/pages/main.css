@@ -27,7 +27,7 @@
   font-weight: 400;
 }
 
-.tip-container {
+.tips-container {
   position: absolute;
   top: 18px;
   right: $common-offset;

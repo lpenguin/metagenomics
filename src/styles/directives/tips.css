@@ -1,8 +1,26 @@
 @import '../variables';
 
-.tip__question-button {
+.tips__upload-button {
+  padding: 2px 8px;
+
+  cursor: pointer;
+  user-select: none;
+
+  border: 1px solid rgba(0, 0, 0, .15);
+  border-radius: 4px;
+  background-color: #fff;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+  line-height: 18px;
+}
+
+.tips__question-button {
+  float: right;
+
   width: 24px;
   height: 24px;
+  margin-top: 280px;
 
   cursor: pointer;
 
@@ -12,7 +30,7 @@
   background-size: 24px 24px;
 }
 
-.tip__info-background {
+.tips__info-background {
   position: fixed;
   z-index: 999;
   top: 0;
@@ -24,7 +42,7 @@
   background-color: rgba(255, 255, 255, .95);
 }
 
-.tip__info {
+.tips__info {
   position: fixed;
   z-index: 999;
   top: 50%;
@@ -43,15 +61,15 @@
   line-height: 20px;
 }
 
-.tip__info h3 {
+.tips__info h3 {
   margin: 0 0 20px 0;
 
   text-transform: uppercase;
 
-  font-family: 'Syncopate', sans-serif;
+  font-family: $syncopate;
   font-size: 26px;
 }
 
-.tip__info p {
+.tips__info p {
   margin: 15px 0 0 0;
 }
