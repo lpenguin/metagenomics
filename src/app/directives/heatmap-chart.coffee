@@ -199,7 +199,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
                   secondRow.push createExcelbuilderCell (if substance is 'overall' then (if $scope.data.resistances[key].length < 2 then 'median' else 'mean') else substance), 'string'
 
                 unless j
-                  secondRow.push createExcelbuilderCell '', 'string'
+                  cohortRow.push createExcelbuilderCell '', 'string'
                 cohortRow.push createExcelbuilderCell c.abundances[key][substance], 'number'
                 return
             return
