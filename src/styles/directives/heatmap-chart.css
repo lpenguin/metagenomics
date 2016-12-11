@@ -265,3 +265,16 @@
 
   border: 1px solid #0a9;
 }
+
+.heatmap-chart .heatmap-chart__download {
+  float: right;
+
+  margin-top: 10px;
+
+  font-family: $helvetica-neue-regular;
+  font-size: $m-font-size;
+}
+
+.heatmap-chart .heatmap-chart__download a {
+  cursor: pointer;
+}

@@ -149,6 +149,81 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
     $scope.getCellColor = (cohort, resistance, substance) ->
       colorScale.getColorByValue cohort.abundances[resistance][substance]
 
+    createExcelbuilderCell = (value, type, format) ->
+      value: value
+      metadata:
+        type: type
+        style: format
+
+    $scope.downloadData = ->
+      $a = $('.heatmap-chart__download a')
+
+      workbook = ExcelBuilder.createWorkbook()
+      sheet = workbook.createWorksheet name: 'Sheet'
+      stylesheet = workbook.getStyleSheet()
+
+      formats =
+        header: stylesheet.createFormat
+          font:
+            bold: true
+
+      fileData = []
+
+      $scope.cohorts.forEach (c, i) ->
+        cohortRow = []
+        cohortRow.push createExcelbuilderCell c.name, 'string'
+        cohortRow.push createExcelbuilderCell c.samples.length, 'number'
+
+        unless i
+          firstRow = []
+          secondRow = []
+          firstRow.push createExcelbuilderCell '', 'string'
+          firstRow.push createExcelbuilderCell '', 'string'
+          secondRow.push createExcelbuilderCell 'Cohort', 'string'
+          secondRow.push createExcelbuilderCell 'Samples', 'string'
+
+        _.keys $scope.data.resistances
+          .forEach (key) ->
+            ['overall']
+              .concat (if $scope.data.resistances[key].length < 2 then [] else $scope.data.resistances[key])
+              .forEach (substance, j) ->
+                unless i
+                  unless j
+                    firstRow.push createExcelbuilderCell '', 'string'
+                    firstRow.push createExcelbuilderCell key, 'string', formats.header.id
+                  else
+                    firstRow.push createExcelbuilderCell '', 'string'
+
+                  unless j
+                    secondRow.push createExcelbuilderCell '', 'string'
+                  secondRow.push createExcelbuilderCell (if substance is 'overall' then (if $scope.data.resistances[key].length < 2 then 'median' else 'mean') else substance), 'string'
+
+                unless j
+                  secondRow.push createExcelbuilderCell '', 'string'
+                cohortRow.push createExcelbuilderCell c.abundances[key][substance], 'number'
+                return
+            return
+
+        unless i
+          fileData.push firstRow
+          fileData.push secondRow
+
+        if c.isPushed
+          fileData.push []
+
+        fileData.push cohortRow
+        return
+
+      # Download
+      sheet.setData fileData
+      workbook.addWorksheet sheet
+      file = ExcelBuilder.createFile workbook
+
+      $a
+        .attr 'download', 'Heatmap.xlsx'
+        .attr 'href', 'data:application/vnd.openxmlformats-officedocument.spreadsheetml.sheet;base64,' + file
+      return
+
     # Events →
     prepareCellData = (cohort, resistance, substance) ->
       countryName: _.find($scope.data.countries, 'code': cohort.flag)?['name']

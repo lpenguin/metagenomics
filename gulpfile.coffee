@@ -36,6 +36,7 @@ destinations =
 # Vendors
 vendors =
   scripts: [
+    'external_libs/excelbuilder/excel-builder.dist.js'
     'node_modules/jquery/dist/jquery.min.js'
     'node_modules/d3/d3.min.js'
     'node_modules/d3-queue/build/d3-queue.min.js'
