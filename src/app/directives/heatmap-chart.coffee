@@ -277,11 +277,12 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
         $rootScope.$broadcast 'heatmapChart.cellIsUnfrozen'
         $rootScope.$broadcast 'heatmapChart.cellChanged', {}
 
-        if $scope.predicate.resistance and $scope.predicate.substance and isSortable
-          if $scope.predicate.resistance is resistance and $scope.predicate.substance is substance
-            $scope.reverseSorting = not $scope.reverseSorting
-          else
-            $scope.reverseSorting = true
+        if $scope.predicate.resistance and $scope.predicate.substance
+          if isSortable
+            if $scope.predicate.resistance is resistance and $scope.predicate.substance is substance
+              $scope.reverseSorting = not $scope.reverseSorting
+            else
+              $scope.reverseSorting = true
           $scope.predicate.resistance = resistance
           $scope.predicate.substance = substance
 
