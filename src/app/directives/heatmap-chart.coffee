@@ -5,6 +5,12 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
   scope:
     data: '='
   link: ($scope, $element, $attrs) ->
+    $scope.predicate = {}
+    $scope.reverseSorting = true
+
+    studyCountryFiltersValues = undefined
+    checkboxesValues = undefined
+
     getCohortAbundances = (samples) ->
       cohortAbundances = {}
 
@@ -86,11 +92,11 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
 
       permutationsCohorts
 
-    createCohorts = (filtersValues, checkboxesValues) ->
+    createCohorts = ->
       $scope.cohorts = []
 
-      studies = filtersValues['f-studies'].map (fv) -> fv.value
-      countries = filtersValues['f-countries'].map (fv) -> fv.value
+      studies = studyCountryFiltersValues['f-studies'].map (fv) -> fv.value
+      countries = studyCountryFiltersValues['f-countries'].map (fv) -> fv.value
 
       groupingOrder = _.keys checkboxesValues
         .filter (key) ->
@@ -248,7 +254,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
       $rootScope.$broadcast 'heatmapChart.tempSubstanceChanged', undefined
       return
 
-    $scope.substanceMouseClick = (cohort, resistance, substance) ->
+    $scope.substanceMouseClick = (cohort, resistance, substance, isSortable) ->
       $scope.defaultResistance = resistance
       $scope.defaultSubstance = substance
 
@@ -271,6 +277,14 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
         $rootScope.$broadcast 'heatmapChart.cellIsUnfrozen'
         $rootScope.$broadcast 'heatmapChart.cellChanged', {}
 
+        if $scope.predicate.resistance and $scope.predicate.substance and isSortable
+          if $scope.predicate.resistance is resistance and $scope.predicate.substance is substance
+            $scope.reverseSorting = not $scope.reverseSorting
+          else
+            $scope.reverseSorting = true
+          $scope.predicate.resistance = resistance
+          $scope.predicate.substance = substance
+
       $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
       return
 
@@ -282,7 +296,14 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
       return
 
     $scope.$on 'filters.groupingChanged', (event, eventData) ->
-      createCohorts eventData.studyCountryFiltersValues, eventData.checkboxesValues
+      studyCountryFiltersValues = eventData.studyCountryFiltersValues
+      checkboxesValues = eventData.checkboxesValues
+      createCohorts()
+      return
+
+    $scope.$on 'filters.sortingStateChanged', (event, eventData) ->
+      $scope.predicate.resistance = if eventData then $scope.defaultResistance else undefined
+      $scope.predicate.substance = if eventData then $scope.defaultSubstance else undefined
       return
 
     return

@@ -10,15 +10,15 @@
   left: 258px;
 }
 
-.filters__filters .custom-select {
+.filters__filters .custom-select-multi {
   margin-left: 10px;
 }
 
-.filters__filters .custom-select.f-studies {
+.filters__filters .custom-select-multi.f-studies {
   width: 240px;
 }
 
-.filters__filters .custom-select.f-countries {
+.filters__filters .custom-select-multi.f-countries {
   width: 145px;
 }
 
@@ -60,4 +60,18 @@
 
 .filters__checkboxes .checkbox.active .caption {
   color: #005599;
+}
+
+.filters__sort-by {
+  position: absolute;
+  top: 970px;
+  left: 894px;
+
+  white-space: nowrap;
+
+  font-size: $m-font-size;
+}
+
+.filters__sort-by .custom-select {
+  margin: -4px 0 0 5px;
 }

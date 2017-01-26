@@ -48,6 +48,16 @@ app.directive 'filters', ($rootScope) ->
       $scope.checkboxesValues[c] = c is 'f-countries'
       return
 
+    # Sort by
+    $scope.sortBySelect =
+      key: 'sort-by'
+      dataset: [
+        {title: 'number of samples', value: false}
+        {title: 'resistance level', value: true}
+      ]
+
+    $scope.sortBySelectValue = $scope.sortBySelect.dataset[0]
+
     # Events →
     onGroupingChanged = ->
       eventData =
@@ -75,5 +85,9 @@ app.directive 'filters', ($rootScope) ->
       onGroupingChanged()
       return
     , true
+
+    $scope.$watch 'sortBySelectValue', ->
+      $rootScope.$broadcast 'filters.sortingStateChanged', $scope.sortBySelectValue.value
+      return
 
     return

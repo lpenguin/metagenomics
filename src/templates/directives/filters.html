@@ -3,14 +3,14 @@
     <substance-filter
       class="inline"
       data-data="data"></substance-filter>
-    <custom-select
+    <custom-select-multi
       class="inline"
       data-ng-repeat="filter in studyCountryFilters track by $index"
       data-key="filter.key"
       data-dataset="filter.dataset"
       data-plural="filter.plural"
       data-selected="studyCountryFiltersValues[filter.key]"
-      data-flags-before="filter.flagsBefore"></custom-select>
+      data-flags-before="filter.flagsBefore"></custom-select-multi>
     <div
       class="filters-reset inline"
       data-ng-show="isResetShown"
@@ -32,5 +32,14 @@
       <span class="caption inline">{{checkbox.replace('f-', '')}}</span>
       <br class="clear-both" />
     </div>
+  </div>
+  <div class="filters__sort-by">
+    <div class="caption inline">Sort by</div>
+    <custom-select
+      class="inline"
+      data-key="sortBySelect.key"
+      data-dataset="sortBySelect.dataset"
+      data-selected="sortBySelectValue"></custom-select>
+      <br class="clear-both" />
   </div>
 </div>

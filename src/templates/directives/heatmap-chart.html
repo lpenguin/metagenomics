@@ -9,15 +9,15 @@
         once-text="r !== 'ABX determinants' ? r : 'Antibiotics (ABX) determinants'">
       </div>
       <div
-        class="substance-caption inline"
+        class="substance-caption sortable inline"
         data-ng-repeat="s in ['overall'].concat(substances.length < 2 ? [] : substances) track by $index"
-        data-ng-class="{'highlighted': r === defaultResistance && s === defaultSubstance, 'full': r === tempResistance && s === tempSubstance}"
+        data-ng-class="[{'highlighted': r === defaultResistance && s === defaultSubstance, 'full': r === tempResistance && s === tempSubstance}, predicate.resistance === r && predicate.substance === s ? (reverseSorting ? 'descending' : 'ascending') : '']"
         data-ng-mouseover="substanceMouseOver(undefined, r, s)"
         data-ng-mouseout="substanceMouseOut()"
-        data-ng-click="substanceMouseClick(undefined, r, s)"
+        data-ng-click="substanceMouseClick(undefined, r, s, true)"
+        data-ng-attr-data-after-content="{{(s === 'overall' ? '' : s.substring(1)) + (predicate.resistance && predicate.substance ? (predicate.resistance === r && predicate.substance === s ? (reverseSorting ? '▲' : '▼') : '▲') : '')}}"
         once-class="{'overall': s === 'overall'}"
-        once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"
-        once once-attr-data-after-content="s === 'overall' ? '' : s.substring(1)"></div>
+        once-text="s === 'overall' ? (substances.length < 2 ? 'median' : 'mean') : s.charAt(0)"></div>
       <br class="clear-both" />
     </div>
     <br class="clear-both" />
