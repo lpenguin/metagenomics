@@ -32,8 +32,8 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
     getPermutationsCohorts = (samples, order) ->
       permutationsCohorts = []
       permutations = tools.getPermutations order.map (o) -> $scope.data.filteringFieldsValues[o]
-
       nOfGroupSamples = {}
+      sortingEnabled = $scope.predicate.resistance and $scope.predicate.substance
 
       _.uniq permutations.map (p) -> p[0]
         .forEach (u) ->
@@ -74,26 +74,33 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
         return
 
       permutationsCohorts.sort (a, b) ->
-        return 1 if a.nOfSamplesInGroup < b.nOfSamplesInGroup
-        return -1 if a.nOfSamplesInGroup > b.nOfSamplesInGroup
-        return 1 if a.name > b.name
-        return -1 if a.name < b.name
-        0
+        unless sortingEnabled
+          return 1 if a.nOfSamplesInGroup < b.nOfSamplesInGroup
+          return -1 if a.nOfSamplesInGroup > b.nOfSamplesInGroup
+          return 1 if a.name > b.name
+          return -1 if a.name < b.name
+          0
+        else
+          aa = a.abundances[$scope.predicate.resistance][$scope.predicate.substance]
+          ba = b.abundances[$scope.predicate.resistance][$scope.predicate.substance]
+          (if aa is ba then 0 else if aa < ba then -1 else 1) * if $scope.reverseSorting then -1 else 1
 
-      permutationsCohorts.forEach (p, i) ->
-        previousCohort = permutationsCohorts[i - 1]
-        isPushed = false
+      unless sortingEnabled
+        permutationsCohorts.forEach (p, i) ->
+          previousCohort = permutationsCohorts[i - 1]
+          isPushed = false
 
-        if previousCohort
-          isPushed = _.some _.dropRight(order, 1), (o, j) -> p.permutation[j] isnt previousCohort.permutation[j]
+          if previousCohort
+            isPushed = _.some _.dropRight(order, 1), (o, j) -> p.permutation[j] isnt previousCohort.permutation[j]
 
-        p.isPushed = isPushed
-        return
+          p.isPushed = isPushed
+          return
 
       permutationsCohorts
 
     createCohorts = ->
       $scope.cohorts = []
+      sortingEnabled = $scope.predicate.resistance and $scope.predicate.substance
 
       studies = studyCountryFiltersValues['f-studies'].map (fv) -> fv.value
       countries = studyCountryFiltersValues['f-countries'].map (fv) -> fv.value
@@ -114,34 +121,50 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
         else
           roots = countries
 
-        roots
-          .sort tools.sortAlphabetically
-          .forEach (root, i) ->
-            rootProperties = {}
+        rootCohorts = []
 
-            if _.isArray(root)
-              rootProperties['f-studies'] = root[0]
-              rootProperties['f-countries'] = root[1]
+        roots.forEach (root, i) ->
+          rootProperties = {}
+
+          if _.isArray(root)
+            rootProperties['f-studies'] = root[0]
+            rootProperties['f-countries'] = root[1]
+          else
+            rootProperties[if studies.length then 'f-studies' else 'f-countries'] = root
+
+          rootSamples = samplesFilter.getFilteredSamples $scope.data.samples, rootProperties
+
+          return unless rootSamples.length
+
+          flag = if countries.length then _.find($scope.data.countries, 'name': rootProperties['f-countries'])['code'] else undefined
+          name = root
+          displayName = if _.isArray(root) then root[0] else root
+
+          rootCohorts.push
+            name: name
+            displayName: displayName
+            flag: flag
+            samples: rootSamples
+            abundances: getCohortAbundances rootSamples
+          return
+
+        rootCohorts
+          .sort (a, b) ->
+            unless sortingEnabled
+              return 1 if a.samples.length < b.samples.length
+              return -1 if a.samples.length > b.samples.length
+              return 1 if a.name > b.name
+              return -1 if a.name < b.name
+              0
             else
-              rootProperties[if studies.length then 'f-studies' else 'f-countries'] = root
+              aa = a.abundances[$scope.predicate.resistance][$scope.predicate.substance]
+              ba = b.abundances[$scope.predicate.resistance][$scope.predicate.substance]
+              (if aa is ba then 0 else if aa < ba then -1 else 1) * if $scope.reverseSorting then -1 else 1
+          .forEach (root, i) ->
+            root.isPushed = i
+            $scope.cohorts.push root
 
-            rootSamples = samplesFilter.getFilteredSamples $scope.data.samples, rootProperties
-
-            return unless rootSamples.length
-
-            flag = if countries.length then _.find($scope.data.countries, 'name': rootProperties['f-countries'])['code'] else undefined
-            name = root
-            displayName = if _.isArray(root) then root[0] else root
-
-            $scope.cohorts.push
-              name: name
-              displayName: displayName
-              flag: flag
-              isPushed: i
-              samples: rootSamples
-              abundances: getCohortAbundances rootSamples
-
-            permutationsCohorts = getPermutationsCohorts rootSamples, groupingOrder
+            permutationsCohorts = getPermutationsCohorts root.samples, groupingOrder
 
             return unless permutationsCohorts.length
 
@@ -285,6 +308,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
               $scope.reverseSorting = true
           $scope.predicate.resistance = resistance
           $scope.predicate.substance = substance
+          createCohorts()
 
       $rootScope.$broadcast 'heatmapChart.defaultSubstanceChanged'
       return
@@ -305,6 +329,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
     $scope.$on 'filters.sortingStateChanged', (event, eventData) ->
       $scope.predicate.resistance = if eventData then $scope.defaultResistance else undefined
       $scope.predicate.substance = if eventData then $scope.defaultSubstance else undefined
+      createCohorts()
       return
 
     return

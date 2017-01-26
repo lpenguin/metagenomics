@@ -51,6 +51,8 @@
 .heatmap-chart__header .substance-caption {
   margin-top: 20px;
   padding-bottom: 5px;
+
+  white-space: nowrap;
 }
 
 .heatmap-chart__footer .substance-caption {
