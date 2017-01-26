@@ -71,11 +71,11 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, topFive
       return
 
     # Studies for footer
-    $scope.studies = _.uniq _.map $scope.data.samples, 'f-studies'
-      .sort tools.sortAlphabeticaly
-      .map (s) ->
-        name: s
-        link: _.find($scope.data.samples, 'f-studies': s)['f-studies_link']
+    $scope.studies = rawData[6].map (d) ->
+      name: d['study']
+      link: d['link to article']
+      reads: d['links to reads']
+    .sort (a, b) -> tools.sortAlphabeticaly a.name, b.name
 
     # Prepare filters data
     filteringFields = [
