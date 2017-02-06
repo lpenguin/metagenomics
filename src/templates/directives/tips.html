@@ -13,30 +13,37 @@
     class="tips__info"
     data-ng-show="isInfoShown['upload']">
     <h3>Add your data</h3>
-    <p>We welcome community-driven update of our global map of gut microbiota resistome. If you want to put the resistome profiles of interesting published datasets on ResistoMap, please follow these instructions:</p>
+    <p>We welcome community-driven updates to our global map of gut microbiota resistome. If you want to add resistome profiles of interesting published datasets to ResistoMap, please follow these instructions:</p>
     <ol type="1">
-      <li>Send a request to our e-mail with the general information about the study including PMID reference to the publication presenting the samples, the number of samples and brief description of the cohorts;</li>
-      <li>The value and relevance of the datasets will be assessed by our experts, and we will notify you about the decision of whether the datasets are deemed valuable to be displayed on Resistomap;</li>
-      <li>In the case of positive decision, please download the scripts from the <a class="common-link" target="_blank" href="https://github.com/datalaboratory/metagenomics/tree/map-heatmap">GitHub repo</a>;</li>
+      <li>Send a request via e-mail <a class="common-link" href="mailto:resistomap@gmail.com">resistomap@gmail.com</a> with general information about the study including PMID reference to the publication presenting the samples, number of samples and brief description of the cohorts;</li>
+      <li>The value and relevance of datasets will be assessed by our experts, and you will be notified about the decision of whether we will include these datasets on ResistoMap or not;</li>
+      <li>In the case of a positive decision, please download the scripts from <a class="common-link" target="_blank" href="https://github.com/KonstantinYarygin/ResistoMap">GitHub repo</a>;</li>
       <li>Apply the scripts to your datasets according to the instructions;</li>
       <li>Send us the obtained resistome abundance tables together with the meta-data on the subjects according to the format;</li>
-      <li>After internal validation, the datasets will be added to the Resistomap together with the information about contributors and reference publication.</li>
+      <li>After internal validation, the datasets will be added to the ResistoMap together with the information about contributors and reference publication.</li>
     </ol>
   </div>
   <div
-    class="tips__info"
+    class="tips__info two-columns"
     data-ng-show="isInfoShown['about']">
     <h3>About Resistomap</h3>
-    <p>Resistomap is an interactive visualization of the presence of genetic determinants conferring resistance to antibiotics, biocides and heavy metals in human gut microbiota. Resistomap displays the data about more than 1600 published gut metagenomes of the world populations including both healthy subjects and patients.</p>
-    <p>Resistomap contains two main interactive work fields&nbsp;&mdash; a geographic map and a heatmap.</p>
-    <p>The heatmap displays the median relative levels of the determinants conferring resistance to each of the antibiotic groups (columns) in each of the selected cohort of subjects (rows). The values were precomputed by classifying the gut metagenomic reads from 12 publicly available studies (see Methods). The number of the metagenomes included in the cohort is displayed on the left from the heatmap below the color key.</p>
-    <p>The heatmap contains four vertical sections corresponding to different types of resistome quantification:</p>
-    <ol type="1">
-      <li>Levels of the AR-conferring genes;</li>
-      <li>Levels of the mutations in the target genes;</li>
-      <li>Levels of the genes conferring resistance to biocides (total);</li>
-      <li>Levels of the genes conferring resistance to heavy metal (total).</li>
-    </ol>
-    <p>Using the drop-down lists at the top of the screen, a user can choose the antibiotic group of interest, the study(-ies) and/or the country(-ies) to be displayed at the heatmap. For filtering the cohort, the user can use “Pool by” checkboxes that allow to stratify the cohorts by the country of origin, gender, age and diagnosis (where applicable). For convenience of comparison between close values, clicking on a cell “freezes” the displayed abundance value on the right.</p>
+    <div class="columns-container">
+      <div class="column inline">
+        <p>ResistoMap is an interactive visualization of the presence of genetic determinants conferring resistance to antibiotics, biocides and heavy metals in human gut microbiota. ResistoMap displays the data about more than 1600 published gut metagenomes of the world populations including healthy subjects and patients.</p>
+        <p>Resistomap contains two main interactive work fields&nbsp;&mdash; a geographic map and a heatmap. The heatmap displays the median relative levels of determinants conferring resistance to each of antibiotic groups (columns) in each of the selected cohort of subjects (rows). The values were precomputed by classifying the gut metagenomic reads from 12 publicly available studies (see Methods). The number of metagenomes included in the cohort is displayed on the left of the heatmap below the color key.</p>
+        <p>The heatmap contains four vertical sections corresponding to different types of resistome quantification:</p>
+        <ul>
+          <li>Levels of AR-conferring genes;</li>
+          <li>Levels of mutations in the target genes;</li>
+          <li>Levels of genes conferring resistance to biocides (total);</li>
+          <li>Levels of genes conferring resistance to heavy metals (total).</li>
+        </ul>
+      </div>
+      <div class="column inline">
+        <p>Using the drop-down lists at the top of the screen, users can choose the antibiotic group of interest, the study(-ies) and/or the country(-ies) to be displayed on the heatmap. To filter the cohort, users can use “Pool by” checkboxes that allow the stratification of cohorts by country of origin, gender, age and diagnosis (where applicable).</p>
+        <p>It is possible to sort rows of the heatmap. Below the “Pool heatmap by” list, there is a drop-down box “Sort by” containing 2 options: “number of samples” (sorting method enabled by default) and “resistance level”. The rows are sorted in decreasing order of the selected value. Sorting within a group of rows is performed the same way. Additionally, when the “resistance level” option is selected, double-clicking on a column name of the heatmap (a letter denoting antibiotic) allows users to switch between decreasing and increasing order of rows by level of resistance to this antibiotic. For convenience of comparison between close values, clicking on a cell “freezes” the displayed abundance value on the right (click again to “unfreeze”).</p>
+      </div>
+      <br class="clear-both" />
+    </div>
   </div>
 </div>
