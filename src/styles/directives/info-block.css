@@ -96,19 +96,17 @@
 }
 
 .info-block__top-five-list .caption {
+  margin-bottom: 5px;
+
   font-size: $m-font-size;
   font-weight: bold;
-}
-
-.info-block__top-five-list .row {
-  margin-top: 5px;
 }
 
 .info-block__top-five-list .row .name {
   overflow: hidden;
 
   width: 60px;
-  height: 16px;
+  height: 18px;
 
   white-space: nowrap;
   text-overflow: ellipsis;
@@ -122,11 +120,11 @@
 
   display: none;
 
-  padding: 2px;
+  padding: 3px;
 
   transform: translate(-3px, -3px);
 
-  border: 1px solid rgba(0, 0, 0, .167);
+  opacity: .9;
   background-color: #f5f7f9;
 }
 
@@ -139,13 +137,14 @@
 }
 
 .info-block__top-five-list .row .bar {
-  height: 16px;
+  height: 18px;
 }
 
 .info-block__top-five-list .row .value {
-  margin: -2px 0 0 5px;
+  width: 75px;
+  margin-top: -3px;
 
-  font-size: $s-font-size;
+  font-size: $m-font-size;
 }
 
 .info-block__info-link {

@@ -50,11 +50,11 @@
         <span class="full">{{item.name}}</span>
       </div>
       <div
-        class="bar inline"
-        data-ng-style="{'width': maxBarWidth * item.value / topFiveList[0].value + 'px', 'background-color': getBarColor(item.value)}"></div>
-      <div
         class="value inline"
         data-ng-bind-html="item.value | prepareAbundanceValue | trust"></div>
+      <div
+        class="bar inline"
+        data-ng-style="{'width': maxBarWidth * item.value / topFiveList[0].value + 'px', 'background-color': getBarColor(item.value)}"></div>
       <br class="clear-both" />
     </div>
   </div>

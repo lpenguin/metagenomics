@@ -14,7 +14,7 @@ app.directive 'infoBlock', ($rootScope, colorScale) ->
     $scope.legendScale = d3.scale.log()
       .domain colorScale.getDomain()
       .range legendScaleRange
-    $scope.maxBarWidth = 80
+    $scope.maxBarWidth = 76
 
     getLegendPointerX = (value) -> unless value then 0 else $scope.legendScale value
 

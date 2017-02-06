@@ -270,9 +270,9 @@
 }
 
 .heatmap-chart .heatmap-chart__download {
-  float: right;
+  float: left;
 
-  margin-top: 10px;
+  margin: 14px 0 0 150px;
 
   font-family: $helvetica-neue-regular;
   font-size: $m-font-size;

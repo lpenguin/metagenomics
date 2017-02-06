@@ -162,6 +162,8 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
 
         return unless countryAbundances[d.id]
 
+        d3.select(@).classed 'hovered', true
+
         eventData =
           countryName: _.find($scope.data.countries, 'code': d.id)['name']
           flag: d.id
@@ -173,6 +175,8 @@ app.directive 'mapChart', ($document, $rootScope, $timeout, abundanceCalculator,
         $scope.$apply()
         return
       .on 'mouseout', ->
+        d3.select(@).classed 'hovered', false
+
         $rootScope.$broadcast 'mapChart.countryInOut', {}
         $scope.$apply()
         return

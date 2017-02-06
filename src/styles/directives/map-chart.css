@@ -29,6 +29,6 @@
   stroke-opacity: 0;
 }
 
-.map-chart__svg .country:hover {
+.map-chart__svg .country.hovered {
   stroke: #333;
 }
