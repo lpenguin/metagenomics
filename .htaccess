@@ -1,0 +1,3 @@
+AddType application/octet-stream .json
+AddType application/octet-stream .tsv
+AddOutputFilterByType DEFLATE application/octet-stream
