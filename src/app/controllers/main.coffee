@@ -7,6 +7,9 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, topFive
     $scope.data = {}
 
     $scope.data.countries = rawData[1]
+    $scope.data.countriesCodeByName = {}
+    $scope.data.countries.forEach (c) ->
+      $scope.data.countriesCodeByName[c['name']] = c['code']
 
     $scope.data.substances = _.values rawData[3].categories
       .map (substance) ->
@@ -95,6 +98,11 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, topFive
       '51...70'
       '71...∞'
     ]
+    $scope.data.ageIntervalsIndexed = ageIntervals.map (intervalStr) ->
+       [begin, end] = intervalStr.split '...'
+       begin = parseInt begin
+       end = if end is '∞' then Infinity else parseInt end
+       return [begin, end, intervalStr]
 
     $scope.data.filteringFieldsValues = {}
     $scope.data.flags = {}

@@ -5,6 +5,13 @@ app.factory 'tools', ->
       return 1 if a.toLowerCase() > b.toLowerCase()
       0
 
+    searchInIndexedIntervals: (indexedIntervals, value)->
+      for interval in indexedIntervals
+        [begin, end, intervalStr] = interval
+        if begin <= value <= end
+          return intervalStr
+      return undefined
+
     getPermutations: (array) ->
       unless array.length
         []

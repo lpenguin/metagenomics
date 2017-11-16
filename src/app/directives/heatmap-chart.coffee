@@ -41,39 +41,33 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
           groupProperties[order[0]] = u
           nOfGroupSamples[u] = samplesFilter.getFilteredSamples(samples, groupProperties).length
           return
+      # lpenguin: linear time permutations
+      _cohortSamples = {}
+      _cohortSamples = _.groupBy samples, (s)->
+        props = order.map (o)->
+          if o isnt 'f-ages' then s[o] else tools.searchInIndexedIntervals($scope.data.ageIntervalsIndexed, s[o])
+        props.join '::'
+      
+      _displayedOrders = order.filter (p)-> p isnt 'f-genders' and (order.length == 1 or p isnt 'f-countries')
 
-      permutations.forEach (p, i) ->
-        cohortProperties = {}
+      _permutationsCohorts =_.map  _cohortSamples, (cohortSamples, order_str)->
+        permutation = order_str.split('::')
+        cohortProperties = _.zipObject order, permutation
+        displayNameTokens = _displayedOrders.map (o)-> cohortProperties[o]
+        displayName = displayNameTokens.join ', '
 
-        order.forEach (o, j) ->
-          cohortProperties[o] = p[j]
-          return
-
-        cohortSamples = samplesFilter.getFilteredSamples samples, cohortProperties
-
-        return unless cohortSamples.length
-        return if cohortSamples.length is samples.length
-
-        flag = if cohortProperties['f-countries'] then _.find($scope.data.countries, 'name': cohortProperties['f-countries'])['code'] else undefined
-        gender = cohortProperties['f-genders']
-        name = p
-        displayName = p
-        displayName = displayName.filter((prop) -> prop isnt cohortProperties['f-countries']) if flag and p.length > 1
-        displayName = displayName.filter((prop) -> prop isnt gender) if gender
-        displayName = displayName.join ', '
-
-        permutationsCohorts.push
-          permutation: p
-          name: name
+        return {
+          permutation: permutation
+          name: permutation
           displayName: displayName
-          flag: flag
-          gender: gender
+          flag: $scope.data.countriesCodeByName[cohortProperties['f-countries']]
+          gender: cohortProperties['f-genders']
           samples: cohortSamples
+          nOfSamplesInGroup: nOfGroupSamples[permutation[0]]
           abundances: getCohortAbundances cohortSamples
-          nOfSamplesInGroup: nOfGroupSamples[p[0]]
-        return
-
-      permutationsCohorts.sort (a, b) ->
+        }
+        
+      _permutationsCohorts.sort (a, b) ->
         unless sortingEnabled
           return 1 if a.nOfSamplesInGroup < b.nOfSamplesInGroup
           return -1 if a.nOfSamplesInGroup > b.nOfSamplesInGroup
@@ -84,10 +78,9 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
           aa = a.abundances[$scope.predicate.resistance][$scope.predicate.substance]
           ba = b.abundances[$scope.predicate.resistance][$scope.predicate.substance]
           (if aa is ba then 0 else if aa < ba then -1 else 1) * if $scope.reverseSorting then -1 else 1
-
       unless sortingEnabled
-        permutationsCohorts.forEach (p, i) ->
-          previousCohort = permutationsCohorts[i - 1]
+        _permutationsCohorts.forEach (p, i) ->
+          previousCohort = _permutationsCohorts[i - 1]
           isPushed = false
 
           if previousCohort
@@ -95,8 +88,8 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
 
           p.isPushed = isPushed
           return
-
-      permutationsCohorts
+      
+      return _permutationsCohorts
 
     createCohorts = ->
       $scope.cohorts = []
@@ -172,6 +165,7 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
             $scope.cohorts = $scope.cohorts.concat permutationsCohorts
             return
       else
+        # getPermutationsCohorts $scope.data.samples, groupingOrder
         $scope.cohorts = getPermutationsCohorts $scope.data.samples, groupingOrder
       return
 
