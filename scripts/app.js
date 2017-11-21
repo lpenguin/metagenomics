@@ -10,7 +10,10 @@ app = angular.module('app', appDependencies).config([
     }).otherwise({
       redirectTo: '/'
     });
-    $locationProvider.html5Mode(true);
+    $locationProvider.html5Mode({
+      enabled: true,
+      requireBase: false
+    });
   }
 ]);
 
