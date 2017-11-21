@@ -254,6 +254,9 @@ app.directive 'heatmapChart', ($rootScope, abundanceCalculator, topFiveGenerator
       abundanceValue: cohort.abundances[resistance][substance]
       abundanceValueType: if resistance.indexOf('ABX') isnt -1 and substance is 'overall' then 'Mean' else 'Median'
       nOfSamples: cohort.samples.length
+      samples: cohort.samples
+      resistance: resistance
+      substance: substance
       topFiveList: topFiveGenerator.get cohort.samples, cohort.abundances, resistance, substance
 
     $scope.substanceMouseOver = (cohort, resistance, substance) ->

@@ -13,3 +13,4 @@ app.factory 'dataLoader', ->
         .defer tsv, '../data/samples-groups/ab_table_total.tsv'
         .defer tsv, '../data/samples-groups/gene_table_total.tsv'
         .defer csv, '../data/links.csv'
+        .defer tsv, '../data/samples-groups/samples_gene_taxa.tsv'
