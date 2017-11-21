@@ -141,28 +141,6 @@ app.controller('MainController', function($scope, $timeout, abundanceCalculator,
   dataLoader.getData().awaitAll(parseData);
 });
 
-app.filter('prepareAbundanceValue', function() {
-  return function(value, power) {
-    var multiplier;
-    if (!value) {
-      return '0';
-    }
-    if (!power) {
-      power = parseInt(value.toExponential().split('-')[1]);
-    }
-    multiplier = Math.pow(10, power);
-    value *= multiplier;
-    value = parseFloat(value.toFixed(2));
-    return (value === 1 ? '' : value + '×') + '10<sup>−' + power + '</sup>';
-  };
-});
-
-app.filter('trust', function($sce) {
-  return function(html) {
-    return $sce.trustAsHtml(html);
-  };
-});
-
 app.directive('customSelectMulti', function($document, $timeout) {
   return {
     restrict: 'E',
@@ -1386,6 +1364,28 @@ app.directive('zoomButtons', function($rootScope) {
         $scope.canZoomOut = eventData;
       });
     }
+  };
+});
+
+app.filter('prepareAbundanceValue', function() {
+  return function(value, power) {
+    var multiplier;
+    if (!value) {
+      return '0';
+    }
+    if (!power) {
+      power = parseInt(value.toExponential().split('-')[1]);
+    }
+    multiplier = Math.pow(10, power);
+    value *= multiplier;
+    value = parseFloat(value.toFixed(2));
+    return (value === 1 ? '' : value + '×') + '10<sup>−' + power + '</sup>';
+  };
+});
+
+app.filter('trust', function($sce) {
+  return function(html) {
+    return $sce.trustAsHtml(html);
   };
 });
 
