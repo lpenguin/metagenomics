@@ -46,7 +46,7 @@ app.directive 'taxonomyHeatmap', ()->
             genes_set = d3.set(genes)
 
             return all_samples.filter (s)-> 
-                return sample_id_set.has(s.sample) && genes_set.has(s.gene_id)
+                return sample_id_set.has(s.sampleLower) && genes_set.has(s.gene_idLower)
 
         changeCellInfo = (eventData) ->
             $scope.countryName = eventData.countryName

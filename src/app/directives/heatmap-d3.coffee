@@ -15,6 +15,23 @@ app.directive 'heatmapD3', ()->
       indexes = d3.set($scope.data.map((d) -> d[field1])).values()
       columns = d3.set($scope.data.map((d) -> d[field2])).values()
 
+      columnValues = {}
+      indexesValues = {}
+
+      $scope.data.forEach (d)->
+        name = d[field2]
+        if !columnValues[name]
+          columnValues[name] =0 
+        columnValues[name] += d['value']
+
+        name = d[field1]
+        if !indexesValues[name]
+          indexesValues[name] = 0
+        indexesValues[name] += d['value']
+
+      indexes = _.reverse(_.sortBy indexes, (d) -> indexesValues[d])
+      columns = _.reverse(_.sortBy columns, (d) -> columnValues[d])
+
       xScale = d3.scale.ordinal()
                .domain(columns)
                .rangeBands([0, columns.length * itemSize.width]);
@@ -88,10 +105,10 @@ app.directive 'heatmapD3', ()->
                      .domain(_.range(0, baseColors.length - 1))
                      .range(baseColors)
 
-      colorScaleAxis = d3.svg.axis()
-        .scale(colorScale)
-        .tickFormat((d) -> d)
-        .orient("left")
+      # colorScaleAxis = d3.svg.axis()
+      #   .scale(colorScale)
+      #   .tickFormat((d) -> d)
+      #   .orient("left")
       
       colorBarSvg.selectAll('rect.color-bar')
         .data(_.range(0, baseColors.length - 1))
@@ -110,7 +127,6 @@ app.directive 'heatmapD3', ()->
         .enter()
         .append('text')
         .attr('class', 'color-bar')
-        # .text((d) -> d)
         .attr('x', (d, i)-> i * ((baseColors.length - 2) * itemSize.width))
         .attr('y', itemSize.height)
         .attr('dy', 15)
@@ -122,21 +138,19 @@ app.directive 'heatmapD3', ()->
       f = d3.format('.0%')
       selection = colorBarSvg.selectAll('text.color-bar')
         .data([minValue, maxValue])
-        .text((d) -> f(d/maxValue))
-
+        .text((d) -> d)
 
     baseColors = [
-      '#7f3b08'
-      '#b35806'
-      '#e08214'
-      '#fdb863'
-      '#efe3e7'
-      '#d8daeb'
-      '#b2abd2'
-      '#8073ac'
-      '#542788'
+      '#fff5eb',
+      '#fee6ce',
+      '#fdd0a2',
+      '#fdae6b',
+      '#fd8d3c',
+      '#f16913',
+      '#d94801',
+      '#a63603',
+      '#7f2704',
     ]
-    _.reverse baseColors
 
     itemSize = {
       width: attrs.itemWidth

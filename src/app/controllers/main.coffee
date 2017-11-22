@@ -38,6 +38,10 @@ app.controller 'MainController', ($scope, $timeout, abundanceCalculator, topFive
     samplesGeneAbundances = _.groupBy rawData[5], 'sample'
 
     $scope.sampleGeneTaxa = rawData[7]
+    for s in $scope.sampleGeneTaxa
+      s.sampleLower = s.sample.toLowerCase()
+      s.gene_idLower = s.gene_id.toLowerCase()
+
     $scope.data.samples.forEach (sample) ->
       sample.genes = {}
 
