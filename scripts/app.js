@@ -18,7 +18,7 @@ app.controller('MainController', function($scope, $timeout, abundanceCalculator,
   var parseData;
   $scope.initializing = true;
   parseData = function(error, rawData) {
-    var ageIntervals, filteringFields, samplesGeneAbundances, samplesSubstanceAbundances;
+    var ageIntervals, filteringFields, i, len, ref, s, samplesGeneAbundances, samplesSubstanceAbundances;
     $scope.mapData = rawData[0];
     $scope.data = {};
     $scope.data.countries = rawData[1];
@@ -50,6 +50,12 @@ app.controller('MainController', function($scope, $timeout, abundanceCalculator,
     samplesSubstanceAbundances = _.groupBy(rawData[4], 'sample');
     samplesGeneAbundances = _.groupBy(rawData[5], 'sample');
     $scope.sampleGeneTaxa = rawData[7];
+    ref = $scope.sampleGeneTaxa;
+    for (i = 0, len = ref.length; i < len; i++) {
+      s = ref[i];
+      s.sampleLower = s.sample.toLowerCase();
+      s.gene_idLower = s.gene_id.toLowerCase();
+    }
     $scope.data.samples.forEach(function(sample) {
       var resistances, sName, sampleGeneAbundances, sampleSubstanceAbundances;
       sample.genes = {};
@@ -68,16 +74,16 @@ app.controller('MainController', function($scope, $timeout, abundanceCalculator,
         resistanceSubstances = $scope.data.resistances[r];
         sample[r] = {};
         resistanceSubstances.forEach(function(s) {
-          var rec, ref, substanceGenes;
-          rec = (ref = sampleSubstanceAbundances[s]) != null ? ref[0] : void 0;
+          var rec, ref1, substanceGenes;
+          rec = (ref1 = sampleSubstanceAbundances[s]) != null ? ref1[0] : void 0;
           sample[r][s] = !rec ? 0 : parseFloat(rec['sum_abund']);
           substanceGenes = _.find($scope.data.substances, {
             'name': s
           })['genes'];
           sample.genes[s] = {};
           substanceGenes.forEach(function(g) {
-            var ref1, ref2;
-            rec = (ref1 = sampleGeneAbundances[s]) != null ? (ref2 = ref1[g]) != null ? ref2[0] : void 0 : void 0;
+            var ref2, ref3;
+            rec = (ref2 = sampleGeneAbundances[s]) != null ? (ref3 = ref2[g]) != null ? ref3[0] : void 0 : void 0;
             sample.genes[s][g] = !rec ? 0 : parseFloat(rec['abund']);
           });
         });
@@ -95,8 +101,8 @@ app.controller('MainController', function($scope, $timeout, abundanceCalculator,
     filteringFields = ['f-studies', 'f-countries', 'f-diagnosis', 'f-genders', 'f-ages'];
     ageIntervals = ['0...9', '10...16', '17...25', '26...35', '36...50', '51...70', '71...∞'];
     $scope.data.ageIntervalsIndexed = ageIntervals.map(function(intervalStr) {
-      var begin, end, ref;
-      ref = intervalStr.split('...'), begin = ref[0], end = ref[1];
+      var begin, end, ref1;
+      ref1 = intervalStr.split('...'), begin = ref1[0], end = ref1[1];
       begin = parseInt(begin);
       end = end === '∞' ? 2e308 : parseInt(end);
       return [begin, end, intervalStr];
@@ -139,28 +145,6 @@ app.controller('MainController', function($scope, $timeout, abundanceCalculator,
     }, 500);
   };
   dataLoader.getData().awaitAll(parseData);
-});
-
-app.filter('prepareAbundanceValue', function() {
-  return function(value, power) {
-    var multiplier;
-    if (!value) {
-      return '0';
-    }
-    if (!power) {
-      power = parseInt(value.toExponential().split('-')[1]);
-    }
-    multiplier = Math.pow(10, power);
-    value *= multiplier;
-    value = parseFloat(value.toFixed(2));
-    return (value === 1 ? '' : value + '×') + '10<sup>−' + power + '</sup>';
-  };
-});
-
-app.filter('trust', function($sce) {
-  return function(html) {
-    return $sce.trustAsHtml(html);
-  };
 });
 
 app.directive('customSelectMulti', function($document, $timeout) {
@@ -738,7 +722,7 @@ app.directive('heatmapD3', function() {
     link: function($scope, element, attrs) {
       var baseColors, buildColorBar, buildHeatmap, colorBarSvg, heatMapSvg, itemSize, rootSvg, updateColorBar;
       buildHeatmap = function(data, field1, field2) {
-        var colorScale, columns, indexes, maxValue, tScale, valuesRange, xAxis, xScale, yAxis, yScale;
+        var colorScale, columnValues, columns, indexes, indexesValues, maxValue, tScale, valuesRange, xAxis, xScale, yAxis, yScale;
         heatMapSvg.selectAll('*').remove();
         if (!data.length) {
           return;
@@ -749,6 +733,27 @@ app.directive('heatmapD3', function() {
         columns = d3.set($scope.data.map(function(d) {
           return d[field2];
         })).values();
+        columnValues = {};
+        indexesValues = {};
+        $scope.data.forEach(function(d) {
+          var name;
+          name = d[field2];
+          if (!columnValues[name]) {
+            columnValues[name] = 0;
+          }
+          columnValues[name] += d['value'];
+          name = d[field1];
+          if (!indexesValues[name]) {
+            indexesValues[name] = 0;
+          }
+          return indexesValues[name] += d['value'];
+        });
+        indexes = _.reverse(_.sortBy(indexes, function(d) {
+          return indexesValues[d];
+        }));
+        columns = _.reverse(_.sortBy(columns, function(d) {
+          return columnValues[d];
+        }));
         xScale = d3.scale.ordinal().domain(columns).rangeBands([0, columns.length * itemSize.width]);
         yScale = d3.scale.ordinal().domain(indexes).rangeBands([0, indexes.length * itemSize.height]);
         maxValue = d3.max(data.map(function(d) {
@@ -780,11 +785,8 @@ app.directive('heatmapD3', function() {
         return updateColorBar(0, maxValue);
       };
       buildColorBar = function() {
-        var colorScale, colorScaleAxis;
+        var colorScale;
         colorScale = d3.scale.linear().domain(_.range(0, baseColors.length - 1)).range(baseColors);
-        colorScaleAxis = d3.svg.axis().scale(colorScale).tickFormat(function(d) {
-          return d;
-        }).orient("left");
         colorBarSvg.selectAll('rect.color-bar').data(_.range(0, baseColors.length - 1)).enter().append('rect').attr('class', 'color-bar').attr('width', itemSize.width).attr('height', itemSize.height).attr('x', function(d) {
           return d * itemSize.width;
         }).attr('y', 0).attr('fill', function(d) {
@@ -798,11 +800,10 @@ app.directive('heatmapD3', function() {
         var f, selection;
         f = d3.format('.0%');
         return selection = colorBarSvg.selectAll('text.color-bar').data([minValue, maxValue]).text(function(d) {
-          return f(d / maxValue);
+          return d;
         });
       };
-      baseColors = ['#7f3b08', '#b35806', '#e08214', '#fdb863', '#efe3e7', '#d8daeb', '#b2abd2', '#8073ac', '#542788'];
-      _.reverse(baseColors);
+      baseColors = ['#fff5eb', '#fee6ce', '#fdd0a2', '#fdae6b', '#fd8d3c', '#f16913', '#d94801', '#a63603', '#7f2704'];
       itemSize = {
         width: attrs.itemWidth,
         height: attrs.itemHeight
@@ -1315,7 +1316,7 @@ app.directive('taxonomyHeatmap', function() {
         sample_id_set = d3.set(sample_ids);
         genes_set = d3.set(genes);
         return all_samples.filter(function(s) {
-          return sample_id_set.has(s.sample) && genes_set.has(s.gene_id);
+          return sample_id_set.has(s.sampleLower) && genes_set.has(s.gene_idLower);
         });
       };
       changeCellInfo = function(eventData) {
@@ -1386,6 +1387,28 @@ app.directive('zoomButtons', function($rootScope) {
         $scope.canZoomOut = eventData;
       });
     }
+  };
+});
+
+app.filter('prepareAbundanceValue', function() {
+  return function(value, power) {
+    var multiplier;
+    if (!value) {
+      return '0';
+    }
+    if (!power) {
+      power = parseInt(value.toExponential().split('-')[1]);
+    }
+    multiplier = Math.pow(10, power);
+    value *= multiplier;
+    value = parseFloat(value.toFixed(2));
+    return (value === 1 ? '' : value + '×') + '10<sup>−' + power + '</sup>';
+  };
+});
+
+app.filter('trust', function($sce) {
+  return function(html) {
+    return $sce.trustAsHtml(html);
   };
 });
 
@@ -1460,7 +1483,7 @@ app.factory('dataLoader', function() {
   csv = d3.csv;
   return dataLoader = {
     getData: function() {
-      return d3.queue().defer(json, '../data/map/ru_world.json').defer(tsv, '../data/map/countries.tsv').defer(json, '../data/samples-groups/sample_description.json').defer(json, '../data/samples-groups/group_description_with_genes.json').defer(tsv, '../data/samples-groups/ab_table_total.tsv').defer(tsv, '../data/samples-groups/gene_table_total.tsv').defer(csv, '../data/links.csv').defer(tsv, '../data/samples-groups/samples_gene_taxa.tsv');
+      return d3.queue().defer(json, 'data/map/ru_world.json').defer(tsv, 'data/map/countries.tsv').defer(json, 'data/samples-groups/sample_description.json').defer(json, 'data/samples-groups/group_description_with_genes.json').defer(tsv, 'data/samples-groups/ab_table_total.tsv').defer(tsv, 'data/samples-groups/gene_table_total.tsv').defer(csv, 'data/links.csv').defer(tsv, 'data/samples-groups/samples_gene_taxa.tsv');
     }
   };
 });
