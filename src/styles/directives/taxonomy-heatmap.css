@@ -1,0 +1,30 @@
+@import '../variables';
+
+.content__taxonomy-heatmap {
+    float: left;
+    background-color: #f5f7f9;
+    margin: 14px 0 0 14px;
+    padding: 6px 0 0 8px;
+}
+
+.taxonomy-heatmap__header {
+    margin: 0 0 10px 0;
+}
+
+.taxonomy-heatmap__label {
+    font-family: $helvetica-neue-regular;
+    font-size: $xl-font-size;
+    font-weight: bold;
+    
+}
+
+.taxonomy-heatmap__caption{
+    font-family: $helvetica-neue-regular;
+    white-space: nowrap;
+    font-size: $m-font-size;
+    margin: 4px 4px 20px 2px;
+}
+
+heatmap-d3 {
+    margin-top: 10px;
+}

@@ -10,6 +10,7 @@ app.directive 'heatmapD3', ()->
       heatMapSvg.selectAll('*').remove()
       
       if !data.length
+        updateColorBar('', '')
         return
       
       indexes = d3.set($scope.data.map((d) -> d[field1])).values()
@@ -105,11 +106,7 @@ app.directive 'heatmapD3', ()->
                      .domain(_.range(0, baseColors.length - 1))
                      .range(baseColors)
 
-      # colorScaleAxis = d3.svg.axis()
-      #   .scale(colorScale)
-      #   .tickFormat((d) -> d)
-      #   .orient("left")
-      
+     
       colorBarSvg.selectAll('rect.color-bar')
         .data(_.range(0, baseColors.length - 1))
         .enter()
